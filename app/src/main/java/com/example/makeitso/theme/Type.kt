@@ -1,4 +1,4 @@
-package com.example.makeitso.ui.theme
+package com.example.makeitso.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

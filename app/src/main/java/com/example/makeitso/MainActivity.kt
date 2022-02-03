@@ -5,18 +5,27 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import com.example.makeitso.ui.theme.MakeItSoTheme
+import androidx.compose.runtime.Composable
+import com.example.makeitso.login.LoginScreen
+import com.example.makeitso.theme.MakeItSoTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MakeItSoTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    Text(text = "Make It So")
+                    FirstScreen()
                 }
             }
         }
+    }
+
+    @Composable
+    private fun FirstScreen() {
+        //If there is an user logged in -> TasksScreen
+        //Else -> LoginScreen
+        LoginScreen()
     }
 }

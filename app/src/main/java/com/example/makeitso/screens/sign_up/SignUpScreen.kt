@@ -1,6 +1,8 @@
 package com.example.makeitso.screens.sign_up
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.makeitso.common.*
@@ -14,7 +16,7 @@ fun SignUpScreen() {
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         verticalArrangement = Arrangement.Center
     ) {
-        BasicField()
+        BasicField(AppText.enter_your_name, Icons.Filled.Person)
         EmailField()
         PasswordField()
         BasicButton(AppText.create_account) { /* Call ViewModel */ }

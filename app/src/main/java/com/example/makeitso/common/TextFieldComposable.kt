@@ -1,5 +1,6 @@
 package com.example.makeitso.common
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -7,9 +8,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,7 +21,7 @@ import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun BasicField() {
+fun BasicField(@StringRes text: Int, icon: ImageVector? = null) {
     val fieldState = remember { mutableStateOf("") }
 
     OutlinedTextField(
@@ -28,8 +29,10 @@ fun BasicField() {
         modifier = Modifier.fieldModifier(),
         value = fieldState.value,
         onValueChange = { fieldState.value = it },
-        placeholder = { Text(stringResource(AppText.enter_your_name)) },
-        leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = "Name") }
+        placeholder = { Text(stringResource(text)) },
+        leadingIcon = if (icon != null) {
+            { Icon(imageVector = icon, contentDescription = "Name") }
+        } else null
     )
 }
 

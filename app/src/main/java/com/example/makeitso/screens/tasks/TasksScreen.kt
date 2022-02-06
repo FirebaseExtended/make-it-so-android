@@ -23,7 +23,7 @@ import com.example.makeitso.theme.BrightOrange
 fun TasksScreen() {
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ToolBar(
-            AppText.tasks,
+            title = AppText.tasks,
             endActionIcon = AppIcon.ic_exit,
             endAction = {} //Call ViewModel
         )

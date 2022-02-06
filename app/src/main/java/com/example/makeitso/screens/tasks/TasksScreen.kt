@@ -5,8 +5,6 @@ import com.example.makeitso.R
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.ToolBar
 
-//This method should be private and part of a fragment in the future
-
 @Composable
 fun TasksScreen() {
     ToolBar(

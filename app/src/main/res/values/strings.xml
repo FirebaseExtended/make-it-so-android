@@ -1,12 +1,23 @@
 <resources>
+    <!-- Common -->
     <string name="app_name">Make It So</string>
-    <string name="login">Login</string>
-    <string name="sign_up">Sign up</string>
-    <string name="tasks">Tasks</string>
-    <string name="edit_task">Edit your task</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="enter_your_name">Enter your name</string>
+
+    <!-- LoginScreen -->
+    <string name="sign_in">Sign in</string>
     <string name="login_details">Enter your login details</string>
-    <string name="create_account">Create an account</string>
+    <string name="do_not_have_account">Don\'t have an account? Click to sign up</string>
+
+    <!-- SignUpScreen -->
+    <string name="enter_your_name">Enter your name</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="create_account">Create account</string>
+    <string name="sign_up_anonymously">Or click here to sign up anonymously</string>
+
+    <!-- TasksScreen -->
+    <string name="tasks">Tasks</string>
+
+    <!-- EditTaskScreen -->
+    <string name="edit_task">Edit your task</string>
 </resources>

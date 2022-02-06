@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import com.example.makeitso.login.LoginScreen
+import com.example.makeitso.screens.login.LoginScreen
 import com.example.makeitso.theme.MakeItSoTheme
 
 class MainActivity : ComponentActivity() {

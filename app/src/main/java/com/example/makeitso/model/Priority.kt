@@ -1,12 +1,13 @@
 package com.example.makeitso.model
 
 import androidx.annotation.ColorRes
-import com.example.makeitso.R.color as Color
+import androidx.annotation.StringRes
+import com.example.makeitso.R.color as AppColor
+import com.example.makeitso.R.string as AppText
 
-enum class Priority(@ColorRes val color: Int) {
-    NONE(Color.black),
-    LOW(Color.green),
-    MEDIUM(Color.yellow),
-    HIGH(Color.red)
+enum class Priority(@ColorRes val color: Int, @StringRes val title: Int) {
+    NONE(AppColor.black, AppText.none),
+    LOW(AppColor.green, AppText.low),
+    MEDIUM(AppColor.yellow, AppText.medium),
+    HIGH(AppColor.red, AppText.high)
 }
-

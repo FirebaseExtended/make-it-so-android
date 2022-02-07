@@ -6,35 +6,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.makeitso.common.*
 import com.example.makeitso.common.BasicField
+import com.example.makeitso.model.Task
+import com.example.makeitso.model.Task.Companion.hasDueDate
+import com.example.makeitso.model.Task.Companion.hasDueTime
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun EditTaskScreen() { //Receive Task
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
+fun EditTaskScreen(task: Task) {
+    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ToolBar(
             title = AppText.edit_task,
             endActionIcon = AppIcon.ic_check,
             endAction = {} //Call ViewModel
         )
 
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(8.dp))
+        Spacer(modifier = Modifier.fillMaxWidth().padding(8.dp))
 
-        BasicField(AppText.title) //Logic to use Task data
-        BasicField(AppText.description)
-        BasicField(AppText.url)
+        BasicField(AppText.title, initialState = task.title)
+        BasicField(AppText.description, initialState = task.description)
+        BasicField(AppText.url, initialState = task.url)
 
-        FlagButton()
+        Spacer(modifier = Modifier.fillMaxWidth().padding(16.dp))
+
+        CardSwitch(AppText.date, AppIcon.ic_calendar, task.hasDueDate(), task.dueDate)
+        CardSwitch(AppText.time, AppIcon.ic_clock, task.hasDueTime(), task.dueTime)
+        CardSwitch(AppText.flag, AppIcon.ic_flag, task.flag)
+
+        Spacer(modifier = Modifier.fillMaxWidth().padding(16.dp))
+
+        CardSelector(AppText.priority, task.priority.title)
     }
-}
-
-@Composable
-private fun FlagButton() {
-
 }

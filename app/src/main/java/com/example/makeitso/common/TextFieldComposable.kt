@@ -21,8 +21,8 @@ import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun BasicField(@StringRes text: Int, icon: ImageVector? = null) {
-    val fieldState = remember { mutableStateOf("") }
+fun BasicField(@StringRes text: Int, icon: ImageVector? = null, initialState: String = "") {
+    val fieldState = remember { mutableStateOf(initialState) }
 
     OutlinedTextField(
         singleLine = true,
@@ -37,8 +37,8 @@ fun BasicField(@StringRes text: Int, icon: ImageVector? = null) {
 }
 
 @Composable
-fun EmailField() {
-    val fieldState = remember { mutableStateOf("") }
+fun EmailField(initialState: String = "") {
+    val fieldState = remember { mutableStateOf(initialState) }
 
     OutlinedTextField(
         singleLine = true,
@@ -51,8 +51,8 @@ fun EmailField() {
 }
 
 @Composable
-fun PasswordField() {
-    var passwordState by remember { mutableStateOf("") }
+fun PasswordField(initialState: String = "") {
+    var passwordState by remember { mutableStateOf(initialState) }
     var isVisible by remember { mutableStateOf(false) }
 
     val icon = if (isVisible) painterResource(AppIcon.ic_visibility_on)

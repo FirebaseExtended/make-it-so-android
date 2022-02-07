@@ -1,16 +1,23 @@
 package com.example.makeitso.model
 
-import java.time.LocalDate
-import java.time.LocalTime
-
 data class Task(
     val id: String,
     val title: String,
     val priority: Priority,
-    val dueDate: LocalDate,
-    val dueTime: LocalTime,
+    val dueDate: String,
+    val dueTime: String,
     val description: String,
     val url: String,
     val flag: Boolean,
     val completed: Boolean
-)
+) {
+    companion object {
+        fun Task.hasDueDate(): Boolean {
+            return dueDate.isNotBlank()
+        }
+
+        fun Task.hasDueTime(): Boolean {
+            return dueTime.isNotBlank()
+        }
+    }
+}

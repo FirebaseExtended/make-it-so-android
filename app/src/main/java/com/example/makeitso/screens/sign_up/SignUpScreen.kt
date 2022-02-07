@@ -16,7 +16,7 @@ fun SignUpScreen() {
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         verticalArrangement = Arrangement.Center
     ) {
-        BasicField(AppText.enter_your_name, Icons.Filled.Person)
+        BasicField(AppText.name, Icons.Filled.Person)
         EmailField()
         PasswordField()
         BasicButton(AppText.create_account) { /* Call ViewModel */ }

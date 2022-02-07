@@ -10,7 +10,7 @@
     <string name="do_not_have_account">Don\'t have an account? Click to sign up</string>
 
     <!-- SignUpScreen -->
-    <string name="enter_your_name">Enter your name</string>
+    <string name="name">Name</string>
     <string name="create_an_account">Create an account</string>
     <string name="create_account">Create account</string>
     <string name="sign_up_anonymously">Or click here to sign up anonymously</string>
@@ -23,4 +23,14 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="url">URL</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="flag">Flag</string>
+    <string name="priority">Priority</string>
+
+    <!-- Priority -->
+    <string name="none">None</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
 </resources>

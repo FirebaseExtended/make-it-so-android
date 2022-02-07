@@ -1,4 +1,4 @@
-package com.example.makeitso.common
+package com.example.makeitso.common.composable
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

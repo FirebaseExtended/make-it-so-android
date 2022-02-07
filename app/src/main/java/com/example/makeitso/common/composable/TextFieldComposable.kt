@@ -1,4 +1,4 @@
-package com.example.makeitso.common
+package com.example.makeitso.common.composable
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,4 +1,4 @@
-package com.example.makeitso.common
+package com.example.makeitso.common.composable
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -15,24 +15,13 @@ import androidx.compose.ui.res.stringResource
 import com.example.makeitso.theme.MediumOrange
 
 @Composable
-fun ToolBar(
-    @StringRes title: Int,
-    hasBackAction: Boolean = false,
-    @DrawableRes endActionIcon: Int? = null,
-    endAction: () -> Unit = {}
-) {
-    if (endActionIcon == null) BasicToolbar(title, hasBackAction)
-    else ActionToolbar(title, hasBackAction, endActionIcon, endAction)
-}
-
-@Composable
-private fun BasicToolbar(@StringRes title: Int, hasBackAction: Boolean) {
+fun BasicToolbar(@StringRes title: Int, backAction: (() -> Unit)? = null) {
     TopAppBar(
         title = { Text(stringResource(title)) },
         backgroundColor = MediumOrange,
-        navigationIcon = if (hasBackAction) {
+        navigationIcon = if (backAction != null) {
             {
-                IconButton(onClick = { }) {
+                IconButton(onClick = backAction) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                 }
             }
@@ -41,18 +30,18 @@ private fun BasicToolbar(@StringRes title: Int, hasBackAction: Boolean) {
 }
 
 @Composable
-private fun ActionToolbar(
+fun ActionToolbar(
     @StringRes title: Int,
-    hasBackAction: Boolean,
     @DrawableRes endActionIcon: Int,
-    endAction: () -> Unit
+    endAction: () -> Unit,
+    backAction: (() -> Unit)? = null
 ) {
     TopAppBar(
         title = { Text(stringResource(title)) },
         backgroundColor = MediumOrange,
-        navigationIcon = if (hasBackAction) {
+        navigationIcon = if (backAction != null) {
             {
-                IconButton(onClick = { }) {
+                IconButton(onClick = backAction) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                 }
             }

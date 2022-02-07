@@ -12,12 +12,12 @@ data class Task(
     val completed: Boolean
 ) {
     companion object {
-        fun Task.hasDueDate(): Boolean {
-            return dueDate.isNotBlank()
+        fun Task?.hasDueDate(): Boolean {
+            return this?.dueDate.orEmpty().isNotBlank()
         }
 
-        fun Task.hasDueTime(): Boolean {
-            return dueTime.isNotBlank()
+        fun Task?.hasDueTime(): Boolean {
+            return this?.dueTime.orEmpty().isNotBlank()
         }
     }
 }

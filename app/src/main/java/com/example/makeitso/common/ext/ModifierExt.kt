@@ -1,4 +1,4 @@
-package com.example.makeitso.ext
+package com.example.makeitso.common.ext
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier

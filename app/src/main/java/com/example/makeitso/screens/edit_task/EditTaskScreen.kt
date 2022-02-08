@@ -6,10 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
+import com.example.makeitso.common.ext.hasDueDate
+import com.example.makeitso.common.ext.hasDueTime
 import com.example.makeitso.model.Priority
 import com.example.makeitso.model.Task
-import com.example.makeitso.model.Task.Companion.hasDueDate
-import com.example.makeitso.model.Task.Companion.hasDueTime
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
@@ -38,7 +38,7 @@ fun EditTaskScreen(navController: NavHostController, taskId: String) {
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(16.dp))
 
-        val selection = task?.priority?.title ?: Priority.NONE.title
+        val selection = Priority.getByName(task?.priority).title
         CardSelector(AppText.priority, selection)
     }
 }

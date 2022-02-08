@@ -12,10 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.makeitso.common.ext.hasDueDate
+import com.example.makeitso.common.ext.hasDueTime
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.model.Task
-import com.example.makeitso.model.Task.Companion.hasDueDate
-import com.example.makeitso.model.Task.Companion.hasDueTime
 import java.lang.StringBuilder
 
 @Composable

@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.makeitso.ext.paddingEnd
-import com.example.makeitso.ext.paddingStart
+import com.example.makeitso.common.ext.paddingEnd
+import com.example.makeitso.common.ext.paddingStart
 import com.example.makeitso.theme.BrightOrange
 
 @Composable

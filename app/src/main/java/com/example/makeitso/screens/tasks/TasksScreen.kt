@@ -32,8 +32,8 @@ fun TasksScreen(navController: NavHostController) {
                 backgroundColor = BrightOrange,
                 contentColor = Color.White,
                 modifier = Modifier.padding(16.dp)
-            ){
-                Icon(Icons.Filled.Add,"Add")
+            ) {
+                Icon(Icons.Filled.Add, "Add")
             }
         }) {
 //            LazyColumn {

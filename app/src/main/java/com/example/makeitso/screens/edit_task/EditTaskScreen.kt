@@ -14,7 +14,9 @@ import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun EditTaskScreen(navController: NavHostController, task: Task? = null) {
+fun EditTaskScreen(navController: NavHostController, taskId: String) {
+    val task: Task? = null //Retrieve from database based on taskId
+
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ActionToolbar(
             title = AppText.edit_task,

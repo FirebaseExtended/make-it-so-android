@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
+import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
 import com.example.makeitso.R.string as AppText
@@ -22,7 +23,9 @@ fun LoginScreen(navController: NavHostController) {
 
         BasicButton(AppText.sign_in) {
             //Call ViewModel for login logic
-            navController.navigate(TASKS_SCREEN)
+            navController.navigate(TASKS_SCREEN) {
+                popUpTo(LOGIN_SCREEN) { inclusive = true }
+            }
         }
 
         BasicTextButton(AppText.do_not_have_account) {

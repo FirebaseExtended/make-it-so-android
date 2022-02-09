@@ -5,8 +5,9 @@ import com.example.makeitso.model.User
 import com.example.makeitso.model.database.dao.TaskDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class TaskRepo(private val taskDao: TaskDao) {
+class TaskRepo @Inject constructor(private val taskDao: TaskDao) {
     fun selectAllForUser(user: User): Flow<List<Task>> {
         return taskDao.selectAllForUser(user.id)
     }

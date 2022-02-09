@@ -9,7 +9,7 @@ import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.NavHost
 import com.example.makeitso.theme.MakeItSoTheme
 
-class MainActivity : ComponentActivity() {
+class MakeItSoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

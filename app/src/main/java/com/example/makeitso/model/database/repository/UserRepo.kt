@@ -3,8 +3,9 @@ package com.example.makeitso.model.database.repository
 import com.example.makeitso.model.User
 import com.example.makeitso.model.database.dao.UserDao
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class UserRepo(private val userDao: UserDao) {
+class UserRepo @Inject constructor(private val userDao: UserDao) {
     suspend fun insert(user: User) {
         Dispatchers.IO.apply { userDao.insert(user) }
     }

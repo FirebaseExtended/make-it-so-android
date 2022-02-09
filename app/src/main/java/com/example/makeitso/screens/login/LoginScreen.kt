@@ -3,15 +3,15 @@ package com.example.makeitso.screens.login
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
-import com.example.makeitso.common.navigation.LOGIN_SCREEN
-import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
-import com.example.makeitso.common.navigation.TASKS_SCREEN
 import com.example.makeitso.R.string as AppText
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
+    val viewModel = viewModel<LoginViewModel>()
+
     BasicToolbar(AppText.login_details)
 
     Column(
@@ -22,14 +22,11 @@ fun LoginScreen(navController: NavHostController) {
         PasswordField()
 
         BasicButton(AppText.sign_in) {
-            //Call ViewModel for login logic
-            navController.navigate(TASKS_SCREEN) {
-                popUpTo(LOGIN_SCREEN) { inclusive = true }
-            }
+            viewModel.onSignInClick(navController)
         }
 
         BasicTextButton(AppText.do_not_have_account) {
-            navController.navigate(SIGN_UP_SCREEN)
+            viewModel.onSignUpClick(navController)
         }
     }
 }

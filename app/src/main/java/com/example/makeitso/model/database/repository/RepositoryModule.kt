@@ -5,10 +5,10 @@ import com.example.makeitso.model.database.repository.impl.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ViewModelComponent
 
-@InstallIn(ActivityComponent::class)
 @Module
+@InstallIn(ViewModelComponent::class)
 abstract class RepositoryModule {
     @Binds
     abstract fun provideTaskRepository(impl: TaskRepositoryImpl): TaskRepository

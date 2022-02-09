@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class Task(
     @PrimaryKey(autoGenerate = true)
-    val id: String,
+    val id: Long,
     val title: String,
     val priority: String,
     val dueDate: String,
@@ -15,5 +15,5 @@ data class Task(
     val url: String,
     val flag: Boolean,
     val completed: Boolean,
-    val userId: String
+    val userId: Long
 )

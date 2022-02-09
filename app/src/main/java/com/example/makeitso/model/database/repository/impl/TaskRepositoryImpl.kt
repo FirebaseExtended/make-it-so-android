@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao) : TaskRepository {
-    override fun select(id: String): Flow<Task> {
+    override fun select(id: Long): Flow<Task> {
         return taskDao.select(id)
     }
 

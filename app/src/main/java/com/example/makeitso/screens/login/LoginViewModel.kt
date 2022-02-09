@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    val userRepository: UserRepository
 ) : ViewModel() {
     fun onSignInClick(navController: NavHostController) {
         navController.navigate(TASKS_SCREEN) {

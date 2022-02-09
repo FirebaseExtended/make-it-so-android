@@ -5,7 +5,7 @@ import com.example.makeitso.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface TaskRepository {
-    fun select(id: String): Flow<Task>
+    fun select(id: Long): Flow<Task>
     fun selectAllForUser(user: User): Flow<List<Task>>
     suspend fun insert(task: Task)
     suspend fun delete(task: Task)

@@ -2,8 +2,6 @@ package com.example.makeitso.screens.tasks
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -12,18 +10,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.makeitso.common.composable.DropdownContextMenu
 import com.example.makeitso.common.ext.hasDueDate
 import com.example.makeitso.common.ext.hasDueTime
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.model.Task
+import com.example.makeitso.theme.DarkOrange
 import java.lang.StringBuilder
 
 @Composable
-fun TaskItem(
-    task: Task,
-    onChecked: (Boolean) -> Unit,
-    onEdit: (Task) -> Unit,
-) {
+@ExperimentalMaterialApi
+fun TaskItem(task: Task, onChecked: (Boolean) -> Unit) {
     Card(
         backgroundColor = Color.White,
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp),
@@ -46,12 +43,14 @@ fun TaskItem(
             }
 
             if (task.flag) {
-                Icon(painter = painterResource(AppIcon.ic_flag), contentDescription = "Flag")
+                Icon(
+                    painter = painterResource(AppIcon.ic_flag),
+                    tint = DarkOrange,
+                    contentDescription = "Flag"
+                )
             }
 
-            IconButton(onClick = { onEdit(task) }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More")
-            }
+            DropdownContextMenu(listOf()) //Add menu options
         }
     }
 }

@@ -27,9 +27,7 @@ fun CardSwitch(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp, 4.dp),
+            modifier = Modifier.fillMaxWidth().padding(10.dp, 4.dp),
         ) {
             Icon(
                 modifier = Modifier.paddingEnd(8.dp),
@@ -62,6 +60,6 @@ fun CardSelector(@StringRes label: Int, options: List<String>, selection: String
         backgroundColor = Color.White,
         modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 4.dp)
     ) {
-        DropdownMenu(label, options, selection)
+        DropdownSelector(label, options, selection)
     }
 }

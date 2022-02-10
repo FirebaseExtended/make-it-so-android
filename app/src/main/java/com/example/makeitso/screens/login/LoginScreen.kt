@@ -15,9 +15,7 @@ fun LoginScreen(navController: NavHostController) {
     BasicToolbar(AppText.login_details)
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         verticalArrangement = Arrangement.Center
     ) {
         EmailField()

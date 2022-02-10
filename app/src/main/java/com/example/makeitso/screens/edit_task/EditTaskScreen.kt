@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.ext.hasDueDate
@@ -14,14 +15,15 @@ import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun EditTaskScreen(navController: NavHostController, taskId: String) {
-    val task: Task? = null //Retrieve from database based on taskId
+fun EditTaskScreen(navController: NavHostController, taskId: Long) {
+    val viewModel = hiltViewModel<EditTaskViewModel>()
+    val task: Task? = viewModel.getTask(taskId) //Listen to ViewModel state instead
 
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ActionToolbar(
             title = AppText.edit_task,
             endActionIcon = AppIcon.ic_check,
-            endAction = {} //Call ViewModel (save things and pop up backstack)
+            endAction = { viewModel.onDoneClick(navController) }
         )
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(8.dp))

@@ -11,9 +11,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    val userRepository: UserRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
     fun onSignInClick(navController: NavHostController) {
+        //Apply login logic
         navController.navigate(TASKS_SCREEN) {
             popUpTo(LOGIN_SCREEN) { inclusive = true }
         }

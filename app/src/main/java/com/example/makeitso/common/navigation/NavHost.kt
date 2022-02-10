@@ -1,5 +1,6 @@
 package com.example.makeitso.common.navigation
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +21,7 @@ private const val TASK_ID_ARG = "?$TASK_ID={$TASK_ID}"
 private const val TASK_DEFAULT_ID = -1L
 
 @Composable
+@ExperimentalMaterialApi
 fun NavHost(firstScreen: String) {
     val navController = rememberNavController()
 

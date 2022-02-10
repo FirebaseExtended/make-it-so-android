@@ -27,10 +27,4 @@
     <string name="time">Time</string>
     <string name="flag">Flag</string>
     <string name="priority">Priority</string>
-
-    <!-- Priority -->
-    <string name="none">None</string>
-    <string name="low">Low</string>
-    <string name="medium">Medium</string>
-    <string name="high">High</string>
 </resources>

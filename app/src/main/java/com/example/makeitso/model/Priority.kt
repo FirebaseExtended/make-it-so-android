@@ -1,15 +1,13 @@
 package com.example.makeitso.model
 
 import androidx.annotation.ColorRes
-import androidx.annotation.StringRes
 import com.example.makeitso.R.color as AppColor
-import com.example.makeitso.R.string as AppText
 
-enum class Priority(@ColorRes val color: Int, @StringRes val title: Int) {
-    NONE(AppColor.black, AppText.none),
-    LOW(AppColor.green, AppText.low),
-    MEDIUM(AppColor.yellow, AppText.medium),
-    HIGH(AppColor.red, AppText.high);
+enum class Priority(@ColorRes val color: Int) {
+    None(AppColor.black),
+    Low(AppColor.green),
+    Medium(AppColor.yellow),
+    High(AppColor.red);
 
     companion object {
         fun getByName(name: String?): Priority {
@@ -17,7 +15,13 @@ enum class Priority(@ColorRes val color: Int, @StringRes val title: Int) {
                 if (name == priority.name) return priority
             }
 
-            return NONE
+            return None
+        }
+
+        fun getAllNames(): List<String> {
+            val names = mutableListOf<String>()
+            values().forEach { priority -> names.add(priority.name) }
+            return names
         }
     }
 }

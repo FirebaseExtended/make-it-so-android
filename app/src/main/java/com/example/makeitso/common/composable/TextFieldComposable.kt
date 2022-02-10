@@ -78,5 +78,5 @@ fun PasswordField(initialState: String = "") {
 }
 
 private fun Modifier.fieldModifier(): Modifier {
-    return this.fillMaxWidth().padding(16.dp, 8.dp)
+    return this.fillMaxWidth().padding(16.dp, 4.dp)
 }

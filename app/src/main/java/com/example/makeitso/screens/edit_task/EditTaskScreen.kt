@@ -42,7 +42,8 @@ fun EditTaskScreen(navController: NavHostController, taskId: Long) {
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(16.dp))
 
-        val selection = Priority.getByName(task?.priority).title
-        DropdownMenu(AppText.priority, selection)
+        val options = Priority.getAllNames()
+        val selection = Priority.getByName(task?.priority).name
+        CardSelector(AppText.priority, options, selection)
     }
 }

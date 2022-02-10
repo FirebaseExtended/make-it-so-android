@@ -1,56 +1,47 @@
 package com.example.makeitso.common.composable
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.makeitso.theme.BrightOrange
 
 @Composable
 @ExperimentalMaterialApi
-fun DropdownMenu(priority: Int, selection: Int) {
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
+fun DropdownMenu(@StringRes label: Int, options: List<String>, selection: String) {
+    var isExpanded by remember { mutableStateOf(false) }
+    var selectedOption by remember { mutableStateOf(selection) }
 
     ExposedDropdownMenuBox(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp, 0.dp),
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
+        expanded = isExpanded,
+        modifier = Modifier.fillMaxWidth(),
+        onExpandedChange = { isExpanded = !isExpanded }
     ) {
         TextField(
             modifier = Modifier.fillMaxWidth(),
             readOnly = true,
-            value = selectedOptionText,
-            onValueChange = { },
-            label = { Text("Label") },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )
-            },
+            value = selectedOption,
+            onValueChange = { }, //Callback to ViewModel updating state
+            label = { Text(stringResource(label)) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(isExpanded) },
             colors = dropdownColors()
         )
+
         ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = {
-                expanded = false
-            }
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false }
         ) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
+                        selectedOption = selectionOption
+                        isExpanded = false
                     }
-                ) {
-                    Text(text = selectionOption)
-                }
+                ) { Text(text = selectionOption) }
             }
         }
     }
@@ -59,5 +50,13 @@ fun DropdownMenu(priority: Int, selection: Int) {
 @Composable
 @ExperimentalMaterialApi
 private fun dropdownColors(): TextFieldColors {
-    return ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.White)
+    return ExposedDropdownMenuDefaults.textFieldColors(
+        backgroundColor = Color.White,
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor =  Color.Transparent,
+        trailingIconColor = BrightOrange,
+        focusedTrailingIconColor = BrightOrange,
+        focusedLabelColor = BrightOrange,
+        unfocusedLabelColor = BrightOrange
+    )
 }

@@ -1,5 +1,6 @@
 package com.example.makeitso.screens.sign_up
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -34,4 +35,6 @@ fun SignUpScreen(navController: NavHostController) {
             viewModel.onAnonymousSignUpClick(navController)
         }
     }
+
+    BackHandler { viewModel.onBackClick(navController) }
 }

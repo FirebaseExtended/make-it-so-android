@@ -1,6 +1,7 @@
 package com.example.makeitso.screens.edit_task
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,6 +16,7 @@ import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
 @Composable
+@ExperimentalMaterialApi
 fun EditTaskScreen(navController: NavHostController, taskId: Long) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
     val task: Task? = viewModel.getTask(taskId) //Listen to ViewModel state instead
@@ -41,6 +43,6 @@ fun EditTaskScreen(navController: NavHostController, taskId: Long) {
         Spacer(modifier = Modifier.fillMaxWidth().padding(16.dp))
 
         val selection = Priority.getByName(task?.priority).title
-        CardSelector(AppText.priority, selection)
+        DropdownMenu(AppText.priority, selection)
     }
 }

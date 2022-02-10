@@ -21,6 +21,8 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onSignUpClick(navController: NavHostController) {
-        navController.navigate(SIGN_UP_SCREEN)
+        navController.navigate(SIGN_UP_SCREEN) {
+            popUpTo(LOGIN_SCREEN) { inclusive = true }
+        }
     }
 }

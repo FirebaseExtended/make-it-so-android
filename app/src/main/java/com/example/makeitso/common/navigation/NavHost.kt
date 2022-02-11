@@ -9,8 +9,10 @@ import androidx.navigation.navArgument
 import com.example.makeitso.screens.edit_task.EditTaskScreen
 import com.example.makeitso.screens.login.LoginScreen
 import com.example.makeitso.screens.sign_up.SignUpScreen
+import com.example.makeitso.screens.splash.SplashScreen
 import com.example.makeitso.screens.tasks.TasksScreen
 
+const val SPLASH_SCREEN = "SplashScreen"
 const val LOGIN_SCREEN = "LoginScreen"
 const val SIGN_UP_SCREEN = "SignUpScreen"
 const val TASKS_SCREEN = "TasksScreen"
@@ -26,6 +28,7 @@ fun NavHost(firstScreen: String) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = firstScreen) {
+        composable(SPLASH_SCREEN) { SplashScreen(navController) }
         composable(LOGIN_SCREEN) { LoginScreen(navController) }
         composable(SIGN_UP_SCREEN) { SignUpScreen(navController) }
         composable(TASKS_SCREEN) { TasksScreen(navController) }

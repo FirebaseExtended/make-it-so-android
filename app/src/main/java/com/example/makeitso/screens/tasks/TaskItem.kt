@@ -50,7 +50,7 @@ fun TaskItem(task: Task, onChecked: (Boolean) -> Unit) {
                 )
             }
 
-            DropdownContextMenu(listOf()) //Add menu options
+            DropdownContextMenu(TaskActionOptions.getOptions())
         }
     }
 }

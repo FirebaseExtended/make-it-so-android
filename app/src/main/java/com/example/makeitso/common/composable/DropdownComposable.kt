@@ -34,7 +34,7 @@ fun DropdownContextMenu(options: List<String>) {
             onDismissRequest = { isExpanded = false }
         ) {
             options.forEach { selectionOption ->
-                DropdownMenuItem(onClick = { isExpanded = false }) { //Callback to ViewModel
+                DropdownMenuItem(onClick = { isExpanded = false }) {
                     Text(text = selectionOption)
                 }
             }
@@ -44,7 +44,12 @@ fun DropdownContextMenu(options: List<String>) {
 
 @Composable
 @ExperimentalMaterialApi
-fun DropdownSelector(@StringRes label: Int, options: List<String>, selection: String) {
+fun DropdownSelector(
+    @StringRes label: Int,
+    options: List<String>,
+    selection: String,
+    onValueChange: (String) -> Unit
+) {
     var isExpanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(selection) }
 
@@ -57,7 +62,7 @@ fun DropdownSelector(@StringRes label: Int, options: List<String>, selection: St
             modifier = Modifier.fillMaxWidth(),
             readOnly = true,
             value = selectedOption,
-            onValueChange = { }, //Callback to ViewModel updating state
+            onValueChange = onValueChange,
             label = { Text(stringResource(label)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(isExpanded) },
             colors = dropdownColors()

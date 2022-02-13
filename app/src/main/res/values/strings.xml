@@ -8,6 +8,7 @@
     <string name="sign_in">Sign in</string>
     <string name="login_details">Enter your login details</string>
     <string name="do_not_have_account">Don\'t have an account? Click to sign up</string>
+    <string name="login_error">Wrong email or password. Please try again.</string>
 
     <!-- SignUpScreen -->
     <string name="name">Name</string>

@@ -37,22 +37,19 @@ fun BasicField(@StringRes text: Int, icon: ImageVector? = null, initialState: St
 }
 
 @Composable
-fun EmailField(initialState: String = "") {
-    val fieldState = remember { mutableStateOf(initialState) }
-
+fun EmailField(initialState: MutableState<String>) {
     OutlinedTextField(
         singleLine = true,
         modifier = Modifier.fieldModifier(),
-        value = fieldState.value,
-        onValueChange = { fieldState.value = it },
+        value = initialState.value,
+        onValueChange = { initialState.value = it },
         placeholder = { Text(stringResource(AppText.email)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
     )
 }
 
 @Composable
-fun PasswordField(initialState: String = "") {
-    var passwordState by remember { mutableStateOf(initialState) }
+fun PasswordField(initialState: MutableState<String>) {
     var isVisible by remember { mutableStateOf(false) }
 
     val icon = if (isVisible) painterResource(AppIcon.ic_visibility_on)
@@ -63,8 +60,8 @@ fun PasswordField(initialState: String = "") {
 
     OutlinedTextField(
         modifier = Modifier.fieldModifier(),
-        value = passwordState,
-        onValueChange = { passwordState = it },
+        value = initialState.value,
+        onValueChange = { initialState.value = it },
         placeholder = { Text(text = stringResource(AppText.password)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Lock") },
         trailingIcon = {

@@ -24,8 +24,8 @@ fun SignUpScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center
     ) {
         BasicField(AppText.name, Icons.Filled.Person)
-        EmailField()
-        PasswordField()
+      //  EmailField()
+      //  PasswordField()
 
         BasicButton(AppText.create_account) {
             viewModel.onSignUpClick(navController)

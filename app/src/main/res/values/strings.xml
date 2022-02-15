@@ -11,10 +11,10 @@
     <string name="login_error">Wrong email or password. Please try again.</string>
 
     <!-- SignUpScreen -->
-    <string name="name">Name</string>
     <string name="create_an_account">Create an account</string>
     <string name="create_account">Create account</string>
     <string name="sign_up_anonymously">Or click here to sign up anonymously</string>
+    <string name="sign_up_error">Something wrong happened. Please try again.</string>
 
     <!-- TasksScreen -->
     <string name="tasks">Tasks</string>

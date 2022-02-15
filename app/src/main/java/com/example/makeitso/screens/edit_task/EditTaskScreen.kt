@@ -22,7 +22,7 @@ import com.example.makeitso.R.string as AppText
 @ExperimentalMaterialApi
 fun EditTaskScreen(navController: NavHostController, taskId: Long) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
-    val task: Task? = viewModel.getTask(taskId) //Listen to ViewModel state instead
+    val task = viewModel.task.value
 
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ActionToolbar(
@@ -38,6 +38,8 @@ fun EditTaskScreen(navController: NavHostController, taskId: Long) {
         CardEditors(task, viewModel)
         CardSelectors(task, viewModel)
     }
+
+    viewModel.initialize(taskId)
 }
 
 @Composable

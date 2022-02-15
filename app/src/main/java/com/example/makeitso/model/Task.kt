@@ -1,9 +1,18 @@
 package com.example.makeitso.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = User::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("userId"),
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -15,5 +24,6 @@ data class Task(
     val url: String,
     val flag: Boolean,
     val completed: Boolean,
+    @ColumnInfo(index = true)
     val userId: Long
 )

@@ -9,6 +9,7 @@ import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
 import com.example.makeitso.model.database.repository.UserRepository
 import com.example.makeitso.model.service.AccountService
+import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.shared_prefs.SharedPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -18,15 +19,16 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val accountService: AccountService,
+    private val crashlyticsService: CrashlyticsService,
     private val userRepository: UserRepository,
     private val sharedPrefs: SharedPrefs
 ) : ViewModel() {
     var uiState = mutableStateOf<LoginUiState>(LoginUiState.InitialState)
         private set
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         uiState.value = LoginUiState.ErrorState
-        //Log non fatal crash to Firebase
+        viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
     fun onSignInClick(navController: NavHostController, email: String, password: String) {

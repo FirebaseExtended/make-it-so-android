@@ -21,8 +21,10 @@ class EditTaskViewModel @Inject constructor(
     private val firestoreService: FirestoreService,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-    var task = mutableStateOf<Task?>(null)
+    var task = mutableStateOf(Task())
         private set
+
+    private val currentState get() = task.value
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
@@ -32,6 +34,18 @@ class EditTaskViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             task.value = firestoreService.getTask(taskId)
         }
+    }
+
+    fun onTitleChange(newValue: String) {
+        task.value = currentState.copy(title = newValue)
+    }
+
+    fun onDescriptionChange(newValue: String) {
+        task.value = currentState.copy(description = newValue)
+    }
+
+    fun onUrlChange(newValue: String) {
+        task.value = currentState.copy(url = newValue)
     }
 
     fun onDoneClick(navController: NavHostController) {

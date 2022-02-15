@@ -23,19 +23,29 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val sharedPrefs: SharedPrefs
 ) : ViewModel() {
-    var uiState = mutableStateOf<LoginUiState>(LoginUiState.InitialState)
+    var uiState = mutableStateOf(LoginUiState())
         private set
 
+    private val currentState get() = uiState.value
+
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        uiState.value = LoginUiState.ErrorState
+        uiState.value = currentState.copy(hasError = true)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
-    fun onSignInClick(navController: NavHostController, email: String, password: String) {
-        uiState.value = LoginUiState.InitialState
+    fun onEmailChange(newValue: String) {
+        uiState.value = currentState.copy(email = newValue)
+    }
+
+    fun onPasswordChange(newValue: String) {
+        uiState.value = currentState.copy(password = newValue)
+    }
+
+    fun onSignInClick(navController: NavHostController) {
+        uiState.value = currentState.copy(hasError = false)
 
         viewModelScope.launch(exceptionHandler) {
-            val user = accountService.authenticate(email, password)
+            val user = accountService.authenticate(currentState.email, currentState.password)
 
             userRepository.insert(user)
             sharedPrefs.saveCurrentUserId(user.id)

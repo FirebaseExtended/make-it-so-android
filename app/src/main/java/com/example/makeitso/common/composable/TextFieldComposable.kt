@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -21,35 +20,30 @@ import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun BasicField(@StringRes text: Int, icon: ImageVector? = null, initialState: String = "") {
-    val fieldState = remember { mutableStateOf(initialState) }
-
+fun BasicField(@StringRes text: Int, initialValue: String, onNewValue: (String) -> Unit) {
     OutlinedTextField(
         singleLine = true,
         modifier = Modifier.fieldModifier(),
-        value = fieldState.value,
-        onValueChange = { fieldState.value = it },
-        placeholder = { Text(stringResource(text)) },
-        leadingIcon = if (icon != null) {
-            { Icon(imageVector = icon, contentDescription = "Name") }
-        } else null
+        value = initialValue.orEmpty(),
+        onValueChange = { onNewValue(it) },
+        placeholder = { Text(stringResource(text)) }
     )
 }
 
 @Composable
-fun EmailField(initialState: MutableState<String>) {
+fun EmailField(initialValue: String, onNewValue: (String) -> Unit) {
     OutlinedTextField(
         singleLine = true,
         modifier = Modifier.fieldModifier(),
-        value = initialState.value,
-        onValueChange = { initialState.value = it },
+        value = initialValue,
+        onValueChange = { onNewValue(it) },
         placeholder = { Text(stringResource(AppText.email)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
     )
 }
 
 @Composable
-fun PasswordField(initialState: MutableState<String>) {
+fun PasswordField(initialValue: String, onNewValue: (String) -> Unit) {
     var isVisible by remember { mutableStateOf(false) }
 
     val icon = if (isVisible) painterResource(AppIcon.ic_visibility_on)
@@ -60,8 +54,8 @@ fun PasswordField(initialState: MutableState<String>) {
 
     OutlinedTextField(
         modifier = Modifier.fieldModifier(),
-        value = initialState.value,
-        onValueChange = { initialState.value = it },
+        value = initialValue,
+        onValueChange = { onNewValue(it) },
         placeholder = { Text(text = stringResource(AppText.password)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Lock") },
         trailingIcon = {

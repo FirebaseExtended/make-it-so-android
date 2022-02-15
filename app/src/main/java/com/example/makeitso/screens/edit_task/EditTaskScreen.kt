@@ -3,7 +3,7 @@ package com.example.makeitso.screens.edit_task
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -32,45 +32,47 @@ fun EditTaskScreen(navController: NavHostController, taskId: Long) {
         )
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
-        BasicFields(task)
+        BasicFields(task, viewModel)
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
         CardEditors(task, viewModel)
         CardSelectors(task, viewModel)
     }
 
-    viewModel.initialize(taskId)
+    LaunchedEffect(Unit) {
+        viewModel.initialize(taskId)
+    }
 }
 
 @Composable
-private fun BasicFields(task: Task?) {
-    BasicField(AppText.title, initialState = task?.title.orEmpty())
-    BasicField(AppText.description, initialState = task?.description.orEmpty())
-    BasicField(AppText.url, initialState = task?.url.orEmpty())
+private fun BasicFields(task: Task, viewModel: EditTaskViewModel) {
+    BasicField(AppText.title, task.title, viewModel::onTitleChange)
+    BasicField(AppText.description, task.description, viewModel::onDescriptionChange)
+    BasicField(AppText.url, task.url, viewModel::onUrlChange)
 }
 
 @Composable
-private fun CardEditors(task: Task?, viewModel: EditTaskViewModel) {
+private fun CardEditors(task: Task, viewModel: EditTaskViewModel) {
     val activity = LocalContext.current as AppCompatActivity
 
-    CardEditor(AppText.date, AppIcon.ic_calendar, task?.dueDate.orEmpty()) {
+    CardEditor(AppText.date, AppIcon.ic_calendar, task.dueDate) {
         showDatePicker(activity, viewModel)
     }
 
-    CardEditor(AppText.time, AppIcon.ic_clock, task?.dueTime.orEmpty()) {
+    CardEditor(AppText.time, AppIcon.ic_clock, task.dueTime) {
         showTimePicker(activity, viewModel)
     }
 }
 
 @Composable
 @ExperimentalMaterialApi
-private fun CardSelectors(task: Task?, viewModel: EditTaskViewModel) {
-    val prioritySelection = Priority.getByName(task?.priority).name
+private fun CardSelectors(task: Task, viewModel: EditTaskViewModel) {
+    val prioritySelection = Priority.getByName(task.priority).name
     CardSelector(AppText.priority, Priority.getOptions(), prioritySelection) { newValue ->
         viewModel.onPriorityChange(newValue)
     }
 
-    val flagSelection = EditFlagOptions.getByCheckedState(task?.flag).name
+    val flagSelection = EditFlagOptions.getByCheckedState(task.flag).name
     CardSelector(AppText.flag, EditFlagOptions.getOptions(), flagSelection) { newValue ->
         viewModel.onFlagToggle(newValue)
     }

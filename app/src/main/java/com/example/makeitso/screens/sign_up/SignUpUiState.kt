@@ -1,6 +1,7 @@
 package com.example.makeitso.screens.sign_up
 
-sealed class SignUpUiState {
-    object InitialState: SignUpUiState()
-    object ErrorState : SignUpUiState()
-}
+data class SignUpUiState(
+    val email: String = "",
+    val password: String = "",
+    val hasError: Boolean = false
+)

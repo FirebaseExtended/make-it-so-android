@@ -2,8 +2,6 @@ package com.example.makeitso.screens.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,9 +15,6 @@ fun LoginScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<LoginViewModel>()
     val uiState = viewModel.uiState.value
 
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-
     BasicToolbar(AppText.login_details)
 
     Column(
@@ -27,18 +22,18 @@ fun LoginScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EmailField(email)
-        PasswordField(password)
+        EmailField(uiState.email, viewModel::onEmailChange)
+        PasswordField(uiState.password, viewModel::onPasswordChange)
 
         BasicButton(AppText.sign_in) {
-            viewModel.onSignInClick(navController, email.value, password.value)
+            viewModel.onSignInClick(navController)
         }
 
         BasicTextButton(AppText.do_not_have_account) {
             viewModel.onSignUpClick(navController)
         }
 
-        if (uiState === LoginUiState.ErrorState) {
+        if (uiState.hasError) {
             BasicText(text = AppText.login_error, color = Color.Red)
         }
     }

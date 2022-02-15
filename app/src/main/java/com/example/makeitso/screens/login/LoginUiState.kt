@@ -1,6 +1,7 @@
 package com.example.makeitso.screens.login
 
-sealed class LoginUiState {
-    object InitialState: LoginUiState()
-    object ErrorState : LoginUiState()
-}
+data class LoginUiState(
+    val email: String = "",
+    val password: String = "",
+    val hasError: Boolean = false
+)

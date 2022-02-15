@@ -23,25 +23,29 @@ class SignUpViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val sharedPrefs: SharedPrefs
 ) : ViewModel() {
-    var uiState = mutableStateOf<SignUpUiState>(SignUpUiState.InitialState)
+    var uiState = mutableStateOf(SignUpUiState())
         private set
 
+    private val currentState get() = uiState.value
+
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        uiState.value = SignUpUiState.ErrorState
+        uiState.value = currentState.copy(hasError = true)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
-    fun onBackClick(navController: NavHostController) {
-        navController.navigate(LOGIN_SCREEN) {
-            popUpTo(SIGN_UP_SCREEN) { inclusive = true }
-        }
+    fun onEmailChange(newValue: String) {
+        uiState.value = currentState.copy(email = newValue)
     }
 
-    fun onSignUpClick(navController: NavHostController, email: String, password: String) {
-        uiState.value = SignUpUiState.InitialState
+    fun onPasswordChange(newValue: String) {
+        uiState.value = currentState.copy(password = newValue)
+    }
+
+    fun onSignUpClick(navController: NavHostController) {
+        uiState.value = currentState.copy(hasError = false)
 
         viewModelScope.launch(exceptionHandler) {
-            val user = accountService.createAccount(email, password)
+            val user = accountService.createAccount(currentState.email, currentState.password)
 
             userRepository.insert(user)
             sharedPrefs.saveCurrentUserId(user.id)
@@ -53,7 +57,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun onAnonymousSignUpClick(navController: NavHostController) {
-        uiState.value = SignUpUiState.InitialState
+        uiState.value = currentState.copy(hasError = false)
 
         viewModelScope.launch(exceptionHandler) {
             val user = accountService.createAnonymousAccount()
@@ -64,6 +68,12 @@ class SignUpViewModel @Inject constructor(
             navController.navigate(TASKS_SCREEN) {
                 popUpTo(SIGN_UP_SCREEN) { inclusive = true }
             }
+        }
+    }
+
+    fun onBackClick(navController: NavHostController) {
+        navController.navigate(LOGIN_SCREEN) {
+            popUpTo(SIGN_UP_SCREEN) { inclusive = true }
         }
     }
 }

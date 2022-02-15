@@ -16,14 +16,14 @@ import androidx.room.PrimaryKey
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val title: String,
-    val priority: String,
-    val dueDate: String,
-    val dueTime: String,
-    val description: String,
-    val url: String,
-    val flag: Boolean,
-    val completed: Boolean,
+    val title: String = "",
+    val priority: String = "",
+    val dueDate: String = "",
+    val dueTime: String = "",
+    val description: String = "",
+    val url: String = "",
+    val flag: Boolean = false,
+    val completed: Boolean = false,
     @ColumnInfo(index = true)
-    val userId: Long
+    val userId: Long = 0
 )

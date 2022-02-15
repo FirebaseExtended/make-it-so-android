@@ -3,8 +3,6 @@ package com.example.makeitso.screens.sign_up
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,9 +16,6 @@ fun SignUpScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<SignUpViewModel>()
     val uiState = viewModel.uiState.value
 
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-
     BasicToolbar(AppText.create_an_account) {
         viewModel.onBackClick(navController)
     }
@@ -30,18 +25,18 @@ fun SignUpScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EmailField(email)
-        PasswordField(password)
+        EmailField(uiState.email, viewModel::onEmailChange)
+        PasswordField(uiState.password, viewModel::onPasswordChange)
 
         BasicButton(AppText.create_account) {
-            viewModel.onSignUpClick(navController, email.value, password.value)
+            viewModel.onSignUpClick(navController)
         }
 
         BasicTextButton(AppText.sign_up_anonymously) {
             viewModel.onAnonymousSignUpClick(navController)
         }
 
-        if (uiState === SignUpUiState.ErrorState) {
+        if (uiState.hasError) {
             BasicText(text = AppText.sign_up_error, color = Color.Red)
         }
     }

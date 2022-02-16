@@ -8,7 +8,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
     override suspend fun getTask(taskId: Long): Task {
         return Task(
             title = "Example Title",
-            priority = "Example Medium",
+            priority = "Medium",
             dueDate = "Mon, 7 July 2022",
             dueTime = "14:23",
             description = "Example Description",
@@ -21,25 +21,18 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
         //If something goes wrong, throw custom exception
     }
 
-    override suspend fun saveTask(task: Task, callback: (Task) -> Unit) {
+    override suspend fun saveTask(task: Task) {
         //Save Task on Firestore
         //If something goes wrong, throw custom exception
-        callback(task)
     }
 
-    override suspend fun updateFlag(
-        taskId: Long,
-        hasFlag: Boolean,
-        callback: (Long, Boolean) -> Unit
-    ) {
+    override suspend fun updateFlag(taskId: Long, hasFlag: Boolean) {
         //Update Task with new flag value on Firestore
         //If something goes wrong, throw custom exception
-        callback(taskId, hasFlag)
     }
 
-    override suspend fun deleteTask(taskId: Long, callback: (Long) -> Unit) {
+    override suspend fun deleteTask(taskId: Long) {
         //Delete Task on Firestore
         //If something goes wrong, throw custom exception
-        callback(taskId)
     }
 }

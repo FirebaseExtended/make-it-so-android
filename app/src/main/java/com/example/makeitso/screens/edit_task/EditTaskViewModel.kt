@@ -27,6 +27,7 @@ class EditTaskViewModel @Inject constructor(
     private val currentState get() = task.value
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        //Create error state
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
@@ -48,24 +49,32 @@ class EditTaskViewModel @Inject constructor(
         task.value = currentState.copy(url = newValue)
     }
 
-    fun onDoneClick(navController: NavHostController) {
-        //taskRepository.insert(task)
-        navController.popBackStack()
-    }
-
-    fun onFlagToggle(newValue: String)  = Unit
-
-    fun onPriorityChange(newValue: String) = Unit
-
     fun onDateChange(newValue: Long) {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC))
         calendar.timeInMillis = newValue
         val simpleFormat = SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH)
-        simpleFormat.format(calendar.time)
+        task.value = currentState.copy(dueDate = simpleFormat.format(calendar.time))
     }
 
     fun onTimeChange(hour: Int, minute: Int) {
-        val newValue = "$hour:$minute"
+        task.value = currentState.copy(dueTime = "$hour:$minute")
+    }
+
+    fun onFlagToggle(newValue: String)  {
+        task.value = currentState.copy(flag = EditFlagOptions.getBooleanValue(newValue))
+    }
+
+    fun onPriorityChange(newValue: String) {
+        task.value = currentState.copy(priority = newValue)
+    }
+
+    fun onDoneClick(navController: NavHostController) {
+        viewModelScope.launch(exceptionHandler) {
+            firestoreService.saveTask(currentState)
+
+            taskRepository.insert(currentState)
+            navController.popBackStack()
+        }
     }
 
     companion object {

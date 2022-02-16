@@ -57,13 +57,13 @@ fun CardSelector(
     @StringRes label: Int,
     options: List<String>,
     selection: String,
-    onValueChange: (String) -> Unit
+    onNewValue: (String) -> Unit
 ) {
     Card(
         backgroundColor = Color.White,
         modifier = Modifier.cardPadding()
     ) {
-        DropdownSelector(label, options, selection, onValueChange)
+        DropdownSelector(label, options, selection, onNewValue)
     }
 }
 

@@ -10,6 +10,10 @@ enum class EditFlagOptions {
             return if (hasFlag) On else Off
         }
 
+        fun getBooleanValue(flagOption: String): Boolean {
+            return flagOption == On.name
+        }
+
         fun getOptions(): List<String> {
             val options = mutableListOf<String>()
             values().forEach { flagOption -> options.add(flagOption.name) }

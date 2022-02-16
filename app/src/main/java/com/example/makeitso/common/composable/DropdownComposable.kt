@@ -48,10 +48,9 @@ fun DropdownSelector(
     @StringRes label: Int,
     options: List<String>,
     selection: String,
-    onValueChange: (String) -> Unit
+    onNewValue: (String) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf(selection) }
 
     ExposedDropdownMenuBox(
         expanded = isExpanded,
@@ -61,8 +60,8 @@ fun DropdownSelector(
         TextField(
             modifier = Modifier.fillMaxWidth(),
             readOnly = true,
-            value = selectedOption,
-            onValueChange = onValueChange,
+            value = selection,
+            onValueChange = { },
             label = { Text(stringResource(label)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(isExpanded) },
             colors = dropdownColors()
@@ -75,7 +74,7 @@ fun DropdownSelector(
             options.forEach { selectionOption ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedOption = selectionOption
+                        onNewValue(selectionOption)
                         isExpanded = false
                     }
                 ) { Text(text = selectionOption) }

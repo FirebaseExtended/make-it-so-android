@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,7 @@ fun TasksScreen(navController: NavHostController) {
 
         Scaffold(floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.onEditTaskClick(navController) },
+                onClick = { viewModel.onAddTaskClick(navController) },
                 backgroundColor = BrightOrange,
                 contentColor = Color.White,
                 modifier = Modifier.padding(16.dp)
@@ -50,4 +51,6 @@ fun TasksScreen(navController: NavHostController) {
 //            }
         }
     }
+
+    LaunchedEffect(Unit) { viewModel.initialize() }
 }

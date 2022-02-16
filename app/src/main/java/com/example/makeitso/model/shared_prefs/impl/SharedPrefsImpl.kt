@@ -13,7 +13,7 @@ class SharedPrefsImpl @Inject constructor(@ApplicationContext context : Context)
         prefs.edit().putLong(USER_ID, userId).apply()
     }
 
-    override fun deleteCurrentUser(userId: String) {
+    override fun deleteCurrentUser() {
         prefs.edit().remove(USER_ID).apply()
     }
 

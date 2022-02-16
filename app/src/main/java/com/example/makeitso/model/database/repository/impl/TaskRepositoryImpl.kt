@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao) : TaskRepository {
-    override fun select(id: Long): Flow<Task> {
+    override suspend fun select(id: Long): Flow<Task> {
         return taskDao.select(id)
     }
 
-    override fun selectAllForUser(user: User): Flow<List<Task>> {
-        return taskDao.selectAllForUser(user.id)
+    override suspend fun selectAllForUser(userId: Long): Flow<List<Task>> {
+        return taskDao.selectAllForUser(userId)
     }
 
     override suspend fun insert(task: Task) {

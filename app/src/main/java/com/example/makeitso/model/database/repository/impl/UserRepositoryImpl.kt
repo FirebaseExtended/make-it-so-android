@@ -11,7 +11,7 @@ class UserRepositoryImpl @Inject constructor(private val userDao: UserDao) : Use
         Dispatchers.IO.apply { userDao.insert(user) }
     }
 
-    override suspend fun delete(user: User) {
-        Dispatchers.IO.apply { userDao.delete(user.id) }
+    override suspend fun delete(userId: Long) {
+        Dispatchers.IO.apply { userDao.delete(userId) }
     }
 }

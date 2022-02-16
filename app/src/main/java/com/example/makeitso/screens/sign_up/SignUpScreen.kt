@@ -37,7 +37,7 @@ fun SignUpScreen(navController: NavHostController) {
         }
 
         if (uiState.hasError) {
-            BasicText(text = AppText.sign_up_error, color = Color.Red)
+            BasicText(text = AppText.generic_error, color = Color.Red)
         }
     }
 

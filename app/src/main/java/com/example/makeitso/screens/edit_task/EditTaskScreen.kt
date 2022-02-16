@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,9 +24,12 @@ import com.example.makeitso.R.string as AppText
 @ExperimentalMaterialApi
 fun EditTaskScreen(navController: NavHostController, taskId: Long) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
-    val task = viewModel.task.value
+    val uiState = viewModel.uiState.value
 
-    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+    Column(
+        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         ActionToolbar(
             title = AppText.edit_task,
             endActionIcon = AppIcon.ic_check,
@@ -32,11 +37,17 @@ fun EditTaskScreen(navController: NavHostController, taskId: Long) {
         )
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
-        BasicFields(task, viewModel)
+        BasicFields(uiState.task, viewModel)
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
-        CardEditors(task, viewModel)
-        CardSelectors(task, viewModel)
+        CardEditors(uiState.task, viewModel)
+        CardSelectors(uiState.task, viewModel)
+
+        Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
+
+        if (uiState.hasError) {
+            BasicText(text = AppText.generic_error, color = Color.Red)
+        }
     }
 
     LaunchedEffect(Unit) {

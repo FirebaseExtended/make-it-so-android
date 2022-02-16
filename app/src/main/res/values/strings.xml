@@ -3,6 +3,7 @@
     <string name="app_name">Make It So</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="generic_error">Something wrong happened. Please try again.</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
@@ -14,7 +15,6 @@
     <string name="create_an_account">Create an account</string>
     <string name="create_account">Create account</string>
     <string name="sign_up_anonymously">Or click here to sign up anonymously</string>
-    <string name="sign_up_error">Something wrong happened. Please try again.</string>
 
     <!-- TasksScreen -->
     <string name="tasks">Tasks</string>

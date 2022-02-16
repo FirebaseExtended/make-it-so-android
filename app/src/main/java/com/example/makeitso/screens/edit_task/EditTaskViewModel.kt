@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.makeitso.model.Task
+import com.example.makeitso.common.navigation.TASK_DEFAULT_ID
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
@@ -21,60 +21,71 @@ class EditTaskViewModel @Inject constructor(
     private val firestoreService: FirestoreService,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-    var task = mutableStateOf(Task())
+    var uiState = mutableStateOf(EditTaskUiState())
         private set
 
-    private val currentState get() = task.value
+    private val currentState get() = uiState.value
+    private val task get() = currentState.task
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        //Create error state
+        uiState.value = currentState.copy(hasError = true)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
     fun initialize(taskId: Long) {
         viewModelScope.launch(exceptionHandler) {
-            task.value = firestoreService.getTask(taskId)
+            if (taskId != TASK_DEFAULT_ID) {
+                uiState.value = EditTaskUiState(firestoreService.getTask(taskId))
+            }
         }
     }
 
     fun onTitleChange(newValue: String) {
-        task.value = currentState.copy(title = newValue)
+        uiState.value = EditTaskUiState(task.copy(title = newValue))
     }
 
     fun onDescriptionChange(newValue: String) {
-        task.value = currentState.copy(description = newValue)
+        uiState.value = EditTaskUiState(task.copy(description = newValue))
     }
 
     fun onUrlChange(newValue: String) {
-        task.value = currentState.copy(url = newValue)
+        uiState.value = EditTaskUiState(task.copy(url = newValue))
     }
 
     fun onDateChange(newValue: Long) {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC))
         calendar.timeInMillis = newValue
-        val simpleFormat = SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH)
-        task.value = currentState.copy(dueDate = simpleFormat.format(calendar.time))
+        val newDueDate = SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(calendar.time)
+        uiState.value = EditTaskUiState(task.copy(dueDate = newDueDate))
     }
 
     fun onTimeChange(hour: Int, minute: Int) {
-        task.value = currentState.copy(dueTime = "$hour:$minute")
+        val newDueTime = "${hour.toClockPattern()}:${minute.toClockPattern()}"
+        uiState.value = EditTaskUiState(task.copy(dueTime = newDueTime))
     }
 
     fun onFlagToggle(newValue: String)  {
-        task.value = currentState.copy(flag = EditFlagOptions.getBooleanValue(newValue))
+        val newFlagOption = EditFlagOptions.getBooleanValue(newValue)
+        uiState.value = EditTaskUiState(task.copy(flag = newFlagOption))
     }
 
     fun onPriorityChange(newValue: String) {
-        task.value = currentState.copy(priority = newValue)
+        uiState.value = EditTaskUiState(task.copy(priority = newValue))
     }
 
     fun onDoneClick(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
-            firestoreService.saveTask(currentState)
+            uiState.value = currentState.copy(hasError = false)
 
-            taskRepository.insert(currentState)
+            firestoreService.saveTask(task)
+
+            taskRepository.insert(task)
             navController.popBackStack()
         }
+    }
+
+    private fun Int.toClockPattern(): String {
+        return if (this < 10) "0$this" else "$this"
     }
 
     companion object {

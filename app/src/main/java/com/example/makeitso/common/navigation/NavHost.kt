@@ -17,10 +17,10 @@ const val LOGIN_SCREEN = "LoginScreen"
 const val SIGN_UP_SCREEN = "SignUpScreen"
 const val TASKS_SCREEN = "TasksScreen"
 const val EDIT_TASK_SCREEN = "EditTaskScreen"
+const val TASK_DEFAULT_ID = -1L
 
 private const val TASK_ID = "taskId"
 private const val TASK_ID_ARG = "?$TASK_ID={$TASK_ID}"
-private const val TASK_DEFAULT_ID = -1L
 
 @Composable
 @ExperimentalMaterialApi

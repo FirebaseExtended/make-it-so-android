@@ -1,14 +1,16 @@
 package com.example.makeitso.screens.tasks
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.navigation.EDIT_TASK_SCREEN
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
+import com.example.makeitso.model.Task
 import com.example.makeitso.model.database.repository.TaskRepository
-import com.example.makeitso.model.database.repository.UserRepository
 import com.example.makeitso.model.service.CrashlyticsService
+import com.example.makeitso.model.service.FirestoreService
 import com.example.makeitso.model.shared_prefs.SharedPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -18,45 +20,66 @@ import javax.inject.Inject
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val crashlyticsService: CrashlyticsService,
+    private val firestoreService: FirestoreService,
     private val taskRepository: TaskRepository,
-    private val userRepository: UserRepository,
     private val sharedPrefs: SharedPrefs
 ) : ViewModel() {
+    var uiState = mutableStateOf(TasksUiState())
+        private set
+
+    private val currentState get() = uiState.value
+
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        uiState.value = currentState.copy(hasError = true)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
     fun initialize() {
         viewModelScope.launch(exceptionHandler) {
-            taskRepository.selectAllForUser(sharedPrefs.getCurrentUserId())
-            //Should be Firestore
-            //Should remove unnecessary methods from repository
+            val tasks = firestoreService.getTasksForUser(sharedPrefs.getCurrentUserId())
+            uiState.value = TasksUiState(tasks.toMutableList())
         }
-    }
-
-    fun onTaskActionClick(action: String, taskId: String) {
-        //Decide which action based on enum
     }
 
     fun onAddTaskClick(navController: NavHostController) {
         navController.navigate(EDIT_TASK_SCREEN)
     }
 
-    private fun onEditTaskClick(navController: NavHostController, taskId: String) {
-        navController.navigate(EDIT_TASK_SCREEN) //pass along the task id
+    fun onTaskCheckChange(task: Task, isComplete: Boolean) {
+        viewModelScope.launch(exceptionHandler) {
+            firestoreService.updateCompletion(task.id, isComplete)
+            taskRepository.updateCompletion(task.id, isComplete)
+        }
     }
 
-    private fun onDeleteTaskClick() {
-
+    fun onTaskActionClick(task: Task, action: String, navController: NavHostController) {
+        when (TaskActionOption.getByTitle(action)) {
+            TaskActionOption.EditTask -> onEditTaskClick(navController, task)
+            TaskActionOption.ToggleFlag -> onFlagTaskClick(task)
+            TaskActionOption.DeleteTask -> onDeleteTaskClick(task)
+        }
     }
 
-    private fun onFlagTaskClick() {
+    private fun onEditTaskClick(navController: NavHostController, task: Task) {
+        navController.navigate("$EDIT_TASK_SCREEN/${task.id}")
+    }
 
+    private fun onFlagTaskClick(task: Task) {
+        viewModelScope.launch(exceptionHandler) {
+            firestoreService.updateFlag(task.id, !task.flag)
+            taskRepository.updateFlag(task.id, !task.flag)
+        }
+    }
+
+    private fun onDeleteTaskClick(task: Task) {
+        viewModelScope.launch(exceptionHandler) {
+            firestoreService.deleteTask(task.id)
+            taskRepository.delete(task.id)
+        }
     }
 
     fun onSignOutClick(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
-            userRepository.delete(sharedPrefs.getCurrentUserId())
             sharedPrefs.deleteCurrentUser()
 
             navController.navigate(LOGIN_SCREEN) {

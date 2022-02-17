@@ -1,6 +1,8 @@
 package com.example.makeitso.screens.tasks
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -20,15 +22,20 @@ import com.example.makeitso.theme.BrightOrange
 @ExperimentalMaterialApi
 fun TasksScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<TasksViewModel>()
+    val uiState = viewModel.uiState.value
 
-    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight()) {
         ActionToolbar(
             title = AppText.tasks,
             endActionIcon = AppIcon.ic_exit,
             endAction = { viewModel.onSignOutClick(navController) }
         )
 
-        Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(8.dp))
 
         Scaffold(floatingActionButton = {
             FloatingActionButton(
@@ -40,15 +47,17 @@ fun TasksScreen(navController: NavHostController) {
                 Icon(Icons.Filled.Add, "Add")
             }
         }) {
-//            LazyColumn {
-//                items(state.tasks) { task ->
-//                    TaskItem(
-//                        task = task,
-//                        onChecked = { /* Call ViewModel */ },
-//                        onEdit = { /* Call ViewModel */ }
-//                    )
-//                }
-//            }
+            LazyColumn {
+                items(uiState.tasks) { taskItem ->
+                    TaskItem(
+                        task = taskItem,
+                        onCheckChange = viewModel::onTaskCheckChange,
+                        onActionClick = { task, action ->
+                            viewModel.onTaskActionClick(task, action, navController)
+                        }
+                    )
+                }
+            }
         }
     }
 

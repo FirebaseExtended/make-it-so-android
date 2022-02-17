@@ -65,7 +65,7 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onFlagToggle(newValue: String)  {
-        val newFlagOption = EditFlagOptions.getBooleanValue(newValue)
+        val newFlagOption = EditFlagOption.getBooleanValue(newValue)
         uiState.value = EditTaskUiState(task.copy(flag = newFlagOption))
     }
 

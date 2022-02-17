@@ -83,8 +83,8 @@ private fun CardSelectors(task: Task, viewModel: EditTaskViewModel) {
         viewModel.onPriorityChange(newValue)
     }
 
-    val flagSelection = EditFlagOptions.getByCheckedState(task.flag).name
-    CardSelector(AppText.flag, EditFlagOptions.getOptions(), flagSelection) { newValue ->
+    val flagSelection = EditFlagOption.getByCheckedState(task.flag).name
+    CardSelector(AppText.flag, EditFlagOption.getOptions(), flagSelection) { newValue ->
         viewModel.onFlagToggle(newValue)
     }
 }

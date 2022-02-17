@@ -10,11 +10,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.makeitso.model.Task
 import com.example.makeitso.theme.BrightOrange
 
 @Composable
 @ExperimentalMaterialApi
-fun DropdownContextMenu(options: List<String>) {
+fun DropdownContextMenu(
+    task: Task,
+    options: List<String>,
+    onActionClick: (Task, String) -> Unit
+) {
     var isExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
@@ -34,7 +39,12 @@ fun DropdownContextMenu(options: List<String>) {
             onDismissRequest = { isExpanded = false }
         ) {
             options.forEach { selectionOption ->
-                DropdownMenuItem(onClick = { isExpanded = false }) {
+                DropdownMenuItem(
+                    onClick = {
+                        isExpanded = false
+                        onActionClick(task, selectionOption)
+                    }
+                ) {
                     Text(text = selectionOption)
                 }
             }

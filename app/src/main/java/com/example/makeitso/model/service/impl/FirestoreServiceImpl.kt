@@ -5,19 +5,28 @@ import com.example.makeitso.model.service.FirestoreService
 import javax.inject.Inject
 
 class FirestoreServiceImpl @Inject constructor() : FirestoreService {
+
+    private val exampleTask = Task(
+        title = "Example Title",
+        priority = "Medium",
+        dueDate = "Mon, 7 July 2022",
+        dueTime = "14:23",
+        description = "Example Description",
+        url = "",
+        flag = true,
+        completed = false,
+        userId = 0
+    )
+
     override suspend fun getTask(taskId: Long): Task {
-        return Task(
-            title = "Example Title",
-            priority = "Medium",
-            dueDate = "Mon, 7 July 2022",
-            dueTime = "14:23",
-            description = "Example Description",
-            url = "",
-            flag = true,
-            completed = false,
-            userId = 0
-        )
+        return exampleTask
         //Retrieve Task from Firestore
+        //If something goes wrong, throw custom exception
+    }
+
+    override suspend fun getTasksForUser(userId: Long): List<Task> {
+        return listOf(exampleTask, exampleTask.copy(id = 1, title = "Example Title 2"))
+        //Retrieve Tasks from specific user in Firestore
         //If something goes wrong, throw custom exception
     }
 
@@ -28,6 +37,11 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
 
     override suspend fun updateFlag(taskId: Long, hasFlag: Boolean) {
         //Update Task with new flag value on Firestore
+        //If something goes wrong, throw custom exception
+    }
+
+    override suspend fun updateCompletion(taskId: Long, isComplete: Boolean) {
+        //Update Task with new completion value on Firestore
         //If something goes wrong, throw custom exception
     }
 

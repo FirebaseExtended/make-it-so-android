@@ -1,11 +1,11 @@
 package com.example.makeitso.screens.edit_task
 
-enum class EditFlagOptions {
+enum class EditFlagOption {
     On,
     Off;
 
     companion object {
-        fun getByCheckedState(checkedState: Boolean?): EditFlagOptions {
+        fun getByCheckedState(checkedState: Boolean?): EditFlagOption {
             val hasFlag = checkedState ?: false
             return if (hasFlag) On else Off
         }

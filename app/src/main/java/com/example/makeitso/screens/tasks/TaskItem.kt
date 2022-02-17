@@ -20,7 +20,11 @@ import java.lang.StringBuilder
 
 @Composable
 @ExperimentalMaterialApi
-fun TaskItem(task: Task, onChecked: (Boolean) -> Unit) {
+fun TaskItem(
+    task: Task,
+    onCheckChange: (Task, Boolean) -> Unit,
+    onActionClick: (Task, String) -> Unit
+) {
     Card(
         backgroundColor = Color.White,
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp),
@@ -31,7 +35,7 @@ fun TaskItem(task: Task, onChecked: (Boolean) -> Unit) {
         ) {
             Checkbox(
                 checked = task.completed,
-                onCheckedChange = { onChecked(it) },
+                onCheckedChange = { onCheckChange(task, it) },
                 modifier = Modifier.padding(8.dp, 0.dp)
             )
 
@@ -50,7 +54,7 @@ fun TaskItem(task: Task, onChecked: (Boolean) -> Unit) {
                 )
             }
 
-            DropdownContextMenu(TaskActionOptions.getOptions())
+            DropdownContextMenu(task, TaskActionOption.getOptions(), onActionClick)
         }
     }
 }

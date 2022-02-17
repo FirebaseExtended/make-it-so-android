@@ -10,8 +10,4 @@ class UserRepositoryImpl @Inject constructor(private val userDao: UserDao) : Use
     override suspend fun insert(user: User) {
         Dispatchers.IO.apply { userDao.insert(user) }
     }
-
-    override suspend fun delete(userId: Long) {
-        Dispatchers.IO.apply { userDao.delete(userId) }
-    }
 }

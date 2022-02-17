@@ -45,10 +45,17 @@ class TasksViewModel @Inject constructor(
         navController.navigate(EDIT_TASK_SCREEN)
     }
 
-    fun onTaskCheckChange(task: Task, isComplete: Boolean) {
+    fun onTaskCheckChange(task: Task) {
         viewModelScope.launch(exceptionHandler) {
-            firestoreService.updateCompletion(task.id, isComplete)
-            taskRepository.updateCompletion(task.id, isComplete)
+            firestoreService.updateCompletion(task.id, !task.completed)
+            taskRepository.updateCompletion(task.id, !task.completed)
+
+            val updatedTasks = currentState.tasks
+                .filter { it.id != task.id }
+                .toMutableList()
+                .apply { add(task.copy(completed = !task.completed)) }
+
+            uiState.value = currentState.copy(tasks = updatedTasks)
         }
     }
 
@@ -68,6 +75,13 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             firestoreService.updateFlag(task.id, !task.flag)
             taskRepository.updateFlag(task.id, !task.flag)
+
+            val updatedTasks = currentState.tasks
+                .filter { it.id != task.id }
+                .toMutableList()
+                .apply { add(task.copy(flag = !task.flag)) }
+
+            uiState.value = currentState.copy(tasks = updatedTasks)
         }
     }
 
@@ -75,6 +89,9 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             firestoreService.deleteTask(task.id)
             taskRepository.delete(task.id)
+
+            val updatedTasks = currentState.tasks.filter { it.id != task.id }
+            uiState.value = currentState.copy(tasks = updatedTasks)
         }
     }
 

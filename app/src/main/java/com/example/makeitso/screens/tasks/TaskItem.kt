@@ -22,7 +22,7 @@ import java.lang.StringBuilder
 @ExperimentalMaterialApi
 fun TaskItem(
     task: Task,
-    onCheckChange: (Task, Boolean) -> Unit,
+    onCheckChange: (Task) -> Unit,
     onActionClick: (Task, String) -> Unit
 ) {
     Card(
@@ -35,7 +35,7 @@ fun TaskItem(
         ) {
             Checkbox(
                 checked = task.completed,
-                onCheckedChange = { onCheckChange(task, it) },
+                onCheckedChange = { onCheckChange(task) },
                 modifier = Modifier.padding(8.dp, 0.dp)
             )
 

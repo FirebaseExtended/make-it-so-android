@@ -1,9 +1,11 @@
 package com.example.makeitso.screens.tasks
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.navigation.EDIT_TASK_SCREEN
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
@@ -15,6 +17,7 @@ import com.example.makeitso.model.service.FirestoreService
 import com.example.makeitso.model.shared_prefs.SharedPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,20 +28,19 @@ class TasksViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val sharedPrefs: SharedPrefs
 ) : ViewModel() {
-    var uiState = mutableStateOf(TasksUiState())
+    var tasks = mutableStateOf<List<Task>>(emptyList())
         private set
 
-    private val currentState get() = uiState.value
+    val snackbarChannel = Channel<@StringRes Int>(Channel.CONFLATED)
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        uiState.value = currentState.copy(hasError = true)
+        snackbarChannel.trySend(AppText.generic_error)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
     fun initialize() {
         viewModelScope.launch(exceptionHandler) {
-            val tasks = firestoreService.getTasksForUser(sharedPrefs.getCurrentUserId())
-            uiState.value = TasksUiState(tasks)
+            tasks.value = firestoreService.getTasksForUser(sharedPrefs.getCurrentUserId())
         }
     }
 
@@ -51,12 +53,10 @@ class TasksViewModel @Inject constructor(
             firestoreService.updateCompletion(task.id, !task.completed)
             taskRepository.updateCompletion(task.id, !task.completed)
 
-            val updatedTasks = currentState.tasks
+            tasks.value = tasks.value
                 .filter { it.id != task.id }
                 .toMutableList()
                 .apply { add(task.copy(completed = !task.completed)) }
-
-            uiState.value = currentState.copy(tasks = updatedTasks)
         }
     }
 
@@ -77,12 +77,10 @@ class TasksViewModel @Inject constructor(
             firestoreService.updateFlag(task.id, !task.flag)
             taskRepository.updateFlag(task.id, !task.flag)
 
-            val updatedTasks = currentState.tasks
+            tasks.value = tasks.value
                 .filter { it.id != task.id }
                 .toMutableList()
                 .apply { add(task.copy(flag = !task.flag)) }
-
-            uiState.value = currentState.copy(tasks = updatedTasks)
         }
     }
 
@@ -91,8 +89,7 @@ class TasksViewModel @Inject constructor(
             firestoreService.deleteTask(task.id)
             taskRepository.delete(task.id)
 
-            val updatedTasks = currentState.tasks.filter { it.id != task.id }
-            uiState.value = currentState.copy(tasks = updatedTasks)
+            tasks.value = tasks.value.filter { it.id != task.id }
         }
     }
 

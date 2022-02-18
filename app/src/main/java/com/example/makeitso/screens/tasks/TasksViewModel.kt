@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import com.example.makeitso.common.navigation.EDIT_TASK_SCREEN
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
+import com.example.makeitso.common.navigation.TASK_ID
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.CrashlyticsService
@@ -37,7 +38,7 @@ class TasksViewModel @Inject constructor(
     fun initialize() {
         viewModelScope.launch(exceptionHandler) {
             val tasks = firestoreService.getTasksForUser(sharedPrefs.getCurrentUserId())
-            uiState.value = TasksUiState(tasks.toMutableList())
+            uiState.value = TasksUiState(tasks)
         }
     }
 
@@ -68,7 +69,7 @@ class TasksViewModel @Inject constructor(
     }
 
     private fun onEditTaskClick(navController: NavHostController, task: Task) {
-        navController.navigate("$EDIT_TASK_SCREEN/${task.id}")
+        navController.navigate("$EDIT_TASK_SCREEN?$TASK_ID={${task.id}}")
     }
 
     private fun onFlagTaskClick(task: Task) {

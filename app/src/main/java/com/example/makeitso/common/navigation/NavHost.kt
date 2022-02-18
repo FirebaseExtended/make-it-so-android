@@ -17,9 +17,10 @@ const val LOGIN_SCREEN = "LoginScreen"
 const val SIGN_UP_SCREEN = "SignUpScreen"
 const val TASKS_SCREEN = "TasksScreen"
 const val EDIT_TASK_SCREEN = "EditTaskScreen"
-const val TASK_DEFAULT_ID = -1L
 
-private const val TASK_ID = "taskId"
+const val TASK_ID = "taskId"
+const val TASK_DEFAULT_ID = "-1"
+
 private const val TASK_ID_ARG = "?$TASK_ID={$TASK_ID}"
 
 @Composable
@@ -37,7 +38,7 @@ fun NavHost(firstScreen: String) {
             route = "$EDIT_TASK_SCREEN$TASK_ID_ARG",
             arguments = listOf(navArgument(TASK_ID) { defaultValue = TASK_DEFAULT_ID })
         ) {
-            EditTaskScreen(navController, it.arguments?.getLong(TASK_ID) ?: TASK_DEFAULT_ID)
+            EditTaskScreen(navController, it.arguments?.getString(TASK_ID) ?: TASK_DEFAULT_ID)
         }
     }
 }

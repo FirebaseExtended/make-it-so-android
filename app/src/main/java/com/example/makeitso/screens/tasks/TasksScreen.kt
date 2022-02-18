@@ -51,9 +51,9 @@ fun TasksScreen(navController: NavHostController) {
                 items(uiState.tasks) { taskItem ->
                     TaskItem(
                         task = taskItem,
-                        onCheckChange = viewModel::onTaskCheckChange,
-                        onActionClick = { task, action ->
-                            viewModel.onTaskActionClick(task, action, navController)
+                        onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
+                        onActionClick = { action ->
+                            viewModel.onTaskActionClick(taskItem, action, navController)
                         }
                     )
                 }

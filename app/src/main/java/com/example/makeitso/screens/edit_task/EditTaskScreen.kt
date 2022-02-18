@@ -22,7 +22,7 @@ import com.example.makeitso.R.string as AppText
 
 @Composable
 @ExperimentalMaterialApi
-fun EditTaskScreen(navController: NavHostController, taskId: Long) {
+fun EditTaskScreen(navController: NavHostController, taskId: String) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
     val uiState = viewModel.uiState.value
 

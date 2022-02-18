@@ -32,10 +32,10 @@ class EditTaskViewModel @Inject constructor(
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
-    fun initialize(taskId: Long) {
+    fun initialize(taskId: String) {
         viewModelScope.launch(exceptionHandler) {
             if (taskId != TASK_DEFAULT_ID) {
-                uiState.value = EditTaskUiState(firestoreService.getTask(taskId))
+                uiState.value = EditTaskUiState(firestoreService.getTask(taskId.toLong()))
             }
         }
     }

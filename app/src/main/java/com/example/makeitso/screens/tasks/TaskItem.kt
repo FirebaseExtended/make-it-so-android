@@ -22,8 +22,8 @@ import java.lang.StringBuilder
 @ExperimentalMaterialApi
 fun TaskItem(
     task: Task,
-    onCheckChange: (Task) -> Unit,
-    onActionClick: (Task, String) -> Unit
+    onCheckChange: () -> Unit,
+    onActionClick: (String) -> Unit
 ) {
     Card(
         backgroundColor = Color.White,
@@ -35,7 +35,7 @@ fun TaskItem(
         ) {
             Checkbox(
                 checked = task.completed,
-                onCheckedChange = { onCheckChange(task) },
+                onCheckedChange = { onCheckChange() },
                 modifier = Modifier.padding(8.dp, 0.dp)
             )
 
@@ -54,7 +54,7 @@ fun TaskItem(
                 )
             }
 
-            DropdownContextMenu(task, TaskActionOption.getOptions(), onActionClick)
+            DropdownContextMenu(TaskActionOption.getOptions(), onActionClick)
         }
     }
 }

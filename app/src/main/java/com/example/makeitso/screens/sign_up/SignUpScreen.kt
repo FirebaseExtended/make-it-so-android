@@ -2,7 +2,9 @@ package com.example.makeitso.screens.sign_up
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -19,7 +21,6 @@ import com.example.makeitso.R.string as AppText
 @Composable
 fun SignUpScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<SignUpViewModel>()
-    val uiState = viewModel.uiState.value
 
     val context = LocalContext.current
     val snackbarChannel = remember { viewModel.snackbarChannel }
@@ -30,6 +31,17 @@ fun SignUpScreen(navController: NavHostController) {
             snackbarHostState.showSnackbar(context.getString(appText))
         }
     }
+
+    Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
+        ScreenContent(navController, viewModel)
+    }
+
+    BackHandler { viewModel.onBackClick(navController) }
+}
+
+@Composable
+private fun ScreenContent(navController: NavHostController, viewModel: SignUpViewModel) {
+    val uiState = viewModel.uiState.value
 
     BasicToolbar(AppText.create_an_account) {
         viewModel.onBackClick(navController)
@@ -51,6 +63,4 @@ fun SignUpScreen(navController: NavHostController) {
             viewModel.onAnonymousSignUpClick(navController)
         }
     }
-
-    BackHandler { viewModel.onBackClick(navController) }
 }

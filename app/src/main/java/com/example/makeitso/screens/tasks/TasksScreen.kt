@@ -1,8 +1,8 @@
 package com.example.makeitso.screens.tasks
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @ExperimentalMaterialApi
 fun TasksScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<TasksViewModel>()
-    val tasks = viewModel.tasks.value
 
     val context = LocalContext.current
     val snackbarChannel = remember { viewModel.snackbarChannel }
@@ -38,6 +37,26 @@ fun TasksScreen(navController: NavHostController) {
         }
     }
 
+    Scaffold(
+        scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { viewModel.onAddTaskClick(navController) },
+                backgroundColor = BrightOrange,
+                contentColor = Color.White,
+                modifier = Modifier.padding(16.dp)
+            ) { Icon(Icons.Filled.Add, "Add") }
+        }
+    ) {
+        ScreenContent(navController, viewModel)
+    }
+}
+
+@Composable
+@ExperimentalMaterialApi
+private fun ScreenContent(navController: NavHostController, viewModel: TasksViewModel) {
+    val tasks = viewModel.tasks.value
+
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ActionToolbar(
             title = AppText.tasks,
@@ -47,28 +66,15 @@ fun TasksScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
 
-        Scaffold(
-            scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { viewModel.onAddTaskClick(navController) },
-                    backgroundColor = BrightOrange,
-                    contentColor = Color.White,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Icon(Icons.Filled.Add, "Add")
-                }
-            }) {
-            LazyColumn {
-                items(tasks) { taskItem ->
-                    TaskItem(
-                        task = taskItem,
-                        onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
-                        onActionClick = { action ->
-                            viewModel.onTaskActionClick(taskItem, action, navController)
-                        }
-                    )
-                }
+        LazyColumn {
+            items(tasks) { taskItem ->
+                TaskItem(
+                    task = taskItem,
+                    onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
+                    onActionClick = { action ->
+                        viewModel.onTaskActionClick(taskItem, action, navController)
+                    }
+                )
             }
         }
     }

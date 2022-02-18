@@ -3,7 +3,9 @@ package com.example.makeitso.screens.edit_task
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,11 +28,28 @@ import com.example.makeitso.R.string as AppText
 @ExperimentalMaterialApi
 fun EditTaskScreen(navController: NavHostController, taskId: String) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
-    val task = viewModel.task.value
 
     val context = LocalContext.current
     val snackbarChannel = remember { viewModel.snackbarChannel }
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(taskId)
+
+        snackbarChannel.receiveAsFlow().collect { appText ->
+            snackbarHostState.showSnackbar(context.getString(appText))
+        }
+    }
+
+    Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
+        ScreenContent(navController, viewModel)
+    }
+}
+
+@Composable
+@ExperimentalMaterialApi
+private fun ScreenContent(navController: NavHostController, viewModel: EditTaskViewModel) {
+    val task = viewModel.task.value
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
@@ -50,14 +69,6 @@ fun EditTaskScreen(navController: NavHostController, taskId: String) {
         CardSelectors(task, viewModel)
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.initialize(taskId)
-
-        snackbarChannel.receiveAsFlow().collect { appText ->
-            snackbarHostState.showSnackbar(context.getString(appText))
-        }
     }
 }
 

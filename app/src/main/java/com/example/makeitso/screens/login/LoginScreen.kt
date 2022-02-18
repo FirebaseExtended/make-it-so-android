@@ -1,7 +1,9 @@
 package com.example.makeitso.screens.login
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -18,7 +20,6 @@ import com.example.makeitso.R.string as AppText
 @Composable
 fun LoginScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<LoginViewModel>()
-    val uiState = viewModel.uiState.value
 
     val context = LocalContext.current
     val snackbarChannel = remember { viewModel.snackbarChannel }
@@ -29,6 +30,15 @@ fun LoginScreen(navController: NavHostController) {
             snackbarHostState.showSnackbar(context.getString(appText))
         }
     }
+
+    Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
+        ScreenContent(navController, viewModel)
+    }
+}
+
+@Composable
+private fun ScreenContent(navController: NavHostController, viewModel: LoginViewModel) {
+    val uiState = viewModel.uiState.value
 
     BasicToolbar(AppText.login_details)
 

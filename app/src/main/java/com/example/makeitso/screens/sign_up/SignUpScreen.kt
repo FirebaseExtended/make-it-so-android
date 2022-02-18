@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
@@ -34,10 +33,6 @@ fun SignUpScreen(navController: NavHostController) {
 
         BasicTextButton(AppText.sign_up_anonymously) {
             viewModel.onAnonymousSignUpClick(navController)
-        }
-
-        if (uiState.hasError) {
-            BasicText(text = AppText.generic_error, color = Color.Red)
         }
     }
 

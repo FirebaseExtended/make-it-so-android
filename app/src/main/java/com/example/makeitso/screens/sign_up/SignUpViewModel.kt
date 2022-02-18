@@ -1,9 +1,11 @@
 package com.example.makeitso.screens.sign_up
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
@@ -13,6 +15,7 @@ import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.shared_prefs.SharedPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,26 +29,24 @@ class SignUpViewModel @Inject constructor(
     var uiState = mutableStateOf(SignUpUiState())
         private set
 
-    private val currentState get() = uiState.value
+    val snackbarChannel = Channel<@StringRes Int>(Channel.CONFLATED)
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        uiState.value = currentState.copy(hasError = true)
+        snackbarChannel.trySend(AppText.generic_error)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
     fun onEmailChange(newValue: String) {
-        uiState.value = currentState.copy(email = newValue)
+        uiState.value = uiState.value.copy(email = newValue)
     }
 
     fun onPasswordChange(newValue: String) {
-        uiState.value = currentState.copy(password = newValue)
+        uiState.value = uiState.value.copy(password = newValue)
     }
 
     fun onSignUpClick(navController: NavHostController) {
-        uiState.value = currentState.copy(hasError = false)
-
         viewModelScope.launch(exceptionHandler) {
-            val user = accountService.createAccount(currentState.email, currentState.password)
+            val user = accountService.createAccount(uiState.value.email, uiState.value.password)
 
             userRepository.insert(user)
             sharedPrefs.saveCurrentUserId(user.id)
@@ -57,8 +58,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun onAnonymousSignUpClick(navController: NavHostController) {
-        uiState.value = currentState.copy(hasError = false)
-
         viewModelScope.launch(exceptionHandler) {
             val user = accountService.createAnonymousAccount()
 

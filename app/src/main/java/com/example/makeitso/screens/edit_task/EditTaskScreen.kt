@@ -6,7 +6,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,7 +23,7 @@ import com.example.makeitso.R.string as AppText
 @ExperimentalMaterialApi
 fun EditTaskScreen(navController: NavHostController, taskId: String) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
-    val uiState = viewModel.uiState.value
+    val task = viewModel.task.value
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
@@ -37,17 +36,13 @@ fun EditTaskScreen(navController: NavHostController, taskId: String) {
         )
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
-        BasicFields(uiState.task, viewModel)
+        BasicFields(task, viewModel)
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
-        CardEditors(uiState.task, viewModel)
-        CardSelectors(uiState.task, viewModel)
+        CardEditors(task, viewModel)
+        CardSelectors(task, viewModel)
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
-
-        if (uiState.hasError) {
-            BasicText(text = AppText.generic_error, color = Color.Red)
-        }
     }
 
     LaunchedEffect(Unit) {

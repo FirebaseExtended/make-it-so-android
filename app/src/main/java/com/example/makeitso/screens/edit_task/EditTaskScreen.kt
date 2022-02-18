@@ -3,6 +3,7 @@ package com.example.makeitso.screens.edit_task
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +17,8 @@ import com.example.makeitso.model.Task
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
@@ -24,6 +27,10 @@ import com.example.makeitso.R.string as AppText
 fun EditTaskScreen(navController: NavHostController, taskId: String) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
     val task = viewModel.task.value
+
+    val context = LocalContext.current
+    val snackbarChannel = remember { viewModel.snackbarChannel }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
@@ -47,6 +54,10 @@ fun EditTaskScreen(navController: NavHostController, taskId: String) {
 
     LaunchedEffect(Unit) {
         viewModel.initialize(taskId)
+
+        snackbarChannel.receiveAsFlow().collect { appText ->
+            snackbarHostState.showSnackbar(context.getString(appText))
+        }
     }
 }
 

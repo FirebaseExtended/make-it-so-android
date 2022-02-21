@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
     id("dagger.hilt.android.plugin")
 }
 
@@ -67,6 +68,10 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
     kapt "androidx.room:room-compiler:2.4.1"
     kapt "com.google.dagger:hilt-android-compiler:2.38.1"
+
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

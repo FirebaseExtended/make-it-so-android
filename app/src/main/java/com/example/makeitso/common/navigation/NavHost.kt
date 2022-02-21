@@ -42,3 +42,7 @@ fun NavHost(firstScreen: String) {
         }
     }
 }
+
+fun String.idFromParameter(): String {
+    return this.substring(1, this.length-1)
+}

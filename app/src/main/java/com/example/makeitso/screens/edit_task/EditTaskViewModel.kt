@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.navigation.TASK_DEFAULT_ID
+import com.example.makeitso.common.navigation.idFromParameter
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
+import com.example.makeitso.model.shared_prefs.SharedPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -23,7 +25,8 @@ import javax.inject.Inject
 class EditTaskViewModel @Inject constructor(
     private val crashlyticsService: CrashlyticsService,
     private val firestoreService: FirestoreService,
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val sharedPrefs: SharedPrefs
 ) : ViewModel() {
     var task = mutableStateOf(Task())
         private set
@@ -38,7 +41,8 @@ class EditTaskViewModel @Inject constructor(
     fun initialize(taskId: String) {
         viewModelScope.launch(exceptionHandler) {
             if (taskId != TASK_DEFAULT_ID) {
-                task.value = firestoreService.getTask(taskId.toLong())
+                val id = taskId.idFromParameter().toLong()
+                task.value = firestoreService.getTask(id)
             }
         }
     }
@@ -78,8 +82,11 @@ class EditTaskViewModel @Inject constructor(
 
     fun onDoneClick(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
-            firestoreService.saveTask(task.value)
-            taskRepository.insert(task.value)
+            val editedTask = task.value.copy(userId = sharedPrefs.getCurrentUserId())
+
+            firestoreService.saveTask(editedTask)
+            taskRepository.insert(editedTask)
+
             navController.popBackStack()
         }
     }

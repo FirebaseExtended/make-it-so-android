@@ -53,10 +53,12 @@ class TasksViewModel @Inject constructor(
             firestoreService.updateCompletion(task.id, !task.completed)
             taskRepository.updateCompletion(task.id, !task.completed)
 
+            val index = tasks.value.indexOfFirst { it.id == task.id }
+
             tasks.value = tasks.value
                 .filter { it.id != task.id }
                 .toMutableList()
-                .apply { add(task.copy(completed = !task.completed)) }
+                .apply { add(index, task.copy(completed = !task.completed)) }
         }
     }
 
@@ -77,10 +79,12 @@ class TasksViewModel @Inject constructor(
             firestoreService.updateFlag(task.id, !task.flag)
             taskRepository.updateFlag(task.id, !task.flag)
 
+            val index = tasks.value.indexOfFirst { it.id == task.id }
+
             tasks.value = tasks.value
                 .filter { it.id != task.id }
                 .toMutableList()
-                .apply { add(task.copy(flag = !task.flag)) }
+                .apply { add(index, task.copy(flag = !task.flag)) }
         }
     }
 

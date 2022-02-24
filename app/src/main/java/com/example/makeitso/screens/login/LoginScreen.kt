@@ -13,12 +13,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, firebaseAuth: FirebaseAuth) {
     val viewModel = hiltViewModel<LoginViewModel>()
 
     val context = LocalContext.current

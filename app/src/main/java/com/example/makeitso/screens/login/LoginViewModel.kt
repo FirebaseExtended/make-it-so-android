@@ -9,10 +9,8 @@ import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
-import com.example.makeitso.model.database.repository.UserRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
-import com.example.makeitso.model.shared_prefs.SharedPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -22,9 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val accountService: AccountService,
-    private val crashlyticsService: CrashlyticsService,
-    private val userRepository: UserRepository,
-    private val sharedPrefs: SharedPrefs
+    private val crashlyticsService: CrashlyticsService
 ) : ViewModel() {
     var uiState = mutableStateOf(LoginUiState())
         private set
@@ -46,10 +42,10 @@ class LoginViewModel @Inject constructor(
 
     fun onSignInClick(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
-            val user = accountService.authenticate(uiState.value.email, uiState.value.password)
+            accountService.authenticate(uiState.value.email, uiState.value.password)
 
-            userRepository.insert(user)
-            sharedPrefs.saveCurrentUserId(user.id)
+           // userRepository.insert(user)
+           // sharedPrefs.saveCurrentUserId(user.id)
 
             navController.navigate(TASKS_SCREEN) {
                 popUpTo(LOGIN_SCREEN) { inclusive = true }

@@ -15,7 +15,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
         url = "",
         flag = true,
         completed = false,
-        userId = 0
+        userId = ""
     )
 
     override suspend fun getTask(taskId: Long): Task {
@@ -24,7 +24,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
         //If something goes wrong, throw custom exception
     }
 
-    override suspend fun getTasksForUser(userId: Long): List<Task> {
+    override suspend fun getTasksForUser(userId: String): List<Task> {
         return listOf(exampleTask, exampleTask.copy(id = 1, title = "Example Title 2"))
         //Retrieve Tasks from specific user in Firestore
         //If something goes wrong, throw custom exception

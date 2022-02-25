@@ -12,9 +12,9 @@ import com.example.makeitso.common.navigation.TASKS_SCREEN
 import com.example.makeitso.common.navigation.TASK_ID
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.database.repository.TaskRepository
+import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
-import com.example.makeitso.model.shared_prefs.SharedPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -25,8 +25,8 @@ import javax.inject.Inject
 class TasksViewModel @Inject constructor(
     private val crashlyticsService: CrashlyticsService,
     private val firestoreService: FirestoreService,
-    private val taskRepository: TaskRepository,
-    private val sharedPrefs: SharedPrefs
+    private val accountService: AccountService,
+    private val taskRepository: TaskRepository
 ) : ViewModel() {
     var tasks = mutableStateOf<List<Task>>(emptyList())
         private set
@@ -40,7 +40,7 @@ class TasksViewModel @Inject constructor(
 
     fun initialize() {
         viewModelScope.launch(exceptionHandler) {
-            tasks.value = firestoreService.getTasksForUser(sharedPrefs.getCurrentUserId())
+            tasks.value = firestoreService.getTasksForUser(accountService.getUserId())
         }
     }
 
@@ -99,7 +99,7 @@ class TasksViewModel @Inject constructor(
 
     fun onSignOutClick(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
-            sharedPrefs.deleteCurrentUser()
+            accountService.signOut()
 
             navController.navigate(LOGIN_SCREEN) {
                 popUpTo(TASKS_SCREEN) { inclusive = true }

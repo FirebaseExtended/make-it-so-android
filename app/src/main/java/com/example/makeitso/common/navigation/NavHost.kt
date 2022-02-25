@@ -25,13 +25,13 @@ private const val TASK_ID_ARG = "?$TASK_ID={$TASK_ID}"
 
 @Composable
 @ExperimentalMaterialApi
-fun NavHost(firstScreen: String, firebaseAuth: FirebaseAuth) {
+fun NavHost(firstScreen: String) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = firstScreen) {
-        composable(LOGIN_SCREEN) { LoginScreen(navController, firebaseAuth) }
-        composable(SIGN_UP_SCREEN) { SignUpScreen(navController, firebaseAuth) }
-        composable(TASKS_SCREEN) { TasksScreen(navController, firebaseAuth) }
+        composable(LOGIN_SCREEN) { LoginScreen(navController) }
+        composable(SIGN_UP_SCREEN) { SignUpScreen(navController) }
+        composable(TASKS_SCREEN) { TasksScreen(navController) }
 
         composable(
             route = "$EDIT_TASK_SCREEN$TASK_ID_ARG",

@@ -3,7 +3,6 @@ package com.example.makeitso.model.database
 import android.content.Context
 import androidx.room.Room
 import com.example.makeitso.model.database.dao.TaskDao
-import com.example.makeitso.model.database.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,11 +16,6 @@ class DatabaseModule {
     @Provides
     fun provideTaskDao(database: MakeItSoDatabase): TaskDao {
         return database.taskDao()
-    }
-
-    @Provides
-    fun provideUserDao(database: MakeItSoDatabase): UserDao {
-        return database.userDao()
     }
 
     @Provides

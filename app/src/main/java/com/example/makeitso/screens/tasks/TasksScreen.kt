@@ -17,13 +17,12 @@ import com.example.makeitso.common.composable.ActionToolbar
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.theme.BrightOrange
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
 @ExperimentalMaterialApi
-fun TasksScreen(navController: NavHostController, firebaseAuth: FirebaseAuth) {
+fun TasksScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<TasksViewModel>()
 
     val context = LocalContext.current

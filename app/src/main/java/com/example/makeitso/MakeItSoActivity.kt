@@ -20,13 +20,12 @@ class MakeItSoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val firebaseAuth = Firebase.auth
-        val firstScreen = if (firebaseAuth.currentUser != null) TASKS_SCREEN else LOGIN_SCREEN
+        val firstScreen = if (Firebase.auth.currentUser != null) TASKS_SCREEN else LOGIN_SCREEN
 
         setContent {
             MakeItSoTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    NavHost(firstScreen, firebaseAuth)
+                    NavHost(firstScreen)
                 }
             }
         }

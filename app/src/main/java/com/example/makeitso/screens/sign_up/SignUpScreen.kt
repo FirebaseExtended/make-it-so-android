@@ -14,13 +14,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun SignUpScreen(navController: NavHostController, firebaseAuth: FirebaseAuth) {
+fun SignUpScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<SignUpViewModel>()
 
     val context = LocalContext.current
@@ -34,18 +33,14 @@ fun SignUpScreen(navController: NavHostController, firebaseAuth: FirebaseAuth) {
     }
 
     Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
-        ScreenContent(navController, viewModel, firebaseAuth)
+        ScreenContent(navController, viewModel)
     }
 
     BackHandler { viewModel.onBackClick(navController) }
 }
 
 @Composable
-private fun ScreenContent(
-    navController: NavHostController,
-    viewModel: SignUpViewModel,
-    firebaseAuth: FirebaseAuth
-) {
+private fun ScreenContent(navController: NavHostController, viewModel: SignUpViewModel) {
     val uiState = viewModel.uiState.value
 
     BasicToolbar(AppText.create_an_account) {

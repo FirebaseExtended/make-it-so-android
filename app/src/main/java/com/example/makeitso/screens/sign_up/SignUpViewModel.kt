@@ -11,18 +11,19 @@ import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executor
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val accountService: AccountService,
     private val crashlyticsService: CrashlyticsService
-) : ViewModel(), Executor {
+) : ViewModel() {
     var uiState = mutableStateOf(SignUpUiState())
         private set
 
@@ -43,21 +44,16 @@ class SignUpViewModel @Inject constructor(
 
     fun onSignUpClick(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
-            accountService.createAccount(uiState.value.email, uiState.value.password)
-//            userRepository.insert(user)
-//            sharedPrefs.saveCurrentUserId(user.id)
+            accountService.createAccount(uiState.value.email, uiState.value.password) { task ->
+                task.onResult(navController)
+            }
         }
     }
 
     fun onAnonymousSignUpClick(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
-            val user = accountService.createAnonymousAccount()
-
-          //  userRepository.insert(user)
-          //  sharedPrefs.saveCurrentUserId(user.id)
-
-            navController.navigate(TASKS_SCREEN) {
-                popUpTo(SIGN_UP_SCREEN) { inclusive = true }
+            accountService.createAnonymousAccount { task ->
+                task.onResult(navController)
             }
         }
     }
@@ -68,7 +64,13 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    override fun execute(p0: Runnable?) {
-        TODO("Not yet implemented")
+    private fun Task<AuthResult>.onResult(navController: NavHostController) {
+        if (this.isSuccessful) {
+            navController.navigate(TASKS_SCREEN) {
+                popUpTo(SIGN_UP_SCREEN) { inclusive = true }
+            }
+        } else {
+            //ERROR MESSAGE
+        }
     }
 }

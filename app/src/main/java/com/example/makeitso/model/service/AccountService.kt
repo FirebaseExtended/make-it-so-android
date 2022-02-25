@@ -1,9 +1,12 @@
 package com.example.makeitso.model.service
 
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
+
 interface AccountService {
-    suspend fun authenticate(email: String, password: String)
-    suspend fun createAccount(email: String, password: String)
-    suspend fun createAnonymousAccount()
-    suspend fun signOut()
-    suspend fun getUserId(): String
+    fun authenticate(email: String, password: String, callback: (Task<AuthResult>) -> Unit)
+    fun createAccount(email: String, password: String, callback: (Task<AuthResult>) -> Unit)
+    fun createAnonymousAccount(callback: (Task<AuthResult>) -> Unit)
+    fun signOut()
+    fun getUserId(): String
 }

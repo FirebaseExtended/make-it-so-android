@@ -42,13 +42,14 @@ class LoginViewModel @Inject constructor(
 
     fun onSignInClick(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
-            accountService.authenticate(uiState.value.email, uiState.value.password)
-
-           // userRepository.insert(user)
-           // sharedPrefs.saveCurrentUserId(user.id)
-
-            navController.navigate(TASKS_SCREEN) {
-                popUpTo(LOGIN_SCREEN) { inclusive = true }
+            accountService.authenticate(uiState.value.email, uiState.value.password) { task ->
+                if (task.isSuccessful) {
+                    navController.navigate(TASKS_SCREEN) {
+                        popUpTo(LOGIN_SCREEN) { inclusive = true }
+                    }
+                } else {
+                    //ERROR MESSAGE
+                }
             }
         }
     }

@@ -2,14 +2,19 @@ package com.example.makeitso.model.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.makeitso.model.Task
 
 @Dao
 interface TaskDao {
-   @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insert(task: Task)
+
+    @Query("SELECT * FROM Task WHERE id = :id")
+    suspend fun getById(id: Long): Task
+
+    @Query("SELECT * FROM Task WHERE userId = :userId")
+    suspend fun getAllForUser(userId: String): List<Task>
 
     @Query("DELETE FROM Task WHERE id = :id")
     suspend fun delete(id: Long)

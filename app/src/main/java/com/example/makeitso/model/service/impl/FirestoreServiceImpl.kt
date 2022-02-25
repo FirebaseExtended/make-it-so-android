@@ -1,30 +1,20 @@
 package com.example.makeitso.model.service.impl
 
 import com.example.makeitso.model.Task
+import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.FirestoreService
 import javax.inject.Inject
 
-class FirestoreServiceImpl @Inject constructor() : FirestoreService {
-
-    private val exampleTask = Task(
-        title = "Example Title",
-        priority = "Medium",
-        dueDate = "Mon, 7 July 2022",
-        dueTime = "14:23",
-        description = "Example Description",
-        url = "",
-        flag = true,
-        completed = false,
-        userId = ""
-    )
-
+class FirestoreServiceImpl @Inject constructor(
+    private val taskRepository: TaskRepository
+) : FirestoreService {
     override suspend fun getTask(taskId: Long): Task {
-        return exampleTask
+        return taskRepository.getById(taskId)
         //Retrieve Task from Firestore
     }
 
     override suspend fun getTasksForUser(userId: String): List<Task> {
-        return listOf(exampleTask, exampleTask.copy(id = 1, title = "Example Title 2"))
+        return taskRepository.getAllForUser(userId)
         //Retrieve Tasks from specific user in Firestore
     }
 

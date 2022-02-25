@@ -15,6 +15,14 @@ class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao) : Tas
         Dispatchers.IO.apply { taskDao.delete(taskId) }
     }
 
+    override suspend fun getById(id: Long): Task {
+        return taskDao.getById(id)
+    }
+
+    override suspend fun getAllForUser(userId: String): List<Task> {
+        return taskDao.getAllForUser(userId)
+    }
+
     override suspend fun updateCompletion(taskId: Long, isComplete: Boolean) {
         Dispatchers.IO.apply { taskDao.updateCompletion(isComplete, taskId) }
     }

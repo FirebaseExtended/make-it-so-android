@@ -3,7 +3,6 @@ package com.example.makeitso.common.error
 import android.content.Context
 import androidx.annotation.StringRes
 import com.example.makeitso.R.string as AppText
-import java.lang.Exception
 
 sealed class ErrorMessage {
     class StringError(val message: String): ErrorMessage()
@@ -17,7 +16,7 @@ sealed class ErrorMessage {
             }
         }
 
-        fun Exception?.toErrorMessage(): ErrorMessage {
+        fun Throwable?.toErrorMessage(): ErrorMessage {
             if (this == null) return ResourceError(AppText.generic_error)
 
             val message = this.message.orEmpty()

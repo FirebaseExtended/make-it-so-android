@@ -1,5 +1,8 @@
 package com.example.makeitso.model.service
 
+import java.lang.Exception
+
 interface CrashlyticsService {
-    suspend fun logNonFatalCrash(throwable: Throwable)
+    fun logNonFatalCrash(throwable: Throwable?)
+    fun logNonFatalCrash(exception: Exception?)
 }

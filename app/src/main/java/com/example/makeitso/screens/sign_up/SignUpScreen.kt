@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
+import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import com.example.makeitso.R.string as AppText
@@ -27,8 +28,8 @@ fun SignUpScreen(navController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        snackbarChannel.receiveAsFlow().collect { appText ->
-            snackbarHostState.showSnackbar(context.getString(appText))
+        snackbarChannel.receiveAsFlow().collect { errorMessage ->
+            snackbarHostState.showSnackbar(errorMessage.toMessage(context))
         }
     }
 

@@ -41,8 +41,7 @@ class EditTaskViewModel @Inject constructor(
     fun initialize(taskId: String) {
         viewModelScope.launch(exceptionHandler) {
             if (taskId != TASK_DEFAULT_ID) {
-                val id = taskId.idFromParameter().toLong()
-                task.value = firestoreService.getTask(id)
+                task.value = firestoreService.getTask(taskId.idFromParameter())
             }
         }
     }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class FirestoreServiceImpl @Inject constructor(
     private val taskRepository: TaskRepository
 ) : FirestoreService {
-    override suspend fun getTask(taskId: Long): Task {
+    override suspend fun getTask(taskId: String): Task {
         return taskRepository.getById(taskId)
         //Retrieve Task from Firestore
     }
@@ -22,15 +22,15 @@ class FirestoreServiceImpl @Inject constructor(
         //Save Task on Firestore
     }
 
-    override suspend fun updateFlag(taskId: Long, hasFlag: Boolean) {
+    override suspend fun updateFlag(taskId: String, hasFlag: Boolean) {
         //Update Task with new flag value on Firestore
     }
 
-    override suspend fun updateCompletion(taskId: Long, isComplete: Boolean) {
+    override suspend fun updateCompletion(taskId: String, isComplete: Boolean) {
         //Update Task with new completion value on Firestore
     }
 
-    override suspend fun deleteTask(taskId: Long) {
+    override suspend fun deleteTask(taskId: String) {
         //Delete Task on Firestore
     }
 }

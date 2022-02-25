@@ -11,23 +11,23 @@ class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao) : Tas
         Dispatchers.IO.apply { taskDao.insert(task) }
     }
 
-    override suspend fun delete(taskId: Long) {
+    override suspend fun delete(taskId: String) {
         Dispatchers.IO.apply { taskDao.delete(taskId) }
     }
 
-    override suspend fun getById(id: Long): Task {
-        return taskDao.getById(id)
+    override suspend fun getById(taskId: String): Task {
+        return taskDao.getById(taskId)
     }
 
     override suspend fun getAllForUser(userId: String): List<Task> {
         return taskDao.getAllForUser(userId)
     }
 
-    override suspend fun updateCompletion(taskId: Long, isComplete: Boolean) {
+    override suspend fun updateCompletion(taskId: String, isComplete: Boolean) {
         Dispatchers.IO.apply { taskDao.updateCompletion(isComplete, taskId) }
     }
 
-    override suspend fun updateFlag(taskId: Long, hasFlag: Boolean) {
+    override suspend fun updateFlag(taskId: String, hasFlag: Boolean) {
         Dispatchers.IO.apply { taskDao.updateFlag(hasFlag, taskId) }
     }
 }

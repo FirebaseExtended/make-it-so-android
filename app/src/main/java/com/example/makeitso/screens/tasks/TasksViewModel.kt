@@ -50,15 +50,16 @@ class TasksViewModel @Inject constructor(
 
     fun onTaskCheckChange(task: Task) {
         viewModelScope.launch(exceptionHandler) {
-            firestoreService.updateCompletion(task.id, !task.completed)
-            taskRepository.updateCompletion(task.id, !task.completed)
+            val updatedTask = task.copy(completed = !task.completed)
+            firestoreService.saveTask(updatedTask)
+            //taskRepository.updateCompletion(task.id, newValue)
 
             val index = tasks.value.indexOfFirst { it.id == task.id }
 
             tasks.value = tasks.value
                 .filter { it.id != task.id }
                 .toMutableList()
-                .apply { add(index, task.copy(completed = !task.completed)) }
+                .apply { add(index, updatedTask) }
         }
     }
 
@@ -76,15 +77,16 @@ class TasksViewModel @Inject constructor(
 
     private fun onFlagTaskClick(task: Task) {
         viewModelScope.launch(exceptionHandler) {
-            firestoreService.updateFlag(task.id, !task.flag)
-            taskRepository.updateFlag(task.id, !task.flag)
+            val updatedTask = task.copy(flag = !task.flag)
+            firestoreService.saveTask(updatedTask)
+            //taskRepository.updateFlag(task.id, !task.flag)
 
             val index = tasks.value.indexOfFirst { it.id == task.id }
 
             tasks.value = tasks.value
                 .filter { it.id != task.id }
                 .toMutableList()
-                .apply { add(index, task.copy(flag = !task.flag)) }
+                .apply { add(index, updatedTask) }
         }
     }
 

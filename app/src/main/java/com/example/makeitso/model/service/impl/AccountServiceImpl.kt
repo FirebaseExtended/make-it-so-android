@@ -14,8 +14,7 @@ class AccountServiceImpl @Inject constructor() : AccountService {
     }
 
     override fun createAccount(email: String, password: String, callback: (Task<AuthResult>) -> Unit) {
-        Firebase.auth
-            .createUserWithEmailAndPassword(email, password)
+        Firebase.auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task -> callback(task) }
     }
 

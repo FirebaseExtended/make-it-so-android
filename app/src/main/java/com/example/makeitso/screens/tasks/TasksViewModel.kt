@@ -1,10 +1,12 @@
 package com.example.makeitso.screens.tasks
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.makeitso.common.error.ErrorMessage
+import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
+import com.example.makeitso.common.error.ErrorMessage.ResourceError
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.navigation.EDIT_TASK_SCREEN
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
@@ -31,16 +33,18 @@ class TasksViewModel @Inject constructor(
     var tasks = mutableStateOf<List<Task>>(emptyList())
         private set
 
-    val snackbarChannel = Channel<@StringRes Int>(Channel.CONFLATED)
+    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED)
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        snackbarChannel.trySend(AppText.generic_error)
+        snackbarChannel.trySend(ResourceError(AppText.generic_error))
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
     fun initialize() {
         viewModelScope.launch(exceptionHandler) {
-            tasks.value = firestoreService.getTasksForUser(accountService.getUserId())
+             firestoreService.getTasksForUser(accountService.getUserId(), ::onError) {
+                 tasks.value = it
+             }
         }
     }
 
@@ -51,15 +55,13 @@ class TasksViewModel @Inject constructor(
     fun onTaskCheckChange(task: Task) {
         viewModelScope.launch(exceptionHandler) {
             val updatedTask = task.copy(completed = !task.completed)
-            firestoreService.saveTask(updatedTask)
-            //taskRepository.updateCompletion(task.id, newValue)
 
-            val index = tasks.value.indexOfFirst { it.id == task.id }
-
-            tasks.value = tasks.value
-                .filter { it.id != task.id }
-                .toMutableList()
-                .apply { add(index, updatedTask) }
+            firestoreService.saveTask(updatedTask) { error ->
+                if (error == null) {
+                    this.launch { taskRepository.updateCompletion(task.id, updatedTask.completed) }
+                    updateTaskInList(updatedTask)
+                } else onError(error)
+            }
         }
     }
 
@@ -78,25 +80,38 @@ class TasksViewModel @Inject constructor(
     private fun onFlagTaskClick(task: Task) {
         viewModelScope.launch(exceptionHandler) {
             val updatedTask = task.copy(flag = !task.flag)
-            firestoreService.saveTask(updatedTask)
-            //taskRepository.updateFlag(task.id, !task.flag)
 
-            val index = tasks.value.indexOfFirst { it.id == task.id }
-
-            tasks.value = tasks.value
-                .filter { it.id != task.id }
-                .toMutableList()
-                .apply { add(index, updatedTask) }
+            firestoreService.saveTask(updatedTask) { error ->
+                if (error == null) {
+                    this.launch { taskRepository.updateFlag(task.id, updatedTask.flag) }
+                    updateTaskInList(updatedTask)
+                } else onError(error)
+            }
         }
+    }
+
+    private fun updateTaskInList(task: Task) {
+        val index = tasks.value.indexOfFirst { it.id == task.id }
+
+        tasks.value = tasks.value
+            .toMutableList()
+            .apply { set(index, task) }
     }
 
     private fun onDeleteTaskClick(task: Task) {
         viewModelScope.launch(exceptionHandler) {
-            firestoreService.deleteTask(task.id)
-            taskRepository.delete(task.id)
-
-            tasks.value = tasks.value.filter { it.id != task.id }
+            firestoreService.deleteTask(task.id) { error ->
+                if (error == null) {
+                    this.launch { taskRepository.delete(task.id) }
+                    tasks.value = tasks.value.filter { it.id != task.id }
+                } else onError(error)
+            }
         }
+    }
+
+    private fun onError(error: Throwable?) {
+        snackbarChannel.trySend(error.toErrorMessage())
+        viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
     }
 
     fun onSignOutClick(navController: NavHostController) {

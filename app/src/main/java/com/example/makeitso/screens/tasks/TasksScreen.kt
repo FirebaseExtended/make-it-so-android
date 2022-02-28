@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.ActionToolbar
+import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.theme.BrightOrange
@@ -32,8 +33,8 @@ fun TasksScreen(navController: NavHostController) {
     LaunchedEffect(Unit) {
         viewModel.initialize()
 
-        snackbarChannel.receiveAsFlow().collect { appText ->
-            snackbarHostState.showSnackbar(context.getString(appText))
+        snackbarChannel.receiveAsFlow().collect { errorMessage ->
+            snackbarHostState.showSnackbar(errorMessage.toMessage(context))
         }
     }
 

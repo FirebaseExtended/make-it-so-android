@@ -1,10 +1,12 @@
 package com.example.makeitso.screens.edit_task
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.makeitso.common.error.ErrorMessage
+import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
+import com.example.makeitso.common.error.ErrorMessage.ResourceError
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.navigation.TASK_DEFAULT_ID
 import com.example.makeitso.common.navigation.idFromParameter
@@ -31,17 +33,19 @@ class EditTaskViewModel @Inject constructor(
     var task = mutableStateOf(Task())
         private set
 
-    val snackbarChannel = Channel<@StringRes Int>(Channel.CONFLATED)
+    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED)
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        snackbarChannel.trySend(AppText.generic_error)
+        snackbarChannel.trySend(ResourceError(AppText.generic_error))
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
     fun initialize(taskId: String) {
         viewModelScope.launch(exceptionHandler) {
             if (taskId != TASK_DEFAULT_ID) {
-                task.value = firestoreService.getTask(taskId.idFromParameter())
+                firestoreService.getTask(taskId.idFromParameter(), ::onError) {
+                    task.value = it
+                }
             }
         }
     }
@@ -83,15 +87,22 @@ class EditTaskViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             val editedTask = task.value.copy(userId = accountService.getUserId())
 
-            firestoreService.saveTask(editedTask)
-            taskRepository.insert(editedTask)
-
-            navController.popBackStack()
+            firestoreService.saveTask(editedTask) { error ->
+                if (error == null) {
+                    this.launch { taskRepository.insert(editedTask) }
+                    navController.popBackStack()
+                } else onError(error)
+            }
         }
     }
 
     private fun Int.toClockPattern(): String {
         return if (this < 10) "0$this" else "$this"
+    }
+
+    private fun onError(error: Throwable?) {
+        snackbarChannel.trySend(error.toErrorMessage())
+        viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
     }
 
     companion object {

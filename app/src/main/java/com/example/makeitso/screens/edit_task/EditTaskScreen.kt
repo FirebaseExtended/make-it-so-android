@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
+import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
 import com.example.makeitso.model.Priority
 import com.example.makeitso.model.Task
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -36,8 +37,8 @@ fun EditTaskScreen(navController: NavHostController, taskId: String) {
     LaunchedEffect(Unit) {
         viewModel.initialize(taskId)
 
-        snackbarChannel.receiveAsFlow().collect { appText ->
-            snackbarHostState.showSnackbar(context.getString(appText))
+        snackbarChannel.receiveAsFlow().collect { errorMessage ->
+            snackbarHostState.showSnackbar(errorMessage.toMessage(context))
         }
     }
 

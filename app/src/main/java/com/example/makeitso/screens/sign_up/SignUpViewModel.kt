@@ -10,6 +10,7 @@ import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.ResourceError
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.ext.isValidPassword
+import com.example.makeitso.common.ext.passwordMatches
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
@@ -56,8 +57,13 @@ class SignUpViewModel @Inject constructor(
             return
         }
 
-        if (!uiState.value.password.isValidPassword(uiState.value.repeatPassword)) {
+        if (!uiState.value.password.isValidPassword()) {
             snackbarChannel.trySend(ResourceError(AppText.password_error))
+            return
+        }
+
+        if (!uiState.value.password.passwordMatches(uiState.value.repeatPassword)) {
+            snackbarChannel.trySend(ResourceError(AppText.password_match_error))
             return
         }
 

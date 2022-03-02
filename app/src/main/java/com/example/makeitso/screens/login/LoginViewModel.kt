@@ -9,7 +9,6 @@ import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.ResourceError
 import com.example.makeitso.common.ext.isValidEmail
-import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
@@ -60,6 +59,24 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             accountService.authenticate(uiState.value.email, uiState.value.password) { task ->
                 task.onResult(navController)
+            }
+        }
+    }
+
+    fun onForgotPasswordClick() {
+        if (!uiState.value.email.isValidEmail()) {
+            snackbarChannel.trySend(ResourceError(AppText.email_error))
+            return
+        }
+
+        viewModelScope.launch(exceptionHandler) {
+            accountService.sendRecoveryEmail(uiState.value.email) { error ->
+                if (error == null) {
+                    snackbarChannel.trySend(ResourceError(AppText.recovery_email_sent))
+                } else {
+                    snackbarChannel.trySend(error.toErrorMessage())
+                    crashlyticsService.logNonFatalCrash(error)
+                }
             }
         }
     }

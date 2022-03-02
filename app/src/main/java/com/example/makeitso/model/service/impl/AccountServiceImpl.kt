@@ -18,6 +18,11 @@ class AccountServiceImpl @Inject constructor() : AccountService {
             .addOnCompleteListener { task -> callback(task) }
     }
 
+    override fun sendRecoveryEmail(email: String, callback: (Throwable?) -> Unit) {
+        Firebase.auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task -> callback(task.exception) }
+    }
+
     override fun createAnonymousAccount(callback: (Task<AuthResult>) -> Unit) {
         Firebase.auth.signInAnonymously()
             .addOnCompleteListener { task -> callback(task) }

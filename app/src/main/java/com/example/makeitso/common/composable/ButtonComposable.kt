@@ -14,7 +14,10 @@ import com.example.makeitso.theme.BrightOrange
 
 @Composable
 fun BasicTextButton(@StringRes text: Int, action: () -> Unit) {
-    TextButton(onClick = action, modifier = Modifier.fieldModifier()) {
+    TextButton(
+        onClick = action,
+        modifier = Modifier.fillMaxWidth().padding(16.dp, 8.dp, 16.dp, 0.dp)
+    ) {
         Text(text = stringResource(text), color = Color.Gray)
     }
 }
@@ -23,7 +26,7 @@ fun BasicTextButton(@StringRes text: Int, action: () -> Unit) {
 fun BasicButton(@StringRes text: Int, action: () -> Unit) {
     Button(
         onClick = action,
-        modifier = Modifier.fieldModifier(),
+        modifier = Modifier.fillMaxWidth().padding(16.dp, 8.dp),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = BrightOrange,
             contentColor = Color.White
@@ -44,8 +47,4 @@ fun DialogButton(@StringRes text: Int, action: () -> Unit) {
     ) {
         Text(text = stringResource(text))
     }
-}
-
-private fun Modifier.fieldModifier(): Modifier {
-    return this.fillMaxWidth().padding(16.dp, 8.dp)
 }

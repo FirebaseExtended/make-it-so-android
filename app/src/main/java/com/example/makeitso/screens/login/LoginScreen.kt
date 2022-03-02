@@ -1,9 +1,7 @@
 package com.example.makeitso.screens.login
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -57,6 +55,10 @@ private fun ScreenContent(navController: NavHostController, viewModel: LoginView
 
         BasicTextButton(AppText.do_not_have_account) {
             viewModel.onSignUpClick(navController)
+        }
+
+        BasicTextButton(AppText.forgot_password) {
+            viewModel.onForgotPasswordClick()
         }
     }
 }

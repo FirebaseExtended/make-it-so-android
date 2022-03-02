@@ -8,6 +8,8 @@ import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.ResourceError
+import com.example.makeitso.common.ext.isValidEmail
+import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
@@ -45,6 +47,16 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onSignInClick(navController: NavHostController) {
+        if (!uiState.value.email.isValidEmail()) {
+            snackbarChannel.trySend(ResourceError(AppText.email_error))
+            return
+        }
+
+        if (uiState.value.password.isBlank()) {
+            snackbarChannel.trySend(ResourceError(AppText.empty_password_error))
+            return
+        }
+
         viewModelScope.launch(exceptionHandler) {
             accountService.authenticate(uiState.value.email, uiState.value.password) { task ->
                 task.onResult(navController)

@@ -3,17 +3,21 @@
     <string name="app_name">Make It So</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="repeat_password">Repeat password</string>
     <string name="generic_error">Something wrong happened. Please try again.</string>
+    <string name="email_error">Please insert a valid email.</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
     <string name="login_details">Enter your login details</string>
     <string name="do_not_have_account">Don\'t have an account? Click to sign up</string>
+    <string name="empty_password_error">Password cannot be empty.</string>
 
     <!-- SignUpScreen -->
     <string name="create_an_account">Create an account</string>
     <string name="create_account">Create account</string>
     <string name="sign_up_anonymously">Or click here to sign up anonymously</string>
+    <string name="password_error">Your password should have at least one digit, one lower case letter, one upper case letter and a special character.</string>
 
     <!-- TasksScreen -->
     <string name="tasks">Tasks</string>

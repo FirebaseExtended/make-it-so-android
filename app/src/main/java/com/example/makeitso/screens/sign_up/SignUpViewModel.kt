@@ -8,6 +8,8 @@ import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.ResourceError
+import com.example.makeitso.common.ext.isValidEmail
+import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
 import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
 import com.example.makeitso.common.navigation.TASKS_SCREEN
@@ -44,7 +46,21 @@ class SignUpViewModel @Inject constructor(
         uiState.value = uiState.value.copy(password = newValue)
     }
 
+    fun onRepeatPasswordChange(newValue: String) {
+        uiState.value = uiState.value.copy(repeatPassword = newValue)
+    }
+
     fun onSignUpClick(navController: NavHostController) {
+        if (!uiState.value.email.isValidEmail()) {
+            snackbarChannel.trySend(ResourceError(AppText.email_error))
+            return
+        }
+
+        if (!uiState.value.password.isValidPassword(uiState.value.repeatPassword)) {
+            snackbarChannel.trySend(ResourceError(AppText.password_error))
+            return
+        }
+
         viewModelScope.launch(exceptionHandler) {
             accountService.createAccount(uiState.value.email, uiState.value.password) { task ->
                 task.onResult(navController)

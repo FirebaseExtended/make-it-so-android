@@ -55,6 +55,7 @@ private fun ScreenContent(navController: NavHostController, viewModel: SignUpVie
     ) {
         EmailField(uiState.email, viewModel::onEmailChange)
         PasswordField(uiState.password, viewModel::onPasswordChange)
+        RepeatPasswordField(uiState.repeatPassword, viewModel::onRepeatPasswordChange)
 
         BasicButton(AppText.create_account) {
             viewModel.onSignUpClick(navController)

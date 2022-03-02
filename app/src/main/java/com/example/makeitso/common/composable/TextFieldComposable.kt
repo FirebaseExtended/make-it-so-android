@@ -24,7 +24,7 @@ fun BasicField(@StringRes text: Int, initialValue: String, onNewValue: (String) 
     OutlinedTextField(
         singleLine = true,
         modifier = Modifier.fieldModifier(),
-        value = initialValue.orEmpty(),
+        value = initialValue,
         onValueChange = { onNewValue(it) },
         placeholder = { Text(stringResource(text)) }
     )
@@ -44,6 +44,20 @@ fun EmailField(initialValue: String, onNewValue: (String) -> Unit) {
 
 @Composable
 fun PasswordField(initialValue: String, onNewValue: (String) -> Unit) {
+    PasswordField(initialValue, AppText.password, onNewValue)
+}
+
+@Composable
+fun RepeatPasswordField(initialValue: String, onNewValue: (String) -> Unit) {
+    PasswordField(initialValue, AppText.repeat_password, onNewValue)
+}
+
+@Composable
+private fun PasswordField(
+    initialValue: String,
+    @StringRes placeholder: Int,
+    onNewValue: (String) -> Unit
+) {
     var isVisible by remember { mutableStateOf(false) }
 
     val icon = if (isVisible) painterResource(AppIcon.ic_visibility_on)
@@ -56,7 +70,7 @@ fun PasswordField(initialValue: String, onNewValue: (String) -> Unit) {
         modifier = Modifier.fieldModifier(),
         value = initialValue,
         onValueChange = { onNewValue(it) },
-        placeholder = { Text(text = stringResource(AppText.password)) },
+        placeholder = { Text(text = stringResource(placeholder)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Lock") },
         trailingIcon = {
             IconButton(onClick = { isVisible = !isVisible }) {

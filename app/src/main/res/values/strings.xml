@@ -6,6 +6,8 @@
     <string name="repeat_password">Repeat password</string>
     <string name="generic_error">Something wrong happened. Please try again.</string>
     <string name="email_error">Please insert a valid email.</string>
+    <string name="cancel">Cancel</string>
+    <string name="proceed">Proceed</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
@@ -19,6 +21,8 @@
     <string name="sign_up_anonymously">Or click here to sign up anonymously</string>
     <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
     <string name="password_match_error">Passwords do not match.</string>
+    <string name="anonymous_warning_title">Warning</string>
+    <string name="anonymous_warning_description">If you create an anonymous account, all your tasks will be lost when you sign out.</string>
 
     <!-- TasksScreen -->
     <string name="tasks">Tasks</string>

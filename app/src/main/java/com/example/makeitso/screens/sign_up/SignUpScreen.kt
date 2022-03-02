@@ -2,15 +2,12 @@ package com.example.makeitso.screens.sign_up
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
@@ -43,6 +40,7 @@ fun SignUpScreen(navController: NavHostController) {
 @Composable
 private fun ScreenContent(navController: NavHostController, viewModel: SignUpViewModel) {
     val uiState = viewModel.uiState.value
+    var showWarningDialog by remember { mutableStateOf(false) }
 
     BasicToolbar(AppText.create_an_account) {
         viewModel.onBackClick(navController)
@@ -62,7 +60,22 @@ private fun ScreenContent(navController: NavHostController, viewModel: SignUpVie
         }
 
         BasicTextButton(AppText.sign_up_anonymously) {
-            viewModel.onAnonymousSignUpClick(navController)
+            showWarningDialog = true
+        }
+
+        if(showWarningDialog) {
+            AlertDialog(
+                title = { Text(stringResource(AppText.anonymous_warning_title)) },
+                text = { Text(stringResource(AppText.anonymous_warning_description)) },
+                dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
+                confirmButton = {
+                    DialogButton(AppText.proceed) {
+                        viewModel.onAnonymousSignUpClick(navController)
+                        showWarningDialog = false
+                    }
+                },
+                onDismissRequest = { showWarningDialog = false }
+            )
         }
     }
 }

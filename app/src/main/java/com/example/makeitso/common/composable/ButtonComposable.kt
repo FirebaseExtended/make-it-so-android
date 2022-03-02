@@ -33,6 +33,19 @@ fun BasicButton(@StringRes text: Int, action: () -> Unit) {
     }
 }
 
+@Composable
+fun DialogButton(@StringRes text: Int, action: () -> Unit) {
+    Button(
+        onClick = action,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = BrightOrange,
+            contentColor = Color.White
+        )
+    ) {
+        Text(text = stringResource(text))
+    }
+}
+
 private fun Modifier.fieldModifier(): Modifier {
     return this.fillMaxWidth().padding(16.dp, 8.dp)
 }

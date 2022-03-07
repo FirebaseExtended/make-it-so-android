@@ -8,6 +8,10 @@ import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
 class AccountServiceImpl @Inject constructor() : AccountService {
+    override fun hasUser(): Boolean {
+        return Firebase.auth.currentUser != null
+    }
+
     override fun authenticate(email: String, password: String, callback: (Task<AuthResult>) -> Unit) {
         Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task -> callback(task) }

@@ -7,7 +7,8 @@
     <string name="generic_error">Something wrong happened. Please try again.</string>
     <string name="email_error">Please insert a valid email.</string>
     <string name="cancel">Cancel</string>
-    <string name="proceed">Proceed</string>
+    <string name="sign_out">Sign out</string>
+    <string name="warning">Warning</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
@@ -20,11 +21,8 @@
     <!-- SignUpScreen -->
     <string name="create_an_account">Create an account</string>
     <string name="create_account">Create account</string>
-    <string name="sign_up_anonymously">Or click here to sign up anonymously</string>
     <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
     <string name="password_match_error">Passwords do not match.</string>
-    <string name="anonymous_warning_title">Warning</string>
-    <string name="anonymous_warning_description">If you create an anonymous account, all your tasks will be lost when you sign out.</string>
 
     <!-- TasksScreen -->
     <string name="tasks">Tasks</string>
@@ -38,4 +36,9 @@
     <string name="time">Time</string>
     <string name="flag">Flag</string>
     <string name="priority">Priority</string>
+
+    <!-- SettingsScreen -->
+    <string name="settings">Settings</string>
+    <string name="link_with_account">Link with an account</string>
+    <string name="anonymous_warning">You still have not linked your tasks to an account. If you sign out without doing so, all your tasks will be lost.</string>
 </resources>

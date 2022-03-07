@@ -61,8 +61,8 @@ private fun ScreenContent(navController: NavHostController, viewModel: TasksView
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ActionToolbar(
             title = AppText.tasks,
-            endActionIcon = AppIcon.ic_exit,
-            endAction = { viewModel.onSignOutClick(navController) }
+            endActionIcon = AppIcon.ic_settings,
+            endAction = { viewModel.onSettingsClick(navController) }
         )
 
         Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))

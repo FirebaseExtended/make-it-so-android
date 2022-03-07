@@ -74,14 +74,6 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun onAnonymousSignUpClick(navController: NavHostController) {
-        viewModelScope.launch(exceptionHandler) {
-            accountService.createAnonymousAccount { task ->
-                task.onResult(navController)
-            }
-        }
-    }
-
     fun onBackClick(navController: NavHostController) {
         navController.navigate(LOGIN_SCREEN) {
             popUpTo(SIGN_UP_SCREEN) { inclusive = true }

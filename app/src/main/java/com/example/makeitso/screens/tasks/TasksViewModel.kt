@@ -7,11 +7,8 @@ import androidx.navigation.NavHostController
 import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.ResourceError
+import com.example.makeitso.common.navigation.*
 import com.example.makeitso.R.string as AppText
-import com.example.makeitso.common.navigation.EDIT_TASK_SCREEN
-import com.example.makeitso.common.navigation.LOGIN_SCREEN
-import com.example.makeitso.common.navigation.TASKS_SCREEN
-import com.example.makeitso.common.navigation.TASK_ID
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
@@ -114,13 +111,7 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
     }
 
-    fun onSignOutClick(navController: NavHostController) {
-        viewModelScope.launch(exceptionHandler) {
-            accountService.signOut()
-
-            navController.navigate(LOGIN_SCREEN) {
-                popUpTo(TASKS_SCREEN) { inclusive = true }
-            }
-        }
+    fun onSettingsClick(navController: NavHostController) {
+        navController.navigate(SETTINGS_SCREEN)
     }
 }

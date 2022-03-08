@@ -39,7 +39,9 @@ fun LoginScreen(navController: NavHostController) {
 private fun ScreenContent(navController: NavHostController, viewModel: LoginViewModel) {
     val uiState = viewModel.uiState.value
 
-    BasicToolbar(AppText.login_details)
+    BasicToolbar(AppText.login_details) {
+        viewModel.onBackClick(navController)
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),

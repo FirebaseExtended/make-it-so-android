@@ -5,10 +5,12 @@ import com.google.firebase.auth.AuthResult
 
 interface AccountService {
     fun hasUser(): Boolean
+    fun isAnonymousUser(): Boolean
     fun authenticate(email: String, password: String, callback: (Task<AuthResult>) -> Unit)
     fun createAccount(email: String, password: String, callback: (Task<AuthResult>) -> Unit)
     fun sendRecoveryEmail(email: String, callback: (Throwable?) -> Unit)
     fun createAnonymousAccount(callback: (Task<AuthResult>) -> Unit)
+    fun linkAccount(email: String, password: String, callback: (Task<AuthResult>) -> Unit)
     fun signOut()
     fun getUserId(): String
 }

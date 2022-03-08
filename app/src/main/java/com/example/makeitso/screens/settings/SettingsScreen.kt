@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -12,12 +13,25 @@ import androidx.navigation.NavHostController
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
+import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
 fun SettingsScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<SettingsViewModel>()
 
-    Scaffold(scaffoldState = rememberScaffoldState()) {
+    val context = LocalContext.current
+    val snackbarChannel = remember { viewModel.snackbarChannel }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        snackbarChannel.receiveAsFlow().collect { errorMessage ->
+            snackbarHostState.showSnackbar(errorMessage.toMessage(context))
+        }
+    }
+
+    Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
         ScreenContent(navController, viewModel)
     }
 }

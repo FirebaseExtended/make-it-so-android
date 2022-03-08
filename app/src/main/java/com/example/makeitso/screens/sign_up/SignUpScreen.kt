@@ -1,6 +1,5 @@
 package com.example.makeitso.screens.sign_up
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -32,8 +31,6 @@ fun SignUpScreen(navController: NavHostController) {
     Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
         ScreenContent(navController, viewModel)
     }
-
-    BackHandler { viewModel.onBackClick(navController) }
 }
 
 @Composable

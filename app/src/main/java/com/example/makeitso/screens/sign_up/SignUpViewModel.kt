@@ -11,9 +11,6 @@ import com.example.makeitso.common.error.ErrorMessage.ResourceError
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.ext.passwordMatches
-import com.example.makeitso.common.navigation.LOGIN_SCREEN
-import com.example.makeitso.common.navigation.SIGN_UP_SCREEN
-import com.example.makeitso.common.navigation.TASKS_SCREEN
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.google.android.gms.tasks.Task
@@ -32,7 +29,10 @@ class SignUpViewModel @Inject constructor(
     var uiState = mutableStateOf(SignUpUiState())
         private set
 
-    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED)
+    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED) //use SharedFlow
+
+    private val email get() = uiState.value.email
+    private val password get() = uiState.value.password
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         snackbarChannel.trySend(ResourceError(AppText.generic_error))
@@ -52,42 +52,46 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun onSignUpClick(navController: NavHostController) {
-        if (!uiState.value.email.isValidEmail()) {
+        if (!email.isValidEmail()) {
             snackbarChannel.trySend(ResourceError(AppText.email_error))
             return
         }
 
-        if (!uiState.value.password.isValidPassword()) {
+        if (!password.isValidPassword()) {
             snackbarChannel.trySend(ResourceError(AppText.password_error))
             return
         }
 
-        if (!uiState.value.password.passwordMatches(uiState.value.repeatPassword)) {
+        if (!password.passwordMatches(uiState.value.repeatPassword)) {
             snackbarChannel.trySend(ResourceError(AppText.password_match_error))
             return
         }
 
         viewModelScope.launch(exceptionHandler) {
-            accountService.createAccount(uiState.value.email, uiState.value.password) { task ->
-                task.onResult(navController)
+            accountService.createAccount(email, password) { task ->
+                task.onResult { linkWithEmail(navController) }
             }
         }
     }
 
-    fun onBackClick(navController: NavHostController) {
-        navController.navigate(LOGIN_SCREEN) {
-            popUpTo(SIGN_UP_SCREEN) { inclusive = true }
+    private fun linkWithEmail(navController: NavHostController) {
+        viewModelScope.launch(exceptionHandler) {
+            accountService.linkAccount(email, password) { task ->
+                task.onResult { navController.popBackStack() } //update firestore and db?
+            }
         }
     }
 
-    private fun Task<AuthResult>.onResult(navController: NavHostController) {
+    private fun Task<AuthResult>.onResult(successCallback: () -> Unit) {
         if (this.isSuccessful) {
-            navController.navigate(TASKS_SCREEN) {
-                popUpTo(SIGN_UP_SCREEN) { inclusive = true }
-            }
+            successCallback()
         } else {
             snackbarChannel.trySend(this.exception.toErrorMessage())
             crashlyticsService.logNonFatalCrash(this.exception)
         }
+    }
+
+    fun onBackClick(navController: NavHostController) {
+        navController.popBackStack()
     }
 }

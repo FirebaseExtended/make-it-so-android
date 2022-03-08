@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.common.navigation.LOGIN_SCREEN
-import com.example.makeitso.common.navigation.SETTINGS_SCREEN
 import com.example.makeitso.common.navigation.SPLASH_SCREEN
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
@@ -55,7 +54,7 @@ class SettingsViewModel @Inject constructor(
             accountService.signOut()
 
             navController.navigate(SPLASH_SCREEN) {
-                popUpTo(SETTINGS_SCREEN) { inclusive = true } //how to clear up all history?
+                popUpTo(0) { inclusive = true }
             }
         }
     }

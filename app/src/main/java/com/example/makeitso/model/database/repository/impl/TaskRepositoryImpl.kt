@@ -34,4 +34,8 @@ class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao) : Tas
     override suspend fun deleteAllForUser(userId: String) {
         Dispatchers.IO.apply { taskDao.deleteAllForUser(userId) }
     }
+
+    override suspend fun updateUserId(oldUserId: String, newUserId: String) {
+        Dispatchers.IO.apply { taskDao.updateUserId(oldUserId, newUserId) }
+    }
 }

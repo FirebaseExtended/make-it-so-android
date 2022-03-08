@@ -65,6 +65,21 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
             }
     }
 
+    override suspend fun updateUserId(
+        oldUserId: String,
+        newUserId: String,
+        onResult: (Throwable?) -> Unit
+    ) {
+        Firebase.firestore
+            .collection(TASK_COLLECTION)
+            .whereEqualTo(USER_ID, oldUserId)
+            .get()
+            .addOnFailureListener { error -> onResult(error) }
+            .addOnSuccessListener { result ->
+                for (document in result) document.reference.update(USER_ID, newUserId)
+            }
+    }
+
     companion object {
         private const val TASK_COLLECTION = "Task"
         private const val USER_ID = "userId"

@@ -17,6 +17,15 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         return Firebase.auth.currentUser?.isAnonymous ?: true
     }
 
+    override fun getUserId(): String {
+        return if (isAnonymousUser()) getAnonymousUserId()
+        else Firebase.auth.currentUser?.uid.orEmpty()
+    }
+
+    override fun getAnonymousUserId(): String {
+        return ANONYMOUS_ID
+    }
+
     override fun authenticate(email: String, password: String, callback: (Task<AuthResult>) -> Unit) {
         Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task -> callback(task) }
@@ -48,7 +57,7 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         Firebase.auth.signOut()
     }
 
-    override fun getUserId(): String {
-        return Firebase.auth.currentUser?.uid.orEmpty()
+    companion object {
+        private const val ANONYMOUS_ID = "ANONYMOUS_ID"
     }
 }

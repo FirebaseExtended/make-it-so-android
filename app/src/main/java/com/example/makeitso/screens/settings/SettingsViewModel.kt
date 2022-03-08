@@ -61,7 +61,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun clearAnonymousAccount() {
         viewModelScope.launch(exceptionHandler) {
-            val userId = accountService.getUserId()
+            val userId = accountService.getAnonymousUserId()
 
             firestoreService.deleteAllForUser(userId) { error ->
                 if (error == null) {

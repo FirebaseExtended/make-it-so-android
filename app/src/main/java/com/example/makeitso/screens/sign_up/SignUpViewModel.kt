@@ -11,8 +11,10 @@ import com.example.makeitso.common.error.ErrorMessage.ResourceError
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.ext.passwordMatches
+import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
+import com.example.makeitso.model.service.FirestoreService
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +26,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val accountService: AccountService,
-    private val crashlyticsService: CrashlyticsService
+    private val firestoreService: FirestoreService,
+    private val crashlyticsService: CrashlyticsService,
+    private val taskRepository: TaskRepository
 ) : ViewModel() {
     var uiState = mutableStateOf(SignUpUiState())
         private set
@@ -77,7 +81,23 @@ class SignUpViewModel @Inject constructor(
     private fun linkWithEmail(navController: NavHostController) {
         viewModelScope.launch(exceptionHandler) {
             accountService.linkAccount(email, password) { task ->
-                task.onResult { navController.popBackStack() } //update firestore and db?
+                task.onResult { updateUserId(navController) }
+            }
+        }
+    }
+
+    private fun updateUserId(navController: NavHostController) {
+        viewModelScope.launch(exceptionHandler) {
+            val oldUserId = accountService.getAnonymousUserId()
+            val newUserId = accountService.getUserId()
+
+            firestoreService.updateUserId(oldUserId, newUserId) { error ->
+                if (error == null) {
+                    viewModelScope.launch { taskRepository.updateUserId(oldUserId, newUserId) }
+                    navController.popBackStack()
+                } else {
+                    viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
+                }
             }
         }
     }

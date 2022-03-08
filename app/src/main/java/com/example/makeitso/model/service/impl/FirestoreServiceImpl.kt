@@ -54,6 +54,17 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
             .addOnCompleteListener { onResult(it.exception) }
     }
 
+    override suspend fun deleteAllForUser(userId: String, onResult: (Throwable?) -> Unit) {
+        Firebase.firestore
+            .collection(TASK_COLLECTION)
+            .whereEqualTo(USER_ID, userId)
+            .get()
+            .addOnFailureListener { error -> onResult(error) }
+            .addOnSuccessListener { result ->
+                for (document in result) document.reference.delete()
+            }
+    }
+
     companion object {
         private const val TASK_COLLECTION = "Task"
         private const val USER_ID = "userId"

@@ -9,4 +9,5 @@ interface TaskRepository {
     suspend fun getAllForUser(userId: String): List<Task>
     suspend fun updateCompletion(taskId: String, isComplete: Boolean)
     suspend fun updateFlag(taskId: String, hasFlag: Boolean)
+    suspend fun deleteAllForUser(userId: String)
 }

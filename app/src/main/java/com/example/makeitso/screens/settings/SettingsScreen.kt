@@ -26,6 +26,8 @@ fun SettingsScreen(navController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
+        viewModel.initialize()
+
         snackbarChannel.receiveAsFlow().collect { errorMessage ->
             snackbarHostState.showSnackbar(errorMessage.toMessage(context))
         }
@@ -39,6 +41,7 @@ fun SettingsScreen(navController: NavHostController) {
 @Composable
 private fun ScreenContent(navController: NavHostController, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
+    val uiState = viewModel.uiState.value
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
@@ -55,7 +58,8 @@ private fun ScreenContent(navController: NavHostController, viewModel: SettingsV
         }
 
         CardEditor(AppText.sign_out, AppIcon.ic_exit, "") {
-            showWarningDialog = true
+            if (uiState.isAnonymousAccount) showWarningDialog = true
+            else viewModel.onSignOutClick(navController)
         }
 
         if(showWarningDialog) {

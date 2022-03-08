@@ -25,4 +25,7 @@ interface TaskDao {
 
     @Query("UPDATE Task SET flag = :hasFlag WHERE id = :id")
     suspend fun updateFlag(hasFlag: Boolean, id: String)
+
+    @Query("DELETE FROM Task WHERE userId = :userId")
+    suspend fun deleteAllForUser(userId: String)
 }

@@ -7,4 +7,5 @@ interface FirestoreService {
     suspend fun getTasksForUser(userId: String, onError: (Throwable) -> Unit, onSuccess: (List<Task>) -> Unit)
     suspend fun saveTask(task: Task, onResult: (Throwable?) -> Unit)
     suspend fun deleteTask(taskId: String, onResult: (Throwable?) -> Unit)
+    suspend fun deleteAllForUser(userId: String, onResult: (Throwable?) -> Unit)
 }

@@ -29,7 +29,7 @@ class SignUpViewModel @Inject constructor(
     var uiState = mutableStateOf(SignUpUiState())
         private set
 
-    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED) //use SharedFlow
+    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED)
 
     private val email get() = uiState.value.email
     private val password get() = uiState.value.password

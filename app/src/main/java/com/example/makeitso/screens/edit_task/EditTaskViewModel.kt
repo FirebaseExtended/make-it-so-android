@@ -3,13 +3,12 @@ package com.example.makeitso.screens.edit_task
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
+import com.example.makeitso.TASK_DEFAULT_ID
 import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.ResourceError
+import com.example.makeitso.common.ext.idFromParameter
 import com.example.makeitso.R.string as AppText
-import com.example.makeitso.common.navigation.TASK_DEFAULT_ID
-import com.example.makeitso.common.navigation.idFromParameter
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
@@ -83,14 +82,14 @@ class EditTaskViewModel @Inject constructor(
         task.value = task.value.copy(priority = newValue)
     }
 
-    fun onDoneClick(navController: NavHostController) {
+    fun onDoneClick(popUpScreen: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             val editedTask = task.value.copy(userId = accountService.getUserId())
 
             firestoreService.saveTask(editedTask) { error ->
                 if (error == null) {
                     this.launch { taskRepository.insert(editedTask) }
-                    navController.popBackStack()
+                    popUpScreen()
                 } else onError(error)
             }
         }

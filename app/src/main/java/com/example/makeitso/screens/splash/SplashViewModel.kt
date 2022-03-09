@@ -2,9 +2,6 @@ package com.example.makeitso.screens.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
-import com.example.makeitso.common.navigation.SPLASH_SCREEN
-import com.example.makeitso.common.navigation.TASKS_SCREEN
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,21 +18,15 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
-    fun onAppStart(navController: NavHostController) {
-        if (accountService.hasUser()) navigateToTasks(navController)
-        else createAnonymousAccount(navController)
+    fun onAppStart(openTasks: () -> Unit) {
+        if (accountService.hasUser()) openTasks()
+        else createAnonymousAccount(openTasks)
     }
 
-    private fun navigateToTasks(navController: NavHostController) {
-        navController.navigate(TASKS_SCREEN) {
-            popUpTo(SPLASH_SCREEN) { inclusive = true }
-        }
-    }
-
-    private fun createAnonymousAccount(navController: NavHostController) {
+    private fun createAnonymousAccount(openTasks: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             accountService.createAnonymousAccount { task ->
-                if (task.isSuccessful) navigateToTasks(navController)
+                if (task.isSuccessful) openTasks()
                 else crashlyticsService.logNonFatalCrash(task.exception)
             }
         }

@@ -3,11 +3,9 @@ package com.example.makeitso.screens.tasks
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.ResourceError
-import com.example.makeitso.common.navigation.*
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.database.repository.TaskRepository
@@ -45,10 +43,6 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    fun onAddTaskClick(navController: NavHostController) {
-        navController.navigate(EDIT_TASK_SCREEN)
-    }
-
     fun onTaskCheckChange(task: Task) {
         viewModelScope.launch(exceptionHandler) {
             val updatedTask = task.copy(completed = !task.completed)
@@ -62,16 +56,12 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    fun onTaskActionClick(task: Task, action: String, navController: NavHostController) {
+    fun onTaskActionClick(openEditTask: (String) -> Unit, task: Task, action: String) {
         when (TaskActionOption.getByTitle(action)) {
-            TaskActionOption.EditTask -> onEditTaskClick(navController, task)
+            TaskActionOption.EditTask -> openEditTask(task.id)
             TaskActionOption.ToggleFlag -> onFlagTaskClick(task)
             TaskActionOption.DeleteTask -> onDeleteTaskClick(task)
         }
-    }
-
-    private fun onEditTaskClick(navController: NavHostController, task: Task) {
-        navController.navigate("$EDIT_TASK_SCREEN?$TASK_ID={${task.id}}")
     }
 
     private fun onFlagTaskClick(task: Task) {
@@ -109,9 +99,5 @@ class TasksViewModel @Inject constructor(
     private fun onError(error: Throwable?) {
         snackbarChannel.trySend(error.toErrorMessage())
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
-    }
-
-    fun onSettingsClick(navController: NavHostController) {
-        navController.navigate(SETTINGS_SCREEN)
     }
 }

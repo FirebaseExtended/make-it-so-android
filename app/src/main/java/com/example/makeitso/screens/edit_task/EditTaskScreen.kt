@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
 import com.example.makeitso.model.Priority
@@ -27,7 +26,7 @@ import com.example.makeitso.R.string as AppText
 
 @Composable
 @ExperimentalMaterialApi
-fun EditTaskScreen(navController: NavHostController, taskId: String) {
+fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
 
     val context = LocalContext.current
@@ -43,13 +42,13 @@ fun EditTaskScreen(navController: NavHostController, taskId: String) {
     }
 
     Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
-        ScreenContent(navController, viewModel)
+        ScreenContent(popUpScreen, viewModel)
     }
 }
 
 @Composable
 @ExperimentalMaterialApi
-private fun ScreenContent(navController: NavHostController, viewModel: EditTaskViewModel) {
+private fun ScreenContent(popUpScreen: () -> Unit, viewModel: EditTaskViewModel) {
     val task = viewModel.task.value
 
     Column(
@@ -59,7 +58,7 @@ private fun ScreenContent(navController: NavHostController, viewModel: EditTaskV
         ActionToolbar(
             title = AppText.edit_task,
             endActionIcon = AppIcon.ic_check,
-            endAction = { viewModel.onDoneClick(navController) }
+            endAction = { viewModel.onDoneClick(popUpScreen) }
         )
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))

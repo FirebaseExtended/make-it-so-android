@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
-fun SettingsScreen(navController: NavHostController) {
+fun SettingsScreen(signOut: () -> Unit, openLogin: () -> Unit, popUpScreen: () -> Unit) {
     val viewModel = hiltViewModel<SettingsViewModel>()
 
     val context = LocalContext.current
@@ -34,12 +33,17 @@ fun SettingsScreen(navController: NavHostController) {
     }
 
     Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
-        ScreenContent(navController, viewModel)
+        ScreenContent(signOut, openLogin, popUpScreen, viewModel)
     }
 }
 
 @Composable
-private fun ScreenContent(navController: NavHostController, viewModel: SettingsViewModel) {
+private fun ScreenContent(
+    signOut: () -> Unit,
+    openLogin: () -> Unit,
+    popUpScreen: () -> Unit,
+    viewModel: SettingsViewModel
+) {
     var showWarningDialog by remember { mutableStateOf(false) }
     val uiState = viewModel.uiState.value
 
@@ -47,19 +51,17 @@ private fun ScreenContent(navController: NavHostController, viewModel: SettingsV
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BasicToolbar(AppText.settings) {
-            viewModel.onBackClick(navController)
-        }
+        BasicToolbar(AppText.settings) { popUpScreen() }
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
 
         CardEditor(AppText.link_with_account, AppIcon.ic_account, "") {
-            viewModel.onLinkAccountClick(navController)
+            openLogin()
         }
 
         CardEditor(AppText.sign_out, AppIcon.ic_exit, "") {
             if (uiState.isAnonymousAccount) showWarningDialog = true
-            else viewModel.onSignOutClick(navController)
+            else viewModel.onSignOutClick(signOut)
         }
 
         if(showWarningDialog) {
@@ -69,7 +71,7 @@ private fun ScreenContent(navController: NavHostController, viewModel: SettingsV
                 dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
                 confirmButton = {
                     DialogButton(AppText.sign_out) {
-                        viewModel.onSignOutClick(navController)
+                        viewModel.onSignOutClick(signOut)
                         showWarningDialog = false
                     }
                 },

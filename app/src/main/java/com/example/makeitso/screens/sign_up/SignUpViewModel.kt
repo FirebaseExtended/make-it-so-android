@@ -3,7 +3,6 @@ package com.example.makeitso.screens.sign_up
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
@@ -55,7 +54,7 @@ class SignUpViewModel @Inject constructor(
         uiState.value = uiState.value.copy(repeatPassword = newValue)
     }
 
-    fun onSignUpClick(navController: NavHostController) {
+    fun onSignUpClick(popUpScreen: () -> Unit) {
         if (!email.isValidEmail()) {
             snackbarChannel.trySend(ResourceError(AppText.email_error))
             return
@@ -73,20 +72,20 @@ class SignUpViewModel @Inject constructor(
 
         viewModelScope.launch(exceptionHandler) {
             accountService.createAccount(email, password) { task ->
-                task.onResult { linkWithEmail(navController) }
+                task.onResult { linkWithEmail(popUpScreen) }
             }
         }
     }
 
-    private fun linkWithEmail(navController: NavHostController) {
+    private fun linkWithEmail(popUpScreen: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             accountService.linkAccount(email, password) { task ->
-                task.onResult { updateUserId(navController) }
+                task.onResult { updateUserId(popUpScreen) }
             }
         }
     }
 
-    private fun updateUserId(navController: NavHostController) {
+    private fun updateUserId(popUpScreen: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             val oldUserId = accountService.getAnonymousUserId()
             val newUserId = accountService.getUserId()
@@ -94,7 +93,7 @@ class SignUpViewModel @Inject constructor(
             firestoreService.updateUserId(oldUserId, newUserId) { error ->
                 if (error == null) {
                     viewModelScope.launch { taskRepository.updateUserId(oldUserId, newUserId) }
-                    navController.popBackStack()
+                    popUpScreen()
                 } else {
                     viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
                 }
@@ -109,9 +108,5 @@ class SignUpViewModel @Inject constructor(
             snackbarChannel.trySend(this.exception.toErrorMessage())
             crashlyticsService.logNonFatalCrash(this.exception)
         }
-    }
-
-    fun onBackClick(navController: NavHostController) {
-        navController.popBackStack()
     }
 }

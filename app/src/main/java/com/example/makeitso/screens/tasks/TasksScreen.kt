@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.ActionToolbar
 import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
 import com.example.makeitso.R.drawable as AppIcon
@@ -23,7 +22,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
 @ExperimentalMaterialApi
-fun TasksScreen(navController: NavHostController) {
+fun TasksScreen(openAddTask: () -> Unit, openEditTask: (String) -> Unit, openSettings: () -> Unit) {
     val viewModel = hiltViewModel<TasksViewModel>()
 
     val context = LocalContext.current
@@ -42,27 +41,31 @@ fun TasksScreen(navController: NavHostController) {
         scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.onAddTaskClick(navController) },
+                onClick = openAddTask,
                 backgroundColor = BrightOrange,
                 contentColor = Color.White,
                 modifier = Modifier.padding(16.dp)
             ) { Icon(Icons.Filled.Add, "Add") }
         }
     ) {
-        ScreenContent(navController, viewModel)
+        ScreenContent(openEditTask, openSettings, viewModel)
     }
 }
 
 @Composable
 @ExperimentalMaterialApi
-private fun ScreenContent(navController: NavHostController, viewModel: TasksViewModel) {
+private fun ScreenContent(
+    openEditTask: (String) -> Unit,
+    openSettings: () -> Unit,
+    viewModel: TasksViewModel
+) {
     val tasks = viewModel.tasks.value
 
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ActionToolbar(
             title = AppText.tasks,
             endActionIcon = AppIcon.ic_settings,
-            endAction = { viewModel.onSettingsClick(navController) }
+            endAction = openSettings
         )
 
         Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
@@ -73,7 +76,7 @@ private fun ScreenContent(navController: NavHostController, viewModel: TasksView
                     task = taskItem,
                     onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
                     onActionClick = { action ->
-                        viewModel.onTaskActionClick(taskItem, action, navController)
+                        viewModel.onTaskActionClick(openEditTask, taskItem, action)
                     }
                 )
             }

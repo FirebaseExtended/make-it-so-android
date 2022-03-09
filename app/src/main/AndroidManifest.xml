@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MakeItSo"
-        android:name = ".MakeItSoApplication">
+        android:name = ".MakeItSoHiltApp">
         <activity
             android:name=".MakeItSoActivity"
             android:exported="true"

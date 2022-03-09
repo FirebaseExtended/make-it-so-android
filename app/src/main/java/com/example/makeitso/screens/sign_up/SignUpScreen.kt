@@ -7,7 +7,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
 import kotlinx.coroutines.flow.collect
@@ -15,7 +14,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun SignUpScreen(navController: NavHostController) {
+fun SignUpScreen(popUpScreen: () -> Unit) {
     val viewModel = hiltViewModel<SignUpViewModel>()
 
     val context = LocalContext.current
@@ -29,17 +28,15 @@ fun SignUpScreen(navController: NavHostController) {
     }
 
     Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
-        ScreenContent(navController, viewModel)
+        ScreenContent(popUpScreen, viewModel)
     }
 }
 
 @Composable
-private fun ScreenContent(navController: NavHostController, viewModel: SignUpViewModel) {
+private fun ScreenContent(popUpScreen: () -> Unit, viewModel: SignUpViewModel) {
     val uiState = viewModel.uiState.value
 
-    BasicToolbar(AppText.create_an_account) {
-        viewModel.onBackClick(navController)
-    }
+    BasicToolbar(AppText.create_an_account) { popUpScreen() }
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
@@ -50,8 +47,6 @@ private fun ScreenContent(navController: NavHostController, viewModel: SignUpVie
         PasswordField(uiState.password, viewModel::onPasswordChange)
         RepeatPasswordField(uiState.repeatPassword, viewModel::onRepeatPasswordChange)
 
-        BasicButton(AppText.create_account) {
-            viewModel.onSignUpClick(navController)
-        }
+        BasicButton(AppText.create_account) { viewModel.onSignUpClick(popUpScreen) }
     }
 }

@@ -9,14 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.makeitso.theme.BrightOrange
 import kotlinx.coroutines.delay
 
 private const val SPLASH_TIMEOUT = 1000L
 
 @Composable
-fun SplashScreen(navController: NavHostController) {
+fun SplashScreen(openTasks: () -> Unit) {
     val viewModel = hiltViewModel<SplashViewModel>()
 
     Column(
@@ -32,6 +31,6 @@ fun SplashScreen(navController: NavHostController) {
 
     LaunchedEffect(true) {
         delay(SPLASH_TIMEOUT)
-        viewModel.onAppStart(navController)
+        viewModel.onAppStart(openTasks)
     }
 }

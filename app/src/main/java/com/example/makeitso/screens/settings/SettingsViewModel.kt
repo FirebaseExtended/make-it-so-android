@@ -3,11 +3,8 @@ package com.example.makeitso.screens.settings
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.error.ErrorMessage
-import com.example.makeitso.common.navigation.LOGIN_SCREEN
-import com.example.makeitso.common.navigation.SPLASH_SCREEN
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
@@ -39,23 +36,12 @@ class SettingsViewModel @Inject constructor(
         uiState.value = SettingsUiState(accountService.isAnonymousUser())
     }
 
-    fun onBackClick(navController: NavHostController) {
-        navController.popBackStack()
-    }
-
-    fun onLinkAccountClick(navController: NavHostController) {
-        navController.navigate(LOGIN_SCREEN)
-    }
-
-    fun onSignOutClick(navController: NavHostController) {
+    fun onSignOutClick(signOut: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             if (uiState.value.isAnonymousAccount) clearAnonymousAccount()
 
             accountService.signOut()
-
-            navController.navigate(SPLASH_SCREEN) {
-                popUpTo(0) { inclusive = true }
-            }
+            signOut()
         }
     }
 

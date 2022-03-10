@@ -13,7 +13,7 @@ fun SignUpScreen(popUpScreen: () -> Unit) {
     val viewModel = hiltViewModel<SignUpViewModel>()
     val uiState = viewModel.uiState.value
 
-    BasicToolbar(AppText.create_an_account) { popUpScreen() }
+    BasicToolbar(AppText.create_account) { popUpScreen() }
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),

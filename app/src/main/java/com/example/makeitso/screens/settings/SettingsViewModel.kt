@@ -33,13 +33,22 @@ class SettingsViewModel @Inject constructor(
         uiState.value = SettingsUiState(accountService.isAnonymousUser())
     }
 
-    fun onSignOutClick(signOut: () -> Unit) {
+    fun onSignOutClick(restartApp: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             if (uiState.value.isAnonymousAccount) clearAnonymousAccount()
 
             accountService.signOut()
-            signOut()
+            restartApp()
         }
+    }
+
+    fun onDeleteMyAccountClick(restartApp: () -> Unit) {
+        //LOGIC TO DELETE ACCOUNT
+    }
+
+    fun onClearAllTasksClick() {
+        //LOGIC TO CLEAR TASKS
+        //SHOW SNACKBAR
     }
 
     private fun clearAnonymousAccount() {

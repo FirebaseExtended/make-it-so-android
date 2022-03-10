@@ -13,25 +13,18 @@ import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
 
 @Composable
-fun SettingsScreen(signOut: () -> Unit, openLogin: () -> Unit, popUpScreen: () -> Unit) {
+fun SettingsScreen(
+    restartApp: () -> Unit,
+    openLogin: () -> Unit,
+    openSignUp: () -> Unit,
+    popUpScreen: () -> Unit
+) {
     val viewModel = hiltViewModel<SettingsViewModel>()
+    val uiState = viewModel.uiState.value
 
     LaunchedEffect(Unit) {
         viewModel.initialize()
     }
-
-    ScreenContent(signOut, openLogin, popUpScreen, viewModel)
-}
-
-@Composable
-private fun ScreenContent(
-    signOut: () -> Unit,
-    openLogin: () -> Unit,
-    popUpScreen: () -> Unit,
-    viewModel: SettingsViewModel
-) {
-    var showWarningDialog by remember { mutableStateOf(false) }
-    val uiState = viewModel.uiState.value
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
@@ -41,28 +34,92 @@ private fun ScreenContent(
 
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
 
-        CardEditor(AppText.link_with_account, AppIcon.ic_account, "") {
-            openLogin()
+        if (uiState.isAnonymousAccount) {
+            CardEditor(AppText.sign_in, AppIcon.ic_sign_in, "") {
+                openLogin()
+            }
+
+            CardEditor(AppText.create_account, AppIcon.ic_create_account, "") {
+                openSignUp()
+            }
+        } else {
+            //CREATE DANGER ZONE UI
+            SignOutCard(restartApp, viewModel)
+            DeleteMyAccountCard(restartApp, viewModel)
         }
 
-        CardEditor(AppText.sign_out, AppIcon.ic_exit, "") {
-            if (uiState.isAnonymousAccount) showWarningDialog = true
-            else viewModel.onSignOutClick(signOut)
-        }
+        ClearAllTasksCard(viewModel)
+    }
+}
 
-        if(showWarningDialog) {
-            AlertDialog(
-                title = { Text(stringResource(AppText.warning)) },
-                text = { Text(stringResource(AppText.anonymous_warning)) },
-                dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
-                confirmButton = {
-                    DialogButton(AppText.sign_out) {
-                        viewModel.onSignOutClick(signOut)
-                        showWarningDialog = false
-                    }
-                },
-                onDismissRequest = { showWarningDialog = false }
-            )
-        }
+@Composable
+private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
+    var showWarningDialog by remember { mutableStateOf(false) }
+
+    CardEditor(AppText.sign_out, AppIcon.ic_exit, "") {
+        showWarningDialog = true
+    }
+
+    if(showWarningDialog) { //EDIT DIALOG
+        AlertDialog(
+            title = { Text(stringResource(AppText.warning)) },
+            text = { Text(stringResource(AppText.anonymous_warning)) },
+            dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
+            confirmButton = {
+                DialogButton(AppText.sign_out) {
+                    viewModel.onSignOutClick(restartApp)
+                    showWarningDialog = false
+                }
+            },
+            onDismissRequest = { showWarningDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
+    var showWarningDialog by remember { mutableStateOf(false) }
+
+    CardEditor(AppText.delete_my_account, AppIcon.ic_delete_my_account, "") {
+        showWarningDialog = true
+    }
+
+    if(showWarningDialog) { //EDIT DIALOG
+        AlertDialog(
+            title = { Text(stringResource(AppText.warning)) },
+            text = { Text(stringResource(AppText.anonymous_warning)) },
+            dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
+            confirmButton = {
+                DialogButton(AppText.sign_out) {
+                    viewModel.onDeleteMyAccountClick(restartApp)
+                    showWarningDialog = false
+                }
+            },
+            onDismissRequest = { showWarningDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun ClearAllTasksCard(viewModel: SettingsViewModel) {
+    var showWarningDialog by remember { mutableStateOf(false) }
+
+    CardEditor(AppText.clear_all_tasks, AppIcon.ic_clear_all_tasks, "") {
+        showWarningDialog = true
+    }
+
+    if(showWarningDialog) { //EDIT DIALOG
+        AlertDialog(
+            title = { Text(stringResource(AppText.warning)) },
+            text = { Text(stringResource(AppText.anonymous_warning)) },
+            dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
+            confirmButton = {
+                DialogButton(AppText.sign_out) {
+                    viewModel.onClearAllTasksClick()
+                    showWarningDialog = false
+                }
+            },
+            onDismissRequest = { showWarningDialog = false }
+        )
     }
 }

@@ -3,15 +3,14 @@ package com.example.makeitso.screens.settings
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.R.string as AppText
-import com.example.makeitso.common.error.ErrorMessage
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,10 +24,8 @@ class SettingsViewModel @Inject constructor(
     var uiState = mutableStateOf(SettingsUiState())
         private set
 
-    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED)
-
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        snackbarChannel.trySend(ErrorMessage.ResourceError(AppText.generic_error))
+        SnackbarManager.showMessage(AppText.generic_error)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 

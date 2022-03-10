@@ -4,10 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.R.string as AppText
-import com.example.makeitso.common.error.ErrorMessage
-import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
-import com.example.makeitso.common.error.ErrorMessage.ResourceError
+import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.common.ext.isValidEmail
+import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
@@ -16,7 +15,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,13 +28,11 @@ class LoginViewModel @Inject constructor(
     var uiState = mutableStateOf(LoginUiState())
         private set
 
-    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED)
-
     private val email get() = uiState.value.email
     private val password get() = uiState.value.password
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        snackbarChannel.trySend(ResourceError(AppText.generic_error))
+        SnackbarManager.showMessage(AppText.generic_error)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
@@ -50,12 +46,12 @@ class LoginViewModel @Inject constructor(
 
     fun onSignInClick(popUpScreen: () -> Unit) {
         if (!email.isValidEmail()) {
-            snackbarChannel.trySend(ResourceError(AppText.email_error))
+            SnackbarManager.showMessage(AppText.email_error)
             return
         }
 
         if (password.isBlank()) {
-            snackbarChannel.trySend(ResourceError(AppText.empty_password_error))
+            SnackbarManager.showMessage(AppText.empty_password_error)
             return
         }
 
@@ -94,23 +90,23 @@ class LoginViewModel @Inject constructor(
         if (this.isSuccessful) {
             successCallback()
         } else {
-            snackbarChannel.trySend(this.exception.toErrorMessage())
+            SnackbarManager.showMessage(this.exception.toSnackbarMessage())
             crashlyticsService.logNonFatalCrash(this.exception)
         }
     }
 
     fun onForgotPasswordClick() {
         if (!email.isValidEmail()) {
-            snackbarChannel.trySend(ResourceError(AppText.email_error))
+            SnackbarManager.showMessage(AppText.email_error)
             return
         }
 
         viewModelScope.launch(exceptionHandler) {
             accountService.sendRecoveryEmail(email) { error ->
                 if (error == null) {
-                    snackbarChannel.trySend(ResourceError(AppText.recovery_email_sent))
+                    SnackbarManager.showMessage(AppText.recovery_email_sent)
                 } else {
-                    snackbarChannel.trySend(error.toErrorMessage())
+                    SnackbarManager.showMessage(error.toSnackbarMessage())
                     crashlyticsService.logNonFatalCrash(error)
                 }
             }

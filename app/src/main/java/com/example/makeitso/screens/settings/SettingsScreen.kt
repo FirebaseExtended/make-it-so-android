@@ -5,36 +5,22 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
-import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
 fun SettingsScreen(signOut: () -> Unit, openLogin: () -> Unit, popUpScreen: () -> Unit) {
     val viewModel = hiltViewModel<SettingsViewModel>()
 
-    val context = LocalContext.current
-    val snackbarChannel = remember { viewModel.snackbarChannel }
-    val snackbarHostState = remember { SnackbarHostState() }
-
     LaunchedEffect(Unit) {
         viewModel.initialize()
-
-        snackbarChannel.receiveAsFlow().collect { errorMessage ->
-            snackbarHostState.showSnackbar(errorMessage.toMessage(context))
-        }
     }
 
-    Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
-        ScreenContent(signOut, openLogin, popUpScreen, viewModel)
-    }
+    ScreenContent(signOut, openLogin, popUpScreen, viewModel)
 }
 
 @Composable

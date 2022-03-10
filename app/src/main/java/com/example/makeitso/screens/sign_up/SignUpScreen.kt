@@ -1,39 +1,16 @@
 package com.example.makeitso.screens.sign_up
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.common.composable.*
-import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
 import com.example.makeitso.R.string as AppText
 
 @Composable
 fun SignUpScreen(popUpScreen: () -> Unit) {
     val viewModel = hiltViewModel<SignUpViewModel>()
-
-    val context = LocalContext.current
-    val snackbarChannel = remember { viewModel.snackbarChannel }
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-        snackbarChannel.receiveAsFlow().collect { errorMessage ->
-            snackbarHostState.showSnackbar(errorMessage.toMessage(context))
-        }
-    }
-
-    Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
-        ScreenContent(popUpScreen, viewModel)
-    }
-}
-
-@Composable
-private fun ScreenContent(popUpScreen: () -> Unit, viewModel: SignUpViewModel) {
     val uiState = viewModel.uiState.value
 
     BasicToolbar(AppText.create_an_account) { popUpScreen() }

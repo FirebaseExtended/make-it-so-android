@@ -4,12 +4,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.R.string as AppText
-import com.example.makeitso.common.error.ErrorMessage
-import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
-import com.example.makeitso.common.error.ErrorMessage.ResourceError
+import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.ext.passwordMatches
+import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
@@ -18,7 +17,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,13 +30,11 @@ class SignUpViewModel @Inject constructor(
     var uiState = mutableStateOf(SignUpUiState())
         private set
 
-    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED)
-
     private val email get() = uiState.value.email
     private val password get() = uiState.value.password
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        snackbarChannel.trySend(ResourceError(AppText.generic_error))
+        SnackbarManager.showMessage(AppText.generic_error)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
@@ -56,17 +52,17 @@ class SignUpViewModel @Inject constructor(
 
     fun onSignUpClick(popUpScreen: () -> Unit) {
         if (!email.isValidEmail()) {
-            snackbarChannel.trySend(ResourceError(AppText.email_error))
+            SnackbarManager.showMessage(AppText.email_error)
             return
         }
 
         if (!password.isValidPassword()) {
-            snackbarChannel.trySend(ResourceError(AppText.password_error))
+            SnackbarManager.showMessage(AppText.password_error)
             return
         }
 
         if (!password.passwordMatches(uiState.value.repeatPassword)) {
-            snackbarChannel.trySend(ResourceError(AppText.password_match_error))
+            SnackbarManager.showMessage(AppText.password_match_error)
             return
         }
 
@@ -105,7 +101,7 @@ class SignUpViewModel @Inject constructor(
         if (this.isSuccessful) {
             successCallback()
         } else {
-            snackbarChannel.trySend(this.exception.toErrorMessage())
+            SnackbarManager.showMessage(this.exception.toSnackbarMessage())
             crashlyticsService.logNonFatalCrash(this.exception)
         }
     }

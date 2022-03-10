@@ -3,9 +3,8 @@ package com.example.makeitso.screens.tasks
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.makeitso.common.error.ErrorMessage
-import com.example.makeitso.common.error.ErrorMessage.Companion.toErrorMessage
-import com.example.makeitso.common.error.ErrorMessage.ResourceError
+import com.example.makeitso.common.snackbar.SnackbarManager
+import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.database.repository.TaskRepository
@@ -14,7 +13,6 @@ import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,10 +26,8 @@ class TasksViewModel @Inject constructor(
     var tasks = mutableStateOf<List<Task>>(emptyList())
         private set
 
-    val snackbarChannel = Channel<ErrorMessage>(Channel.CONFLATED)
-
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        snackbarChannel.trySend(ResourceError(AppText.generic_error))
+        SnackbarManager.showMessage(AppText.generic_error)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
@@ -97,7 +93,7 @@ class TasksViewModel @Inject constructor(
     }
 
     private fun onError(error: Throwable?) {
-        snackbarChannel.trySend(error.toErrorMessage())
+        SnackbarManager.showMessage(error.toSnackbarMessage())
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
     }
 }

@@ -1,16 +1,23 @@
 package com.example.makeitso
 
+import android.content.res.Resources
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.screens.edit_task.EditTaskScreen
 import com.example.makeitso.screens.login.LoginScreen
 import com.example.makeitso.screens.settings.SettingsScreen
@@ -18,6 +25,7 @@ import com.example.makeitso.screens.sign_up.SignUpScreen
 import com.example.makeitso.screens.splash.SplashScreen
 import com.example.makeitso.screens.tasks.TasksScreen
 import com.example.makeitso.theme.MakeItSoTheme
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 @ExperimentalMaterialApi
@@ -27,7 +35,16 @@ fun MakeItSoApp() {
 
             val appState = rememberAppState()
 
-            Scaffold(scaffoldState = appState.scaffoldState) { innerPaddingModifier ->
+            Scaffold(
+                snackbarHost = {
+                    SnackbarHost(
+                        hostState = it,
+                        modifier = Modifier.padding(8.dp),
+                        snackbar = { snackbarData -> Snackbar(snackbarData) }
+                    )
+                },
+                scaffoldState = appState.scaffoldState
+            ) { innerPaddingModifier ->
                 NavHost(
                     navController = appState.navController,
                     startDestination = SPLASH_SCREEN,
@@ -41,9 +58,19 @@ fun MakeItSoApp() {
 @Composable
 fun rememberAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    navController: NavHostController = rememberNavController()
-) = remember(scaffoldState, navController) {
-    MakeItSoAppState(scaffoldState, navController)
+    navController: NavHostController = rememberNavController(),
+    snackbarManager: SnackbarManager = SnackbarManager,
+    resources: Resources = resources(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope()
+) = remember(scaffoldState, navController, snackbarManager, resources, coroutineScope) {
+    MakeItSoAppState(scaffoldState, navController, snackbarManager, resources, coroutineScope)
+}
+
+@Composable
+@ReadOnlyComposable
+fun resources(): Resources {
+    LocalConfiguration.current
+    return LocalContext.current.resources
 }
 
 @ExperimentalMaterialApi

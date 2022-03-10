@@ -3,9 +3,6 @@ package com.example.makeitso.screens.edit_task
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,14 +10,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.common.composable.*
-import com.example.makeitso.common.error.ErrorMessage.Companion.toMessage
 import com.example.makeitso.model.Priority
 import com.example.makeitso.model.Task
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
@@ -28,28 +22,11 @@ import com.example.makeitso.R.string as AppText
 @ExperimentalMaterialApi
 fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String) {
     val viewModel = hiltViewModel<EditTaskViewModel>()
-
-    val context = LocalContext.current
-    val snackbarChannel = remember { viewModel.snackbarChannel }
-    val snackbarHostState = remember { SnackbarHostState() }
+    val task = viewModel.task.value
 
     LaunchedEffect(Unit) {
         viewModel.initialize(taskId)
-
-        snackbarChannel.receiveAsFlow().collect { errorMessage ->
-            snackbarHostState.showSnackbar(errorMessage.toMessage(context))
-        }
     }
-
-    Scaffold(scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)) {
-        ScreenContent(popUpScreen, viewModel)
-    }
-}
-
-@Composable
-@ExperimentalMaterialApi
-private fun ScreenContent(popUpScreen: () -> Unit, viewModel: EditTaskViewModel) {
-    val task = viewModel.task.value
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),

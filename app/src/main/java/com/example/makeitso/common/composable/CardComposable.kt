@@ -14,11 +14,32 @@ import androidx.compose.ui.unit.dp
 import com.example.makeitso.theme.BrightOrange
 
 @Composable
-fun CardEditor(
+fun DangerousCardEditor(
     @StringRes title: Int,
     @DrawableRes icon: Int,
     content: String,
     onEditClick: () -> Unit
+) {
+    CardEditor(title, icon, content, onEditClick, BrightOrange)
+}
+
+@Composable
+fun RegularCardEditor(
+    @StringRes title: Int,
+    @DrawableRes icon: Int,
+    content: String,
+    onEditClick: () -> Unit
+) {
+    CardEditor(title, icon, content, onEditClick, Color.DarkGray)
+}
+
+@Composable
+private fun CardEditor(
+    @StringRes title: Int,
+    @DrawableRes icon: Int,
+    content: String,
+    onEditClick: () -> Unit,
+    highlightColor: Color
 ) {
     Card(
         backgroundColor = Color.White,
@@ -29,7 +50,7 @@ fun CardEditor(
             modifier = Modifier.fillMaxWidth().padding(16.dp, 4.dp, 0.dp, 4.dp),
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(stringResource(title), color = Color.DarkGray)
+                Text(stringResource(title), color = highlightColor)
             }
 
             if (content.isNotBlank()) {
@@ -44,7 +65,7 @@ fun CardEditor(
                 Icon(
                     painter = painterResource(icon),
                     contentDescription = "Icon",
-                    tint = BrightOrange
+                    tint = highlightColor
                 )
             }
         }

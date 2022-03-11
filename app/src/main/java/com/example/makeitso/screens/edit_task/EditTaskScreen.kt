@@ -60,11 +60,11 @@ private fun BasicFields(task: Task, viewModel: EditTaskViewModel) {
 private fun CardEditors(task: Task, viewModel: EditTaskViewModel) {
     val activity = LocalContext.current as AppCompatActivity
 
-    CardEditor(AppText.date, AppIcon.ic_calendar, task.dueDate) {
+    RegularCardEditor(AppText.date, AppIcon.ic_calendar, task.dueDate) {
         showDatePicker(activity, viewModel)
     }
 
-    CardEditor(AppText.time, AppIcon.ic_clock, task.dueTime) {
+    RegularCardEditor(AppText.time, AppIcon.ic_clock, task.dueTime) {
         showTimePicker(activity, viewModel)
     }
 }

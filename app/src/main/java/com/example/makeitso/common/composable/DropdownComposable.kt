@@ -95,8 +95,8 @@ private fun dropdownColors(): TextFieldColors {
         backgroundColor = Color.White,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor =  Color.Transparent,
-        trailingIconColor = BrightOrange,
-        focusedTrailingIconColor = BrightOrange,
+        trailingIconColor = Color.DarkGray,
+        focusedTrailingIconColor = Color.DarkGray,
         focusedLabelColor = BrightOrange,
         unfocusedLabelColor = BrightOrange
     )

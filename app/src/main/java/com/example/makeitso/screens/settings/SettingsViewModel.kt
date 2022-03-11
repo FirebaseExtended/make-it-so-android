@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.common.snackbar.SnackbarManager
+import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
@@ -35,28 +36,33 @@ class SettingsViewModel @Inject constructor(
 
     fun onSignOutClick(restartApp: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
-            if (uiState.value.isAnonymousAccount) clearAnonymousAccount()
-
             accountService.signOut()
             restartApp()
         }
     }
 
     fun onDeleteMyAccountClick(restartApp: () -> Unit) {
-        //LOGIC TO DELETE ACCOUNT
-    }
+        onClearAllTasksClick(shouldDisplayMessage = false)
 
-    fun onClearAllTasksClick() {
-        //LOGIC TO CLEAR TASKS
-        //SHOW SNACKBAR
-    }
-
-    private fun clearAnonymousAccount() {
         viewModelScope.launch(exceptionHandler) {
-            val userId = accountService.getAnonymousUserId()
+            accountService.deleteAccount { error ->
+                if (error == null) {
+                    restartApp()
+                } else {
+                    SnackbarManager.showMessage(error.toSnackbarMessage())
+                    crashlyticsService.logNonFatalCrash(error)
+                }
+            }
+        }
+    }
+
+    fun onClearAllTasksClick(shouldDisplayMessage: Boolean = true) {
+        viewModelScope.launch(exceptionHandler) {
+            val userId = accountService.getUserId()
 
             firestoreService.deleteAllForUser(userId) { error ->
                 if (error == null) {
+                    if (shouldDisplayMessage) SnackbarManager.showMessage(AppText.tasks_cleared)
                     viewModelScope.launch { taskRepository.deleteAllForUser(userId) }
                 } else {
                     viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }

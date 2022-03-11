@@ -35,15 +35,14 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
 
         if (uiState.isAnonymousAccount) {
-            CardEditor(AppText.sign_in, AppIcon.ic_sign_in, "") {
+            RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "") {
                 openLogin()
             }
 
-            CardEditor(AppText.create_account, AppIcon.ic_create_account, "") {
+            RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "") {
                 openSignUp()
             }
         } else {
-            //CREATE DANGER ZONE UI
             SignOutCard(restartApp, viewModel)
             DeleteMyAccountCard(restartApp, viewModel)
         }
@@ -56,17 +55,17 @@ fun SettingsScreen(
 private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    CardEditor(AppText.sign_out, AppIcon.ic_exit, "") {
+    RegularCardEditor(AppText.sign_out, AppIcon.ic_exit, "") {
         showWarningDialog = true
     }
 
-    if(showWarningDialog) { //EDIT DIALOG
+    if(showWarningDialog) {
         AlertDialog(
-            title = { Text(stringResource(AppText.warning)) },
-            text = { Text(stringResource(AppText.anonymous_warning)) },
-            dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
+            title = { Text(stringResource(AppText.sign_out_title)) },
+            text = { Text(stringResource(AppText.sign_out_description)) },
+            dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
             confirmButton = {
-                DialogButton(AppText.sign_out) {
+                DialogConfirmButton(AppText.sign_out) {
                     viewModel.onSignOutClick(restartApp)
                     showWarningDialog = false
                 }
@@ -80,17 +79,17 @@ private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
 private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    CardEditor(AppText.delete_my_account, AppIcon.ic_delete_my_account, "") {
+    DangerousCardEditor(AppText.delete_my_account, AppIcon.ic_delete_my_account, "") {
         showWarningDialog = true
     }
 
-    if(showWarningDialog) { //EDIT DIALOG
+    if(showWarningDialog) {
         AlertDialog(
-            title = { Text(stringResource(AppText.warning)) },
-            text = { Text(stringResource(AppText.anonymous_warning)) },
-            dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
+            title = { Text(stringResource(AppText.delete_account_title)) },
+            text = { Text(stringResource(AppText.delete_account_description)) },
+            dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
             confirmButton = {
-                DialogButton(AppText.sign_out) {
+                DialogConfirmButton(AppText.delete_my_account) {
                     viewModel.onDeleteMyAccountClick(restartApp)
                     showWarningDialog = false
                 }
@@ -104,17 +103,17 @@ private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewM
 private fun ClearAllTasksCard(viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    CardEditor(AppText.clear_all_tasks, AppIcon.ic_clear_all_tasks, "") {
+    DangerousCardEditor(AppText.clear_all_tasks, AppIcon.ic_clear_all_tasks, "") {
         showWarningDialog = true
     }
 
-    if(showWarningDialog) { //EDIT DIALOG
+    if(showWarningDialog) {
         AlertDialog(
-            title = { Text(stringResource(AppText.warning)) },
-            text = { Text(stringResource(AppText.anonymous_warning)) },
-            dismissButton = { DialogButton(AppText.cancel) { showWarningDialog = false } },
+            title = { Text(stringResource(AppText.clear_tasks_title)) },
+            text = { Text(stringResource(AppText.clear_tasks_description)) },
+            dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
             confirmButton = {
-                DialogButton(AppText.sign_out) {
+                DialogConfirmButton(AppText.clear_all_tasks) {
                     viewModel.onClearAllTasksClick()
                     showWarningDialog = false
                 }

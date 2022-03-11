@@ -37,12 +37,25 @@ fun BasicButton(@StringRes text: Int, action: () -> Unit) {
 }
 
 @Composable
-fun DialogButton(@StringRes text: Int, action: () -> Unit) {
+fun DialogConfirmButton(@StringRes text: Int, action: () -> Unit) {
     Button(
         onClick = action,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = BrightOrange,
             contentColor = Color.White
+        )
+    ) {
+        Text(text = stringResource(text))
+    }
+}
+
+@Composable
+fun DialogCancelButton(@StringRes text: Int, action: () -> Unit) {
+    Button(
+        onClick = action,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.White,
+            contentColor = BrightOrange
         )
     ) {
         Text(text = stringResource(text))

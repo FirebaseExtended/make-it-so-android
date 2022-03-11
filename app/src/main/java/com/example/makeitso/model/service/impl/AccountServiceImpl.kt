@@ -53,6 +53,11 @@ class AccountServiceImpl @Inject constructor() : AccountService {
             .addOnCompleteListener { task -> callback(task) }
     }
 
+    override fun deleteAccount(callback: (Throwable?) -> Unit) {
+        Firebase.auth.currentUser!!.delete()
+            .addOnCompleteListener { task -> callback(task.exception) }
+    }
+
     override fun signOut() {
         Firebase.auth.signOut()
     }

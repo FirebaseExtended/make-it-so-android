@@ -62,6 +62,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
             .addOnFailureListener { error -> onResult(error) }
             .addOnSuccessListener { result ->
                 for (document in result) document.reference.delete()
+                onResult(null)
             }
     }
 
@@ -77,6 +78,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
             .addOnFailureListener { error -> onResult(error) }
             .addOnSuccessListener { result ->
                 for (document in result) document.reference.update(USER_ID, newUserId)
+                onResult(null)
             }
     }
 

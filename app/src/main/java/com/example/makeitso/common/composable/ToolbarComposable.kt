@@ -10,13 +10,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.example.makeitso.theme.MediumOrange
 
 @Composable
 fun BasicToolbar(@StringRes title: Int, backAction: (() -> Unit)? = null) {
     TopAppBar(
         title = { Text(stringResource(title)) },
-        backgroundColor = MediumOrange,
+        backgroundColor = MaterialTheme.colors.primaryVariant,
         navigationIcon = if (backAction != null) {
             {
                 IconButton(onClick = backAction) {
@@ -36,7 +35,7 @@ fun ActionToolbar(
 ) {
     TopAppBar(
         title = { Text(stringResource(title)) },
-        backgroundColor = MediumOrange,
+        backgroundColor = MaterialTheme.colors.primaryVariant,
         actions = {
             Box(modifier) {
                 IconButton(onClick = endAction) {

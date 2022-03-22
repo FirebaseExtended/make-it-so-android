@@ -12,7 +12,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.makeitso.common.ext.dropdownSelector
-import com.example.makeitso.theme.BrightOrange
 
 @Composable
 fun DangerousCardEditor(
@@ -22,7 +21,7 @@ fun DangerousCardEditor(
     modifier: Modifier,
     onEditClick: () -> Unit
 ) {
-    CardEditor(title, icon, content, onEditClick, BrightOrange, modifier)
+    CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.primary, modifier)
 }
 
 @Composable
@@ -33,7 +32,7 @@ fun RegularCardEditor(
     modifier: Modifier,
     onEditClick: () -> Unit
 ) {
-    CardEditor(title, icon, content, onEditClick, Color.DarkGray, modifier)
+    CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.onSurface, modifier)
 }
 
 @Composable
@@ -45,7 +44,7 @@ private fun CardEditor(
     highlightColor: Color,
     modifier: Modifier
 ) {
-    Card(backgroundColor = Color.White, modifier = modifier) {
+    Card(backgroundColor = MaterialTheme.colors.onPrimary, modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(16.dp, 4.dp, 0.dp, 4.dp),
@@ -57,7 +56,7 @@ private fun CardEditor(
             if (content.isNotBlank()) {
                 Text(
                     text = content,
-                    color = Color.LightGray,
+                    color = MaterialTheme.colors.onSecondary,
                     modifier = Modifier.padding(16.dp, 0.dp)
                 )
             }
@@ -82,7 +81,7 @@ fun CardSelector(
     modifier: Modifier,
     onNewValue: (String) -> Unit
 ) {
-    Card(backgroundColor = Color.White, modifier = modifier) {
+    Card(backgroundColor = MaterialTheme.colors.onPrimary, modifier = modifier) {
         DropdownSelector(label, options, selection, Modifier.dropdownSelector(), onNewValue)
     }
 }

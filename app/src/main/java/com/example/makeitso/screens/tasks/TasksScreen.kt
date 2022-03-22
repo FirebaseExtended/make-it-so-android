@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.common.composable.ActionToolbar
@@ -16,7 +15,6 @@ import com.example.makeitso.common.ext.smallSpacer
 import com.example.makeitso.common.ext.toolbarActions
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
-import com.example.makeitso.theme.BrightOrange
 
 @Composable
 @ExperimentalMaterialApi
@@ -27,8 +25,8 @@ fun TasksScreen(openAddTask: () -> Unit, openEditTask: (String) -> Unit, openSet
         floatingActionButton = {
             FloatingActionButton(
                 onClick = openAddTask,
-                backgroundColor = BrightOrange,
-                contentColor = Color.White,
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onPrimary,
                 modifier = Modifier.padding(16.dp)
             ) { Icon(Icons.Filled.Add, "Add") }
         }

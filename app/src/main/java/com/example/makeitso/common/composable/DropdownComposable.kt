@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.makeitso.theme.BrightOrange
 
 @Composable
 @ExperimentalMaterialApi
@@ -93,12 +92,12 @@ fun DropdownSelector(
 @ExperimentalMaterialApi
 private fun dropdownColors(): TextFieldColors {
     return ExposedDropdownMenuDefaults.textFieldColors(
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.onPrimary,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor =  Color.Transparent,
-        trailingIconColor = Color.DarkGray,
-        focusedTrailingIconColor = Color.DarkGray,
-        focusedLabelColor = BrightOrange,
-        unfocusedLabelColor = BrightOrange
+        trailingIconColor = MaterialTheme.colors.onSurface,
+        focusedTrailingIconColor = MaterialTheme.colors.onSurface,
+        focusedLabelColor = MaterialTheme.colors.primary,
+        unfocusedLabelColor = MaterialTheme.colors.primary
     )
 }

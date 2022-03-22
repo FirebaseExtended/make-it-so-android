@@ -4,15 +4,13 @@ import androidx.annotation.StringRes
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
-import com.example.makeitso.theme.BrightOrange
 
 @Composable
 fun BasicTextButton(@StringRes text: Int, modifier: Modifier, action: () -> Unit) {
     TextButton(onClick = action, modifier = modifier) {
-        Text(text = stringResource(text), color = Color.Gray)
+        Text(text = stringResource(text), color = MaterialTheme.colors.onBackground)
     }
 }
 
@@ -22,8 +20,8 @@ fun BasicButton(@StringRes text: Int, modifier: Modifier, action: () -> Unit) {
         onClick = action,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = BrightOrange,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary
         )
     ) {
         Text(text = stringResource(text), fontSize = 16.sp)
@@ -35,8 +33,8 @@ fun DialogConfirmButton(@StringRes text: Int, action: () -> Unit) {
     Button(
         onClick = action,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = BrightOrange,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary
         )
     ) {
         Text(text = stringResource(text))
@@ -48,8 +46,8 @@ fun DialogCancelButton(@StringRes text: Int, action: () -> Unit) {
     Button(
         onClick = action,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.White,
-            contentColor = BrightOrange
+            backgroundColor = MaterialTheme.colors.onPrimary,
+            contentColor = MaterialTheme.colors.primary
         )
     ) {
         Text(text = stringResource(text))

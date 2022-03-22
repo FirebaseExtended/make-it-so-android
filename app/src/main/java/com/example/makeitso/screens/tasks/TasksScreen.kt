@@ -44,7 +44,7 @@ private fun ScreenContent(
     openSettings: () -> Unit,
     viewModel: TasksViewModel
 ) {
-    val tasks = viewModel.tasks.value
+    val tasks = viewModel.tasks
 
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ActionToolbar(
@@ -57,7 +57,7 @@ private fun ScreenContent(
         Spacer(modifier = Modifier.smallSpacer())
 
         LazyColumn {
-            items(tasks) { taskItem ->
+            items(tasks, key = { it.id }) { taskItem ->
                 TaskItem(
                     task = taskItem,
                     onCheckChange = { viewModel.onTaskCheckChange(taskItem) },

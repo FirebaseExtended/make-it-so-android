@@ -1,6 +1,6 @@
 package com.example.makeitso.screens.tasks
 
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.common.snackbar.SnackbarManager
@@ -23,7 +23,7 @@ class TasksViewModel @Inject constructor(
     private val accountService: AccountService,
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-    var tasks = mutableStateOf<List<Task>>(emptyList())
+    var tasks = mutableStateListOf<Task>()
         private set
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -34,7 +34,7 @@ class TasksViewModel @Inject constructor(
     init {
         viewModelScope.launch(exceptionHandler) {
             firestoreService.getTasksForUser(accountService.getUserId(), ::onError) {
-                tasks.value = it
+                tasks.addAll(it)
             }
         }
     }
@@ -74,11 +74,8 @@ class TasksViewModel @Inject constructor(
     }
 
     private fun updateTaskInList(task: Task) {
-        val index = tasks.value.indexOfFirst { it.id == task.id }
-
-        tasks.value = tasks.value
-            .toMutableList()
-            .apply { set(index, task) }
+        val index = tasks.indexOfFirst { it.id == task.id }
+        tasks[index] = task
     }
 
     private fun onDeleteTaskClick(task: Task) {
@@ -86,7 +83,7 @@ class TasksViewModel @Inject constructor(
             firestoreService.deleteTask(task.id) { error ->
                 if (error == null) {
                     this.launch { taskRepository.delete(task.id) }
-                    tasks.value = tasks.value.filter { it.id != task.id }
+                    tasks.remove(task)
                 } else onError(error)
             }
         }

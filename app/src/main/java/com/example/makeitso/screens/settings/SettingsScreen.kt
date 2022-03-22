@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
+import com.example.makeitso.common.ext.card
 
 @Composable
 fun SettingsScreen(
@@ -35,11 +36,11 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
 
         if (uiState.isAnonymousAccount) {
-            RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "") {
+            RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.card()) {
                 openLogin()
             }
 
-            RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "") {
+            RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "", Modifier.card()) {
                 openSignUp()
             }
         } else {
@@ -55,7 +56,7 @@ fun SettingsScreen(
 private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    RegularCardEditor(AppText.sign_out, AppIcon.ic_exit, "") {
+    RegularCardEditor(AppText.sign_out, AppIcon.ic_exit, "", Modifier.card()) {
         showWarningDialog = true
     }
 
@@ -79,7 +80,7 @@ private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
 private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    DangerousCardEditor(AppText.delete_my_account, AppIcon.ic_delete_my_account, "") {
+    DangerousCardEditor(AppText.delete_my_account, AppIcon.ic_delete_my_account, "", Modifier.card()) {
         showWarningDialog = true
     }
 
@@ -103,7 +104,7 @@ private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewM
 private fun ClearAllTasksCard(viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    DangerousCardEditor(AppText.clear_all_tasks, AppIcon.ic_clear_all_tasks, "") {
+    DangerousCardEditor(AppText.clear_all_tasks, AppIcon.ic_clear_all_tasks, "", Modifier.card()) {
         showWarningDialog = true
     }
 

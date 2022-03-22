@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.makeitso.common.ext.dropdownSelector
 import com.example.makeitso.theme.BrightOrange
 
 @Composable
@@ -18,9 +19,10 @@ fun DangerousCardEditor(
     @StringRes title: Int,
     @DrawableRes icon: Int,
     content: String,
+    modifier: Modifier,
     onEditClick: () -> Unit
 ) {
-    CardEditor(title, icon, content, onEditClick, BrightOrange)
+    CardEditor(title, icon, content, onEditClick, BrightOrange, modifier)
 }
 
 @Composable
@@ -28,9 +30,10 @@ fun RegularCardEditor(
     @StringRes title: Int,
     @DrawableRes icon: Int,
     content: String,
+    modifier: Modifier,
     onEditClick: () -> Unit
 ) {
-    CardEditor(title, icon, content, onEditClick, Color.DarkGray)
+    CardEditor(title, icon, content, onEditClick, Color.DarkGray, modifier)
 }
 
 @Composable
@@ -39,12 +42,10 @@ private fun CardEditor(
     @DrawableRes icon: Int,
     content: String,
     onEditClick: () -> Unit,
-    highlightColor: Color
+    highlightColor: Color,
+    modifier: Modifier
 ) {
-    Card(
-        backgroundColor = Color.White,
-        modifier = Modifier.cardPadding()
-    ) {
+    Card(backgroundColor = Color.White, modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(16.dp, 4.dp, 0.dp, 4.dp),
@@ -78,16 +79,10 @@ fun CardSelector(
     @StringRes label: Int,
     options: List<String>,
     selection: String,
+    modifier: Modifier,
     onNewValue: (String) -> Unit
 ) {
-    Card(
-        backgroundColor = Color.White,
-        modifier = Modifier.cardPadding()
-    ) {
-        DropdownSelector(label, options, selection, onNewValue)
+    Card(backgroundColor = Color.White, modifier = modifier) {
+        DropdownSelector(label, options, selection, Modifier.dropdownSelector(), onNewValue)
     }
-}
-
-private fun Modifier.cardPadding(): Modifier {
-    return this.padding(16.dp, 0.dp, 16.dp, 8.dp)
 }

@@ -10,6 +10,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.common.composable.*
+import com.example.makeitso.common.ext.card
+import com.example.makeitso.common.ext.fieldModifier
+import com.example.makeitso.common.ext.toolbarActions
 import com.example.makeitso.model.Priority
 import com.example.makeitso.model.Task
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -34,6 +37,7 @@ fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String) {
     ) {
         ActionToolbar(
             title = AppText.edit_task,
+            modifier = Modifier.toolbarActions(),
             endActionIcon = AppIcon.ic_check,
             endAction = { viewModel.onDoneClick(popUpScreen) }
         )
@@ -51,20 +55,20 @@ fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String) {
 
 @Composable
 private fun BasicFields(task: Task, viewModel: EditTaskViewModel) {
-    BasicField(AppText.title, task.title, viewModel::onTitleChange)
-    BasicField(AppText.description, task.description, viewModel::onDescriptionChange)
-    BasicField(AppText.url, task.url, viewModel::onUrlChange)
+    BasicField(AppText.title, task.title, Modifier.fieldModifier(), viewModel::onTitleChange)
+    BasicField(AppText.description, task.description, Modifier.fieldModifier(), viewModel::onDescriptionChange)
+    BasicField(AppText.url, task.url, Modifier.fieldModifier(), viewModel::onUrlChange)
 }
 
 @Composable
 private fun CardEditors(task: Task, viewModel: EditTaskViewModel) {
     val activity = LocalContext.current as AppCompatActivity
 
-    RegularCardEditor(AppText.date, AppIcon.ic_calendar, task.dueDate) {
+    RegularCardEditor(AppText.date, AppIcon.ic_calendar, task.dueDate, Modifier.card()) {
         showDatePicker(activity, viewModel)
     }
 
-    RegularCardEditor(AppText.time, AppIcon.ic_clock, task.dueTime) {
+    RegularCardEditor(AppText.time, AppIcon.ic_clock, task.dueTime, Modifier.card()) {
         showTimePicker(activity, viewModel)
     }
 }
@@ -73,12 +77,12 @@ private fun CardEditors(task: Task, viewModel: EditTaskViewModel) {
 @ExperimentalMaterialApi
 private fun CardSelectors(task: Task, viewModel: EditTaskViewModel) {
     val prioritySelection = Priority.getByName(task.priority).name
-    CardSelector(AppText.priority, Priority.getOptions(), prioritySelection) { newValue ->
+    CardSelector(AppText.priority, Priority.getOptions(), prioritySelection, Modifier.card()) { newValue ->
         viewModel.onPriorityChange(newValue)
     }
 
     val flagSelection = EditFlagOption.getByCheckedState(task.flag).name
-    CardSelector(AppText.flag, EditFlagOption.getOptions(), flagSelection) { newValue ->
+    CardSelector(AppText.flag, EditFlagOption.getOptions(), flagSelection, Modifier.card()) { newValue ->
         viewModel.onFlagToggle(newValue)
     }
 }

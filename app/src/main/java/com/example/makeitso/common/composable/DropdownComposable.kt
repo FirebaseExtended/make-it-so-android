@@ -14,12 +14,12 @@ import com.example.makeitso.theme.BrightOrange
 
 @Composable
 @ExperimentalMaterialApi
-fun DropdownContextMenu(options: List<String>, onActionClick: (String) -> Unit) {
+fun DropdownContextMenu(options: List<String>, modifier: Modifier, onActionClick: (String) -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = isExpanded,
-        modifier = Modifier.wrapContentWidth(),
+        modifier = modifier,
         onExpandedChange = { isExpanded = !isExpanded }
     ) {
         Icon(
@@ -53,13 +53,14 @@ fun DropdownSelector(
     @StringRes label: Int,
     options: List<String>,
     selection: String,
+    modifier: Modifier,
     onNewValue: (String) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = isExpanded,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         onExpandedChange = { isExpanded = !isExpanded }
     ) {
         TextField(

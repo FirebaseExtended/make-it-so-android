@@ -11,6 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.makeitso.common.composable.DropdownContextMenu
+import com.example.makeitso.common.ext.contextMenu
 import com.example.makeitso.common.ext.hasDueDate
 import com.example.makeitso.common.ext.hasDueTime
 import com.example.makeitso.R.drawable as AppIcon
@@ -54,7 +55,7 @@ fun TaskItem(
                 )
             }
 
-            DropdownContextMenu(TaskActionOption.getOptions(), onActionClick)
+            DropdownContextMenu(TaskActionOption.getOptions(), Modifier.contextMenu(), onActionClick)
         }
     }
 }

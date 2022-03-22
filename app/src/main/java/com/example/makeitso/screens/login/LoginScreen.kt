@@ -6,6 +6,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.common.composable.*
+import com.example.makeitso.common.ext.basicButton
+import com.example.makeitso.common.ext.fieldModifier
+import com.example.makeitso.common.ext.textButton
 import com.example.makeitso.R.string as AppText
 
 @Composable
@@ -22,11 +25,15 @@ fun LoginScreen(popUpScreen: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EmailField(uiState.email, viewModel::onEmailChange)
-        PasswordField(uiState.password, viewModel::onPasswordChange)
+        EmailField(uiState.email, Modifier.fieldModifier(), viewModel::onEmailChange)
+        PasswordField(uiState.password, Modifier.fieldModifier(), viewModel::onPasswordChange)
 
-        BasicButton(AppText.sign_in) { viewModel.onSignInClick(popUpScreen) }
+        BasicButton(AppText.sign_in, Modifier.basicButton()) {
+            viewModel.onSignInClick(popUpScreen)
+        }
 
-        BasicTextButton(AppText.forgot_password) { viewModel.onForgotPasswordClick() }
+        BasicTextButton(AppText.forgot_password, Modifier.textButton()) {
+            viewModel.onForgotPasswordClick()
+        }
     }
 }

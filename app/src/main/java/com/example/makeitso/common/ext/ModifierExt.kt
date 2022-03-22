@@ -1,9 +1,6 @@
 package com.example.makeitso.common.ext
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -34,4 +31,12 @@ fun Modifier.fieldModifier(): Modifier {
 
 fun Modifier.toolbarActions(): Modifier {
     return this.wrapContentSize(Alignment.TopEnd)
+}
+
+fun Modifier.spacer(): Modifier {
+    return this.fillMaxWidth().padding(12.dp)
+}
+
+fun Modifier.smallSpacer(): Modifier {
+    return this.fillMaxWidth().height(8.dp)
 }

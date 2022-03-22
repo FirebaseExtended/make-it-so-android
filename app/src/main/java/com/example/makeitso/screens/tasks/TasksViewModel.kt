@@ -31,11 +31,11 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
-    fun initialize() {
+    init {
         viewModelScope.launch(exceptionHandler) {
-             firestoreService.getTasksForUser(accountService.getUserId(), ::onError) {
-                 tasks.value = it
-             }
+            firestoreService.getTasksForUser(accountService.getUserId(), ::onError) {
+                tasks.value = it
+            }
         }
     }
 

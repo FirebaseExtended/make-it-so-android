@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.common.composable.ActionToolbar
+import com.example.makeitso.common.ext.smallSpacer
 import com.example.makeitso.common.ext.toolbarActions
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
@@ -21,10 +22,6 @@ import com.example.makeitso.theme.BrightOrange
 @ExperimentalMaterialApi
 fun TasksScreen(openAddTask: () -> Unit, openEditTask: (String) -> Unit, openSettings: () -> Unit) {
     val viewModel = hiltViewModel<TasksViewModel>()
-
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
-    }
 
     Scaffold(
         floatingActionButton = {
@@ -57,7 +54,7 @@ private fun ScreenContent(
             endAction = openSettings
         )
 
-        Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
+        Spacer(modifier = Modifier.smallSpacer())
 
         LazyColumn {
             items(tasks) { taskItem ->

@@ -2,16 +2,18 @@ package com.example.makeitso.screens.edit_task
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.ext.card
 import com.example.makeitso.common.ext.fieldModifier
+import com.example.makeitso.common.ext.spacer
 import com.example.makeitso.common.ext.toolbarActions
 import com.example.makeitso.model.Priority
 import com.example.makeitso.model.Task
@@ -32,7 +34,10 @@ fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String) {
     }
 
     Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ActionToolbar(
@@ -42,14 +47,14 @@ fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String) {
             endAction = { viewModel.onDoneClick(popUpScreen) }
         )
 
-        Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
+        Spacer(modifier = Modifier.spacer())
         BasicFields(task, viewModel)
 
-        Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
+        Spacer(modifier = Modifier.spacer())
         CardEditors(task, viewModel)
         CardSelectors(task, viewModel)
 
-        Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
+        Spacer(modifier = Modifier.spacer())
     }
 }
 

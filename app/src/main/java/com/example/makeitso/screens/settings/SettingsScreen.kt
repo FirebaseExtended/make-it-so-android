@@ -1,17 +1,19 @@
 package com.example.makeitso.screens.settings
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.ext.card
+import com.example.makeitso.common.ext.spacer
 
 @Composable
 fun SettingsScreen(
@@ -23,17 +25,16 @@ fun SettingsScreen(
     val viewModel = hiltViewModel<SettingsViewModel>()
     val uiState = viewModel.uiState.value
 
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
-    }
-
     Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         BasicToolbar(AppText.settings) { popUpScreen() }
 
-        Spacer(modifier = Modifier.fillMaxWidth().padding(12.dp))
+        Spacer(modifier = Modifier.spacer())
 
         if (uiState.isAnonymousAccount) {
             RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.card()) {

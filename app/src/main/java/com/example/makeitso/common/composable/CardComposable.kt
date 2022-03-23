@@ -54,11 +54,7 @@ private fun CardEditor(
             }
 
             if (content.isNotBlank()) {
-                Text(
-                    text = content,
-                    color = MaterialTheme.colors.onSecondary,
-                    modifier = Modifier.padding(16.dp, 0.dp)
-                )
+                Text(text = content, modifier = Modifier.padding(16.dp, 0.dp))
             }
 
             IconButton(onClick = onEditClick) {

@@ -40,7 +40,9 @@ fun MakeItSoApp() {
                     SnackbarHost(
                         hostState = it,
                         modifier = Modifier.padding(8.dp),
-                        snackbar = { snackbarData -> Snackbar(snackbarData) }
+                        snackbar = { snackbarData ->
+                            Snackbar(snackbarData, contentColor = MaterialTheme.colors.onPrimary)
+                        }
                     )
                 },
                 scaffoldState = appState.scaffoldState

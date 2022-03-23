@@ -27,7 +27,7 @@ fun TaskItem(
     onActionClick: (String) -> Unit
 ) {
     Card(
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp),
     ) {
         Row(

@@ -9,7 +9,6 @@ import com.example.makeitso.common.ext.idFromParameter
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.model.Task
-import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
@@ -24,7 +23,6 @@ import javax.inject.Inject
 class EditTaskViewModel @Inject constructor(
     private val crashlyticsService: CrashlyticsService,
     private val firestoreService: FirestoreService,
-    private val taskRepository: TaskRepository,
     private val accountService: AccountService
 ) : ViewModel() {
     var task = mutableStateOf(Task())
@@ -83,10 +81,7 @@ class EditTaskViewModel @Inject constructor(
             val editedTask = task.value.copy(userId = accountService.getUserId())
 
             firestoreService.saveTask(editedTask) { error ->
-                if (error == null) {
-                    this.launch { taskRepository.insert(editedTask) }
-                    popUpScreen()
-                } else onError(error)
+                if (error == null) popUpScreen() else onError(error)
             }
         }
     }

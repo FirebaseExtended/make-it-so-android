@@ -7,7 +7,6 @@ import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.model.Task
-import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
@@ -20,8 +19,7 @@ import javax.inject.Inject
 class TasksViewModel @Inject constructor(
     private val crashlyticsService: CrashlyticsService,
     private val firestoreService: FirestoreService,
-    private val accountService: AccountService,
-    private val taskRepository: TaskRepository
+    private val accountService: AccountService
 ) : ViewModel() {
     var tasks = mutableStateListOf<Task>()
         private set
@@ -44,10 +42,7 @@ class TasksViewModel @Inject constructor(
             val updatedTask = task.copy(completed = !task.completed)
 
             firestoreService.saveTask(updatedTask) { error ->
-                if (error == null) {
-                    this.launch { taskRepository.updateCompletion(task.id, updatedTask.completed) }
-                    updateTaskInList(updatedTask)
-                } else onError(error)
+                if (error == null) updateTaskInList(updatedTask) else onError(error)
             }
         }
     }
@@ -65,10 +60,7 @@ class TasksViewModel @Inject constructor(
             val updatedTask = task.copy(flag = !task.flag)
 
             firestoreService.saveTask(updatedTask) { error ->
-                if (error == null) {
-                    this.launch { taskRepository.updateFlag(task.id, updatedTask.flag) }
-                    updateTaskInList(updatedTask)
-                } else onError(error)
+                if (error == null) updateTaskInList(updatedTask) else onError(error)
             }
         }
     }
@@ -81,10 +73,7 @@ class TasksViewModel @Inject constructor(
     private fun onDeleteTaskClick(task: Task) {
         viewModelScope.launch(exceptionHandler) {
             firestoreService.deleteTask(task.id) { error ->
-                if (error == null) {
-                    this.launch { taskRepository.delete(task.id) }
-                    tasks.remove(task)
-                } else onError(error)
+                if (error == null) tasks.remove(task) else onError(error)
             }
         }
     }

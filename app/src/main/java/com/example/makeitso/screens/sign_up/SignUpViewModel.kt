@@ -9,7 +9,6 @@ import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.ext.passwordMatches
 import com.example.makeitso.common.snackbar.SnackbarManager
-import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
@@ -24,8 +23,7 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val accountService: AccountService,
     private val firestoreService: FirestoreService,
-    private val crashlyticsService: CrashlyticsService,
-    private val taskRepository: TaskRepository
+    private val crashlyticsService: CrashlyticsService
 ) : ViewModel() {
     var uiState = mutableStateOf(SignUpUiState())
         private set
@@ -87,12 +85,8 @@ class SignUpViewModel @Inject constructor(
             val newUserId = accountService.getUserId()
 
             firestoreService.updateUserId(oldUserId, newUserId) { error ->
-                if (error == null) {
-                    viewModelScope.launch { taskRepository.updateUserId(oldUserId, newUserId) }
-                    popUpScreen()
-                } else {
-                    viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
-                }
+                if (error == null) popUpScreen()
+                else viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
             }
         }
     }

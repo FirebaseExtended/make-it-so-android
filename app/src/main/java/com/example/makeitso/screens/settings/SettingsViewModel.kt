@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.R.string as AppText
-import com.example.makeitso.model.database.repository.TaskRepository
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
@@ -19,8 +18,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val accountService: AccountService,
     private val firestoreService: FirestoreService,
-    private val crashlyticsService: CrashlyticsService,
-    private val taskRepository: TaskRepository
+    private val crashlyticsService: CrashlyticsService
 ) : ViewModel() {
     var uiState = mutableStateOf(SettingsUiState())
         private set
@@ -63,7 +61,6 @@ class SettingsViewModel @Inject constructor(
             firestoreService.deleteAllForUser(userId) { error ->
                 if (error == null) {
                     if (shouldDisplayMessage) SnackbarManager.showMessage(AppText.tasks_cleared)
-                    viewModelScope.launch { taskRepository.deleteAllForUser(userId) }
                 } else {
                     viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
                 }

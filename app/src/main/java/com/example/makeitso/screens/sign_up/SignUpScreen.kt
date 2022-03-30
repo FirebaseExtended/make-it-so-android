@@ -18,7 +18,7 @@ fun SignUpScreen(popUpScreen: () -> Unit) {
     val viewModel = hiltViewModel<SignUpViewModel>()
     val uiState = viewModel.uiState.value
 
-    BasicToolbar(AppText.create_account) { popUpScreen() }
+    BasicToolbar(AppText.create_account)
 
     Column(
         modifier = Modifier

@@ -8,6 +8,7 @@ import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @Stable
@@ -20,11 +21,9 @@ class MakeItSoAppState(
 ) {
     init {
         coroutineScope.launch {
-            snackbarManager.snackbarMessages.collect { messages ->
-                if (messages.isNotEmpty()) {
-                    val text = messages[0].toMessage(resources)
-                    scaffoldState.snackbarHostState.showSnackbar(text)
-                }
+            snackbarManager.snackbarMessages.filterNotNull().collect { snackbarMessage ->
+                val text = snackbarMessage.toMessage(resources)
+                scaffoldState.snackbarHostState.showSnackbar(text)
             }
         }
     }

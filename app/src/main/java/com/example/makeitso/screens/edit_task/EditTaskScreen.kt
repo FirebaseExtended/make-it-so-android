@@ -65,6 +65,7 @@ private fun BasicFields(task: Task, viewModel: EditTaskViewModel) {
     BasicField(AppText.url, task.url, Modifier.fieldModifier(), viewModel::onUrlChange)
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun CardEditors(task: Task, viewModel: EditTaskViewModel) {
     val activity = LocalContext.current as AppCompatActivity

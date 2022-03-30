@@ -18,7 +18,7 @@ fun LoginScreen(popUpScreen: () -> Unit) {
     val viewModel = hiltViewModel<LoginViewModel>()
     val uiState = viewModel.uiState.value
 
-    BasicToolbar(AppText.login_details) { popUpScreen() }
+    BasicToolbar(AppText.login_details)
 
     Column(
         modifier = Modifier

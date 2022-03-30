@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.makeitso.common.ext.dropdownSelector
 
+@ExperimentalMaterialApi
 @Composable
 fun DangerousCardEditor(
     @StringRes title: Int,
@@ -24,6 +25,7 @@ fun DangerousCardEditor(
     CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.primary, modifier)
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun RegularCardEditor(
     @StringRes title: Int,
@@ -35,6 +37,7 @@ fun RegularCardEditor(
     CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.onSurface, modifier)
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun CardEditor(
     @StringRes title: Int,
@@ -44,10 +47,10 @@ private fun CardEditor(
     highlightColor: Color,
     modifier: Modifier
 ) {
-    Card(backgroundColor = MaterialTheme.colors.onPrimary, modifier = modifier) {
+    Card(backgroundColor = MaterialTheme.colors.onPrimary, modifier = modifier, onClick = onEditClick) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(16.dp, 4.dp, 0.dp, 4.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(stringResource(title), color = highlightColor)
@@ -57,13 +60,11 @@ private fun CardEditor(
                 Text(text = content, modifier = Modifier.padding(16.dp, 0.dp))
             }
 
-            IconButton(onClick = onEditClick) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = "Icon",
-                    tint = highlightColor
-                )
-            }
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = "Icon",
+                tint = highlightColor
+            )
         }
     }
 }

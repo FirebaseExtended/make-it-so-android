@@ -85,8 +85,7 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
         SettingsScreen(
             restartApp = { appState.clearAndNavigate(SPLASH_SCREEN) },
             openLogin = { appState.navigate(LOGIN_SCREEN) },
-            openSignUp = { appState.navigate(SIGN_UP_SCREEN) },
-            popUpScreen = { appState.popUp() }
+            openSignUp = { appState.navigate(SIGN_UP_SCREEN) }
         )
     }
 

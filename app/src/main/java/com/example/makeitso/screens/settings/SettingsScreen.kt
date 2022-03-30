@@ -15,12 +15,12 @@ import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.ext.card
 import com.example.makeitso.common.ext.spacer
 
+@ExperimentalMaterialApi
 @Composable
 fun SettingsScreen(
     restartApp: () -> Unit,
     openLogin: () -> Unit,
-    openSignUp: () -> Unit,
-    popUpScreen: () -> Unit
+    openSignUp: () -> Unit
 ) {
     val viewModel = hiltViewModel<SettingsViewModel>()
     val uiState = viewModel.uiState.value
@@ -32,7 +32,7 @@ fun SettingsScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BasicToolbar(AppText.settings) { popUpScreen() }
+        BasicToolbar(AppText.settings)
 
         Spacer(modifier = Modifier.spacer())
 
@@ -53,6 +53,7 @@ fun SettingsScreen(
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
@@ -77,6 +78,7 @@ private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
@@ -101,6 +103,7 @@ private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewM
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun ClearAllTasksCard(viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }

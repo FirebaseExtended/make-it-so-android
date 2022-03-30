@@ -48,7 +48,7 @@ class SignUpViewModel @Inject constructor(
         uiState.value = uiState.value.copy(repeatPassword = newValue)
     }
 
-    fun onSignUpClick(popUpScreen: () -> Unit) {
+    fun onSignUpClick(restartApp: () -> Unit) {
         if (!email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -66,26 +66,24 @@ class SignUpViewModel @Inject constructor(
 
         viewModelScope.launch(exceptionHandler) {
             accountService.createAccount(email, password) { task ->
-                task.onResult { linkWithEmail(popUpScreen) }
+                task.onResult { linkWithEmail(restartApp) }
             }
         }
     }
 
-    private fun linkWithEmail(popUpScreen: () -> Unit) {
+    private fun linkWithEmail(restartApp: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
-            accountService.linkAccount(email, password) { task ->
-                task.onResult { updateUserId(popUpScreen) }
-            }
+            accountService.linkAccount(email, password) { updateUserId(restartApp) }
         }
     }
 
-    private fun updateUserId(popUpScreen: () -> Unit) {
+    private fun updateUserId(restartApp: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             val oldUserId = accountService.getAnonymousUserId()
             val newUserId = accountService.getUserId()
 
             firestoreService.updateUserId(oldUserId, newUserId) { error ->
-                if (error == null) popUpScreen()
+                if (error == null) restartApp()
                 else viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
             }
         }

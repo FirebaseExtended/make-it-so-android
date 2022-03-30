@@ -10,6 +10,7 @@ import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
+import com.google.firebase.firestore.DocumentChange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -31,9 +32,15 @@ class TasksViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(exceptionHandler) {
-            firestoreService.getTasksForUser(accountService.getUserId(), ::onError) {
-                tasks.addAll(it)
-            }
+            firestoreService.addListener(accountService.getUserId(), ::onDocumentEvent, ::onError)
+        }
+    }
+
+    private fun onDocumentEvent(type: DocumentChange.Type, task: Task) {
+        when (type) {
+            DocumentChange.Type.ADDED -> tasks.add(task)
+            DocumentChange.Type.MODIFIED -> updateTaskInList(task)
+            DocumentChange.Type.REMOVED -> tasks.removeAll { it.id == task.id }
         }
     }
 

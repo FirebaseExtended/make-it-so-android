@@ -12,7 +12,7 @@ interface AccountService {
     fun createAccount(email: String, password: String, callback: (Task<AuthResult>) -> Unit)
     fun sendRecoveryEmail(email: String, callback: (Throwable?) -> Unit)
     fun createAnonymousAccount(callback: (Task<AuthResult>) -> Unit)
-    fun linkAccount(email: String, password: String, callback: (Task<AuthResult>) -> Unit)
+    fun linkAccount(email: String, password: String, callback: () -> Unit)
     fun deleteAccount(callback: (Throwable?) -> Unit)
     fun signOut()
 }

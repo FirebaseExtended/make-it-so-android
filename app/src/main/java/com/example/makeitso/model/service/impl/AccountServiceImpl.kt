@@ -46,11 +46,11 @@ class AccountServiceImpl @Inject constructor() : AccountService {
             .addOnCompleteListener { task -> callback(task) }
     }
 
-    override fun linkAccount(email: String, password: String, callback: (Task<AuthResult>) -> Unit) {
+    override fun linkAccount(email: String, password: String, callback: () -> Unit) {
         val credential = EmailAuthProvider.getCredential(email, password)
 
         Firebase.auth.currentUser!!.linkWithCredential(credential)
-            .addOnCompleteListener { task -> callback(task) }
+            .addOnCompleteListener { callback() }
     }
 
     override fun deleteAccount(callback: (Throwable?) -> Unit) {

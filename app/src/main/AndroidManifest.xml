@@ -8,9 +8,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MakeItSo">
+        android:theme="@style/Theme.MakeItSo"
+        android:name = ".MakeItSoHiltApp">
         <activity
-            android:name=".MainActivity"
+            android:name=".MakeItSoActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MakeItSo.NoActionBar">

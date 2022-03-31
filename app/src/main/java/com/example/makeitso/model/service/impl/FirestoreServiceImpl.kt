@@ -3,6 +3,7 @@ package com.example.makeitso.model.service.impl
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.FirestoreService
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -13,20 +14,25 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
         userId: String,
         onDocumentEvent: (DocumentChange.Type, Task) -> Unit,
         onError: (Throwable) -> Unit
-    ) {
-        Firebase.firestore
-            .collection(TASK_COLLECTION)
-            .whereEqualTo(USER_ID, userId)
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    onError(error)
-                    return@addSnapshotListener
-                }
+    ): ListenerRegistration {
+        val query = Firebase.firestore.collection(TASK_COLLECTION).whereEqualTo(USER_ID, userId)
 
-                value?.documentChanges?.forEach {
-                    onDocumentEvent(it.type, it.document.toObject())
-                }
+        val registration = query.addSnapshotListener { value, error ->
+            if (error != null) {
+                onError(error)
+                return@addSnapshotListener
             }
+
+            value?.documentChanges?.forEach {
+                onDocumentEvent(it.type, it.document.toObject())
+            }
+        }
+
+        return registration
+    }
+
+    override suspend fun removeListener(listenerRegistration: ListenerRegistration?) {
+        listenerRegistration?.remove()
     }
 
     override suspend fun getTask(

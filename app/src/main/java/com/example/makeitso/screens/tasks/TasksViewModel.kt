@@ -11,6 +11,8 @@ import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentChange.Type.*
+import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -25,22 +27,24 @@ class TasksViewModel @Inject constructor(
     var tasks = mutableStateListOf<Task>()
         private set
 
+    private var listenerRegistration: ListenerRegistration? = null
+
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         SnackbarManager.showMessage(AppText.generic_error)
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
-    init {
+    fun addListener() {
         viewModelScope.launch(exceptionHandler) {
-            firestoreService.addListener(accountService.getUserId(), ::onDocumentEvent, ::onError)
+            listenerRegistration = firestoreService.addListener(
+                accountService.getUserId(), ::onDocumentEvent, ::onError
+            )
         }
     }
 
-    private fun onDocumentEvent(type: DocumentChange.Type, task: Task) {
-        when (type) {
-            DocumentChange.Type.ADDED -> tasks.add(task)
-            DocumentChange.Type.MODIFIED -> updateTaskInList(task)
-            DocumentChange.Type.REMOVED -> tasks.removeAll { it.id == task.id }
+    fun removeListener() {
+        viewModelScope.launch(exceptionHandler) {
+            firestoreService.removeListener(listenerRegistration)
         }
     }
 
@@ -49,7 +53,7 @@ class TasksViewModel @Inject constructor(
             val updatedTask = task.copy(completed = !task.completed)
 
             firestoreService.saveTask(updatedTask) { error ->
-                if (error == null) updateTaskInList(updatedTask) else onError(error)
+                if (error != null) onError(error)
             }
         }
     }
@@ -67,22 +71,26 @@ class TasksViewModel @Inject constructor(
             val updatedTask = task.copy(flag = !task.flag)
 
             firestoreService.saveTask(updatedTask) { error ->
-                if (error == null) updateTaskInList(updatedTask) else onError(error)
+                if (error != null) onError(error)
             }
         }
-    }
-
-    private fun updateTaskInList(task: Task) {
-        val index = tasks.indexOfFirst { it.id == task.id }
-        tasks[index] = task
     }
 
     private fun onDeleteTaskClick(task: Task) {
         viewModelScope.launch(exceptionHandler) {
             firestoreService.deleteTask(task.id) { error ->
-                if (error == null) tasks.remove(task) else onError(error)
+                if (error != null) onError(error)
             }
         }
+    }
+
+    private fun onDocumentEvent(type: DocumentChange.Type, task: Task) {
+        if (type == REMOVED) tasks.remove(task) else updateTaskInList(task)
+    }
+
+    private fun updateTaskInList(task: Task) {
+        val index = tasks.indexOfFirst { it.id == task.id }
+        if (index < 0) tasks.add(task) else tasks[index] = task
     }
 
     private fun onError(error: Throwable?) {

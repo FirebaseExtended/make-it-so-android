@@ -33,6 +33,11 @@ fun TasksScreen(openAddTask: () -> Unit, openEditTask: (String) -> Unit, openSet
     ) {
         ScreenContent(openEditTask, openSettings, viewModel)
     }
+
+    DisposableEffect(viewModel) {
+        viewModel.addListener()
+        onDispose { viewModel.removeListener() }
+    }
 }
 
 @Composable

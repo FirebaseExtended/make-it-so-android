@@ -64,8 +64,6 @@ fun SettingsScreen(
             SignOutCard(restartApp, viewModel)
             DeleteMyAccountCard(restartApp, viewModel)
         }
-
-        ClearAllTasksCard(viewModel)
     }
 }
 
@@ -111,31 +109,6 @@ private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewM
             confirmButton = {
                 DialogConfirmButton(AppText.delete_my_account) {
                     viewModel.onDeleteMyAccountClick(restartApp)
-                    showWarningDialog = false
-                }
-            },
-            onDismissRequest = { showWarningDialog = false }
-        )
-    }
-}
-
-@ExperimentalMaterialApi
-@Composable
-private fun ClearAllTasksCard(viewModel: SettingsViewModel) {
-    var showWarningDialog by remember { mutableStateOf(false) }
-
-    DangerousCardEditor(AppText.clear_all_tasks, AppIcon.ic_clear_all_tasks, "", Modifier.card()) {
-        showWarningDialog = true
-    }
-
-    if(showWarningDialog) {
-        AlertDialog(
-            title = { Text(stringResource(AppText.clear_tasks_title)) },
-            text = { Text(stringResource(AppText.clear_tasks_description)) },
-            dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
-            confirmButton = {
-                DialogConfirmButton(AppText.clear_all_tasks) {
-                    viewModel.onClearAllTasksClick()
                     showWarningDialog = false
                 }
             },

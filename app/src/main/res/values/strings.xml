@@ -37,14 +37,10 @@
     <string name="settings">Settings</string>
     <string name="sign_out">Sign out</string>
     <string name="delete_my_account">Delete my account</string>
-    <string name="clear_all_tasks">Clear all tasks</string>
-    <string name="tasks_cleared">Tasks cleared successfully.</string>
 
     <!-- Dialogs -->
     <string name="sign_out_title">Sign out?</string>
     <string name="sign_out_description">You will have to sign in again to see your tasks.</string>
     <string name="delete_account_title">Delete account?</string>
     <string name="delete_account_description">You will lose all your tasks and your account will be deleted. This action is irreversible.</string>
-    <string name="clear_tasks_title">Clear tasks?</string>
-    <string name="clear_tasks_description">You will lose all your tasks. This action is irreversible.</string>
 </resources>

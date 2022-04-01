@@ -56,31 +56,23 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun onDeleteMyAccountClick(restartApp: () -> Unit) {
-        onClearAllTasksClick(shouldDisplayMessage = false)
-
         viewModelScope.launch(exceptionHandler) {
-            accountService.deleteAccount { error ->
-                if (error == null) {
-                    restartApp()
-                } else {
-                    SnackbarManager.showMessage(error.toSnackbarMessage())
-                    crashlyticsService.logNonFatalCrash(error)
-                }
+            firestoreService.deleteAllForUser(accountService.getUserId()) { error ->
+                if (error == null) deleteAccount(restartApp) else error.onError()
             }
         }
     }
 
-    fun onClearAllTasksClick(shouldDisplayMessage: Boolean = true) {
+    private fun deleteAccount(restartApp: () -> Unit) {
         viewModelScope.launch(exceptionHandler) {
-            val userId = accountService.getUserId()
-
-            firestoreService.deleteAllForUser(userId) { error ->
-                if (error == null) {
-                    if (shouldDisplayMessage) SnackbarManager.showMessage(AppText.tasks_cleared)
-                } else {
-                    viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
-                }
+            accountService.deleteAccount { error ->
+                if (error == null) restartApp() else error.onError()
             }
         }
+    }
+
+    private fun Throwable.onError() {
+        SnackbarManager.showMessage(this.toSnackbarMessage())
+        crashlyticsService.logNonFatalCrash(this)
     }
 }

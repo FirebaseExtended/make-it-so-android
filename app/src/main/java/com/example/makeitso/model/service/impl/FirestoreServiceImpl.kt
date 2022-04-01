@@ -26,7 +26,7 @@ import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
 class FirestoreServiceImpl @Inject constructor() : FirestoreService {
-    override suspend fun addListener(
+    override fun addListener(
         userId: String,
         onDocumentEvent: (DocumentChange.Type, Task) -> Unit,
         onError: (Throwable) -> Unit
@@ -47,11 +47,11 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
         return registration
     }
 
-    override suspend fun removeListener(listenerRegistration: ListenerRegistration?) {
+    override fun removeListener(listenerRegistration: ListenerRegistration?) {
         listenerRegistration?.remove()
     }
 
-    override suspend fun getTask(
+    override fun getTask(
         taskId: String,
         onError: (Throwable) -> Unit,
         onSuccess: (Task) -> Unit
@@ -64,7 +64,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
             .addOnSuccessListener { result -> onSuccess(result.toObject() ?: Task()) }
     }
 
-    override suspend fun saveTask(task: Task, onResult: (Throwable?) -> Unit) {
+    override fun saveTask(task: Task, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
             .collection(TASK_COLLECTION)
             .document(task.id)
@@ -72,7 +72,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
             .addOnCompleteListener { onResult(it.exception) }
     }
 
-    override suspend fun deleteTask(taskId: String, onResult: (Throwable?) -> Unit) {
+    override fun deleteTask(taskId: String, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
             .collection(TASK_COLLECTION)
             .document(taskId)
@@ -80,7 +80,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
             .addOnCompleteListener { onResult(it.exception) }
     }
 
-    override suspend fun deleteAllForUser(userId: String, onResult: (Throwable?) -> Unit) {
+    override fun deleteAllForUser(userId: String, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
             .collection(TASK_COLLECTION)
             .whereEqualTo(USER_ID, userId)
@@ -92,7 +92,7 @@ class FirestoreServiceImpl @Inject constructor() : FirestoreService {
             }
     }
 
-    override suspend fun updateUserId(
+    override fun updateUserId(
         oldUserId: String,
         newUserId: String,
         onResult: (Throwable?) -> Unit

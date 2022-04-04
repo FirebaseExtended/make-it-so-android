@@ -41,9 +41,8 @@ import com.example.makeitso.R.string as AppText
 
 @Composable
 @ExperimentalMaterialApi
-fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String) {
-    val viewModel = hiltViewModel<EditTaskViewModel>()
-    val task = viewModel.task.value
+fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String, viewModel: EditTaskViewModel = hiltViewModel()) {
+    val task by viewModel.task
 
     LaunchedEffect(Unit) {
         viewModel.initialize(taskId)

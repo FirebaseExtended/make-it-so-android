@@ -36,10 +36,10 @@ import com.example.makeitso.common.ext.spacer
 fun SettingsScreen(
     restartApp: () -> Unit,
     openLogin: () -> Unit,
-    openSignUp: () -> Unit
+    openSignUp: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val viewModel = hiltViewModel<SettingsViewModel>()
-    val uiState = viewModel.uiState.value
+    val uiState by viewModel.uiState
 
     LaunchedEffect(Unit) { viewModel.initialize() }
 

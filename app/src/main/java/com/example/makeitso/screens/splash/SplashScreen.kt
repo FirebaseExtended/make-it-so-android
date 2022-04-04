@@ -32,9 +32,7 @@ import kotlinx.coroutines.delay
 private const val SPLASH_TIMEOUT = 1000L
 
 @Composable
-fun SplashScreen(openTasks: () -> Unit) {
-    val viewModel = hiltViewModel<SplashViewModel>()
-
+fun SplashScreen(openTasks: () -> Unit, viewModel: SplashViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

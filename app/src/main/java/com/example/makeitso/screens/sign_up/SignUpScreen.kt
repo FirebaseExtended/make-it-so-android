@@ -29,10 +29,9 @@ import com.example.makeitso.common.ext.fieldModifier
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun SignUpScreen(restartApp: () -> Unit) {
+fun SignUpScreen(restartApp: () -> Unit, viewModel: SignUpViewModel = hiltViewModel()) {
+    val uiState by viewModel.uiState
     val fieldModifier = Modifier.fieldModifier()
-    val viewModel = hiltViewModel<SignUpViewModel>()
-    val uiState = viewModel.uiState.value
 
     BasicToolbar(AppText.create_account)
 

@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,9 +31,8 @@ import com.example.makeitso.common.ext.textButton
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun LoginScreen(restartApp: () -> Unit) {
-    val viewModel = hiltViewModel<LoginViewModel>()
-    val uiState = viewModel.uiState.value
+fun LoginScreen(restartApp: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
+    val uiState by viewModel.uiState
 
     BasicToolbar(AppText.login_details)
 

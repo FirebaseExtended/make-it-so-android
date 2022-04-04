@@ -34,9 +34,12 @@ import com.example.makeitso.R.string as AppText
 
 @Composable
 @ExperimentalMaterialApi
-fun TasksScreen(openAddTask: () -> Unit, openEditTask: (String) -> Unit, openSettings: () -> Unit) {
-    val viewModel = hiltViewModel<TasksViewModel>()
-
+fun TasksScreen(
+    openAddTask: () -> Unit,
+    openEditTask: (String) -> Unit,
+    openSettings: () -> Unit,
+    viewModel: TasksViewModel = hiltViewModel()
+) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -65,7 +68,9 @@ private fun ScreenContent(
 ) {
     val tasks = viewModel.tasks
 
-    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight()) {
         ActionToolbar(
             title = AppText.tasks,
             modifier = Modifier.toolbarActions(),

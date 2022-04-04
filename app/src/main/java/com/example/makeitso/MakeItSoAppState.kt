@@ -49,17 +49,21 @@ class MakeItSoAppState(
     }
 
     fun navigate(route: String) {
-        navController.navigate(route)
+        navController.navigate(route) {
+            launchSingleTop = true
+        }
     }
 
     fun popUpAndNavigate(route: String, popUp: String) {
         navController.navigate(route) {
+            launchSingleTop = true
             popUpTo(popUp) { inclusive = true }
         }
     }
 
     fun clearAndNavigate(route: String) {
         navController.navigate(route) {
+            launchSingleTop = true
             popUpTo(0) { inclusive = true }
         }
     }

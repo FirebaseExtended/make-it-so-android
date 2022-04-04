@@ -44,7 +44,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
     }
 
-    init {
+    fun initialize() {
         uiState.value = SettingsUiState(accountService.isAnonymousUser())
     }
 

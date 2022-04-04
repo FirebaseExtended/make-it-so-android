@@ -41,6 +41,8 @@ fun SettingsScreen(
     val viewModel = hiltViewModel<SettingsViewModel>()
     val uiState = viewModel.uiState.value
 
+    LaunchedEffect(Unit) { viewModel.initialize() }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()

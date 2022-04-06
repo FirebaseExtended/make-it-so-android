@@ -17,17 +17,15 @@ limitations under the License.
 package com.example.makeitso.model.service
 
 import com.example.makeitso.model.Task
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.ListenerRegistration
 
 interface StorageService {
     fun addListener(
         userId: String,
-        onDocumentEvent: (DocumentChange.Type, Task) -> Unit,
+        onDocumentEvent: (Boolean, Task) -> Unit,
         onError: (Throwable) -> Unit
-    ): ListenerRegistration
+    )
 
-    fun removeListener(listenerRegistration: ListenerRegistration?)
+    fun removeListener()
     fun getTask(taskId: String, onError: (Throwable) -> Unit, onSuccess: (Task) -> Unit)
     fun saveTask(task: Task, onResult: (Throwable?) -> Unit)
     fun deleteTask(taskId: String, onResult: (Throwable?) -> Unit)

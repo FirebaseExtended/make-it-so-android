@@ -18,7 +18,7 @@ package com.example.makeitso.model.service.impl
 
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.StorageService
-import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentChange.Type.REMOVED
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -26,28 +26,29 @@ import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
 class StorageServiceImpl @Inject constructor() : StorageService {
+    private var listenerRegistration: ListenerRegistration? = null
+
     override fun addListener(
         userId: String,
-        onDocumentEvent: (DocumentChange.Type, Task) -> Unit,
+        onDocumentEvent: (Boolean, Task) -> Unit,
         onError: (Throwable) -> Unit
-    ): ListenerRegistration {
+    ) {
         val query = Firebase.firestore.collection(TASK_COLLECTION).whereEqualTo(USER_ID, userId)
 
-        val registration = query.addSnapshotListener { value, error ->
+        listenerRegistration = query.addSnapshotListener { value, error ->
             if (error != null) {
                 onError(error)
                 return@addSnapshotListener
             }
 
             value?.documentChanges?.forEach {
-                onDocumentEvent(it.type, it.document.toObject())
+                val wasDocumentDeleted = it.type == REMOVED
+                onDocumentEvent(wasDocumentDeleted, it.document.toObject())
             }
         }
-
-        return registration
     }
 
-    override fun removeListener(listenerRegistration: ListenerRegistration?) {
+    override fun removeListener() {
         listenerRegistration?.remove()
     }
 

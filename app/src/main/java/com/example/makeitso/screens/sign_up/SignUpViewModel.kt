@@ -72,8 +72,8 @@ class SignUpViewModel @Inject constructor(
         }
 
         viewModelScope.launch(showErrorExceptionHandler) {
-            accountService.createAccount(email, password) { task ->
-                if (task.isSuccessful) linkWithEmail(restartApp) else onError(task.exception)
+            accountService.createAccount(email, password) { error ->
+                if (error == null) linkWithEmail(restartApp) else onError(error)
             }
         }
     }

@@ -23,9 +23,6 @@ import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.DocumentChange.Type.*
-import com.google.firebase.firestore.ListenerRegistration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,20 +36,14 @@ class TasksViewModel @Inject constructor(
     var tasks = mutableStateListOf<Task>()
         private set
 
-    private var listenerRegistration: ListenerRegistration? = null
-
     fun addListener() {
         viewModelScope.launch(showErrorExceptionHandler) {
-            listenerRegistration = storageService.addListener(
-                accountService.getUserId(), ::onDocumentEvent, ::onError
-            )
+            storageService.addListener(accountService.getUserId(), ::onDocumentEvent, ::onError)
         }
     }
 
     fun removeListener() {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            storageService.removeListener(listenerRegistration)
-        }
+        viewModelScope.launch(showErrorExceptionHandler) { storageService.removeListener() }
     }
 
     fun onTaskCheckChange(task: Task) {
@@ -91,8 +82,8 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    private fun onDocumentEvent(type: DocumentChange.Type, task: Task) {
-        if (type == REMOVED) tasks.remove(task) else updateTaskInList(task)
+    private fun onDocumentEvent(wasDocumentDeleted: Boolean, task: Task) {
+        if (wasDocumentDeleted) tasks.remove(task) else updateTaskInList(task)
     }
 
     private fun updateTaskInList(task: Task) {

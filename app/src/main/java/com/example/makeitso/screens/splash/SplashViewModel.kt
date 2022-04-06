@@ -36,9 +36,8 @@ class SplashViewModel @Inject constructor(
 
     private fun createAnonymousAccount(openTasks: () -> Unit) {
         viewModelScope.launch(logErrorExceptionHandler) {
-            accountService.createAnonymousAccount { task ->
-                if (task.isSuccessful) openTasks()
-                else logService.logNonFatalCrash(task.exception)
+            accountService.createAnonymousAccount { error ->
+                if (error == null) openTasks() else logService.logNonFatalCrash(error)
             }
         }
     }

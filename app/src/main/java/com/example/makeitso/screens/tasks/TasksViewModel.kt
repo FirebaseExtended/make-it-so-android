@@ -20,8 +20,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
-import com.example.makeitso.model.service.CrashlyticsService
-import com.example.makeitso.model.service.FirestoreService
+import com.example.makeitso.model.service.LogService
+import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentChange.Type.*
@@ -32,10 +32,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
-    crashlyticsService: CrashlyticsService,
-    private val firestoreService: FirestoreService,
+    logService: LogService,
+    private val storageService: StorageService,
     private val accountService: AccountService
-) : MakeItSoViewModel(crashlyticsService) {
+) : MakeItSoViewModel(logService) {
     var tasks = mutableStateListOf<Task>()
         private set
 
@@ -43,7 +43,7 @@ class TasksViewModel @Inject constructor(
 
     fun addListener() {
         viewModelScope.launch(showErrorExceptionHandler) {
-            listenerRegistration = firestoreService.addListener(
+            listenerRegistration = storageService.addListener(
                 accountService.getUserId(), ::onDocumentEvent, ::onError
             )
         }
@@ -51,7 +51,7 @@ class TasksViewModel @Inject constructor(
 
     fun removeListener() {
         viewModelScope.launch(showErrorExceptionHandler) {
-            firestoreService.removeListener(listenerRegistration)
+            storageService.removeListener(listenerRegistration)
         }
     }
 
@@ -59,7 +59,7 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             val updatedTask = task.copy(completed = !task.completed)
 
-            firestoreService.saveTask(updatedTask) { error ->
+            storageService.saveTask(updatedTask) { error ->
                 if (error != null) onError(error)
             }
         }
@@ -77,7 +77,7 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             val updatedTask = task.copy(flag = !task.flag)
 
-            firestoreService.saveTask(updatedTask) { error ->
+            storageService.saveTask(updatedTask) { error ->
                 if (error != null) onError(error)
             }
         }
@@ -85,7 +85,7 @@ class TasksViewModel @Inject constructor(
 
     private fun onDeleteTaskClick(task: Task) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            firestoreService.deleteTask(task.id) { error ->
+            storageService.deleteTask(task.id) { error ->
                 if (error != null) onError(error)
             }
         }

@@ -22,8 +22,8 @@ import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.service.AccountService
-import com.example.makeitso.model.service.CrashlyticsService
-import com.example.makeitso.model.service.FirestoreService
+import com.example.makeitso.model.service.LogService
+import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -32,9 +32,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val accountService: AccountService,
-    private val firestoreService: FirestoreService,
-    private val crashlyticsService: CrashlyticsService
-) : MakeItSoViewModel(crashlyticsService) {
+    private val storageService: StorageService,
+    private val logService: LogService
+) : MakeItSoViewModel(logService) {
     var uiState = mutableStateOf(LoginUiState())
         private set
 
@@ -78,9 +78,9 @@ class LoginViewModel @Inject constructor(
             val oldUserId = accountService.getAnonymousUserId()
             val newUserId = accountService.getUserId()
 
-            firestoreService.updateUserId(oldUserId, newUserId) { error ->
+            storageService.updateUserId(oldUserId, newUserId) { error ->
                 if (error == null) restartApp()
-                else viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
+                else viewModelScope.launch { logService.logNonFatalCrash(error) }
             }
         }
     }

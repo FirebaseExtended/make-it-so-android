@@ -16,6 +16,6 @@ limitations under the License.
 
 package com.example.makeitso.model.service
 
-interface CrashlyticsService {
+interface LogService {
     fun logNonFatalCrash(throwable: Throwable?)
 }

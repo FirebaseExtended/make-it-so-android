@@ -14,11 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.example.makeitso.model.service
+package com.example.makeitso.model.service.module
 
+import com.example.makeitso.model.service.AccountService
+import com.example.makeitso.model.service.LogService
+import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.model.service.impl.AccountServiceImpl
-import com.example.makeitso.model.service.impl.CrashlyticsServiceImpl
-import com.example.makeitso.model.service.impl.FirestoreServiceImpl
+import com.example.makeitso.model.service.impl.LogServiceImpl
+import com.example.makeitso.model.service.impl.StorageServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -31,8 +34,8 @@ abstract class ServiceModule {
     abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
 
     @Binds
-    abstract fun provideCrashlyticsService(impl: CrashlyticsServiceImpl): CrashlyticsService
+    abstract fun provideLogService(impl: LogServiceImpl): LogService
 
     @Binds
-    abstract fun provideFirestoreService(impl: FirestoreServiceImpl): FirestoreService
+    abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
 }

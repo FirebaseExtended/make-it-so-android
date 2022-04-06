@@ -17,7 +17,7 @@ limitations under the License.
 package com.example.makeitso.model.service.impl
 
 import com.example.makeitso.model.Task
-import com.example.makeitso.model.service.FirestoreService
+import com.example.makeitso.model.service.StorageService
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
@@ -25,7 +25,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
-class FirestoreServiceImpl @Inject constructor() : FirestoreService {
+class StorageServiceImpl @Inject constructor() : StorageService {
     override fun addListener(
         userId: String,
         onDocumentEvent: (DocumentChange.Type, Task) -> Unit,

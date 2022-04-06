@@ -18,7 +18,7 @@ package com.example.makeitso.screens.splash
 
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.model.service.AccountService
-import com.example.makeitso.model.service.CrashlyticsService
+import com.example.makeitso.model.service.LogService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -27,8 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val accountService: AccountService,
-    private val crashlyticsService: CrashlyticsService
-) : MakeItSoViewModel(crashlyticsService) {
+    private val logService: LogService
+) : MakeItSoViewModel(logService) {
     fun onAppStart(openTasks: () -> Unit) {
         if (accountService.hasUser()) openTasks()
         else createAnonymousAccount(openTasks)
@@ -38,7 +38,7 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch(logErrorExceptionHandler) {
             accountService.createAnonymousAccount { task ->
                 if (task.isSuccessful) openTasks()
-                else crashlyticsService.logNonFatalCrash(task.exception)
+                else logService.logNonFatalCrash(task.exception)
             }
         }
     }

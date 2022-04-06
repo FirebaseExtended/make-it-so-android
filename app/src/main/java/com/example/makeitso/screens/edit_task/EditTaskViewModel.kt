@@ -22,8 +22,8 @@ import com.example.makeitso.TASK_DEFAULT_ID
 import com.example.makeitso.common.ext.idFromParameter
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
-import com.example.makeitso.model.service.CrashlyticsService
-import com.example.makeitso.model.service.FirestoreService
+import com.example.makeitso.model.service.LogService
+import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -33,17 +33,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
-    crashlyticsService: CrashlyticsService,
-    private val firestoreService: FirestoreService,
+    logService: LogService,
+    private val storageService: StorageService,
     private val accountService: AccountService
-) : MakeItSoViewModel(crashlyticsService) {
+) : MakeItSoViewModel(logService) {
     var task = mutableStateOf(Task())
         private set
 
     fun initialize(taskId: String) {
         viewModelScope.launch(showErrorExceptionHandler) {
             if (taskId != TASK_DEFAULT_ID) {
-                firestoreService.getTask(taskId.idFromParameter(), ::onError) {
+                storageService.getTask(taskId.idFromParameter(), ::onError) {
                     task.value = it
                 }
             }
@@ -87,7 +87,7 @@ class EditTaskViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             val editedTask = task.value.copy(userId = accountService.getUserId())
 
-            firestoreService.saveTask(editedTask) { error ->
+            storageService.saveTask(editedTask) { error ->
                 if (error == null) popUpScreen() else onError(error)
             }
         }

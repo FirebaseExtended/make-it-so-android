@@ -20,7 +20,7 @@ import com.example.makeitso.model.Task
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ListenerRegistration
 
-interface FirestoreService {
+interface StorageService {
     fun addListener(
         userId: String,
         onDocumentEvent: (DocumentChange.Type, Task) -> Unit,

@@ -19,8 +19,8 @@ package com.example.makeitso.screens.settings
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.model.service.AccountService
-import com.example.makeitso.model.service.CrashlyticsService
-import com.example.makeitso.model.service.FirestoreService
+import com.example.makeitso.model.service.LogService
+import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -28,10 +28,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    crashlyticsService: CrashlyticsService,
+    logService: LogService,
     private val accountService: AccountService,
-    private val firestoreService: FirestoreService
-) : MakeItSoViewModel(crashlyticsService) {
+    private val storageService: StorageService
+) : MakeItSoViewModel(logService) {
     var uiState = mutableStateOf(SettingsUiState())
         private set
 
@@ -48,7 +48,7 @@ class SettingsViewModel @Inject constructor(
 
     fun onDeleteMyAccountClick(restartApp: () -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            firestoreService.deleteAllForUser(accountService.getUserId()) { error ->
+            storageService.deleteAllForUser(accountService.getUserId()) { error ->
                 if (error == null) deleteAccount(restartApp) else onError(error)
             }
         }

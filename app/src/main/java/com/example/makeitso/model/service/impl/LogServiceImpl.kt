@@ -16,12 +16,12 @@ limitations under the License.
 
 package com.example.makeitso.model.service.impl
 
-import com.example.makeitso.model.service.CrashlyticsService
+import com.example.makeitso.model.service.LogService
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
-class CrashlyticsServiceImpl @Inject constructor() : CrashlyticsService {
+class LogServiceImpl @Inject constructor() : LogService {
     override fun logNonFatalCrash(throwable: Throwable?) {
         if (throwable != null) Firebase.crashlytics.recordException(throwable)
     }

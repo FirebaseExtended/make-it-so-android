@@ -49,7 +49,7 @@ class LoginViewModel @Inject constructor(
         uiState.value = uiState.value.copy(password = newValue)
     }
 
-    fun onSignInClick(restartApp: () -> Unit) {
+    fun onSignInClick(popUpScreen: () -> Unit) {
         if (!email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -62,24 +62,24 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch(showErrorExceptionHandler) {
             accountService.authenticate(email, password) { error ->
-                if (error == null) linkWithEmail(restartApp) else onError(error)
+                if (error == null) linkWithEmail(popUpScreen) else onError(error)
             }
         }
     }
 
-    private fun linkWithEmail(restartApp: () -> Unit) {
+    private fun linkWithEmail(popUpScreen: () -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            accountService.linkAccount(email, password) { updateUserId(restartApp) }
+            accountService.linkAccount(email, password) { updateUserId(popUpScreen) }
         }
     }
 
-    private fun updateUserId(restartApp: () -> Unit) {
+    private fun updateUserId(popUpScreen: () -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             val oldUserId = accountService.getAnonymousUserId()
             val newUserId = accountService.getUserId()
 
             storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error == null) restartApp()
+                if (error == null) popUpScreen()
                 else viewModelScope.launch { logService.logNonFatalCrash(error) }
             }
         }

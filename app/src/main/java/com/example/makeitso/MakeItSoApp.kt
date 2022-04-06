@@ -106,11 +106,11 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
     }
 
     composable(LOGIN_SCREEN) {
-        LoginScreen(restartApp = { appState.popUpAndNavigate(SETTINGS_SCREEN, LOGIN_SCREEN) })
+        LoginScreen(popUpScreen = { appState.popUpAndNavigate(SETTINGS_SCREEN, LOGIN_SCREEN) })
     }
 
     composable(SIGN_UP_SCREEN) {
-        SignUpScreen(restartApp = { appState.popUpAndNavigate(SETTINGS_SCREEN, SIGN_UP_SCREEN) })
+        SignUpScreen(popUpScreen = { appState.popUpAndNavigate(SETTINGS_SCREEN, SIGN_UP_SCREEN) })
     }
 
     composable(TASKS_SCREEN) {

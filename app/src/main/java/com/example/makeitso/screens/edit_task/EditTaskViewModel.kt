@@ -17,19 +17,15 @@ limitations under the License.
 package com.example.makeitso.screens.edit_task
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.TASK_DEFAULT_ID
-import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.common.ext.idFromParameter
-import com.example.makeitso.common.snackbar.SnackbarManager
-import com.example.makeitso.R.string as AppText
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
+import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,20 +33,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
-    private val crashlyticsService: CrashlyticsService,
+    crashlyticsService: CrashlyticsService,
     private val firestoreService: FirestoreService,
     private val accountService: AccountService
-) : ViewModel() {
+) : MakeItSoViewModel(crashlyticsService) {
     var task = mutableStateOf(Task())
         private set
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        SnackbarManager.showMessage(AppText.generic_error)
-        viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
-    }
-
     fun initialize(taskId: String) {
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             if (taskId != TASK_DEFAULT_ID) {
                 firestoreService.getTask(taskId.idFromParameter(), ::onError) {
                     task.value = it
@@ -93,7 +84,7 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onDoneClick(popUpScreen: () -> Unit) {
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             val editedTask = task.value.copy(userId = accountService.getUserId())
 
             firestoreService.saveTask(editedTask) { error ->
@@ -104,11 +95,6 @@ class EditTaskViewModel @Inject constructor(
 
     private fun Int.toClockPattern(): String {
         return if (this < 10) "0$this" else "$this"
-    }
-
-    private fun onError(error: Throwable?) {
-        SnackbarManager.showMessage(error.toSnackbarMessage())
-        viewModelScope.launch { crashlyticsService.logNonFatalCrash(error) }
     }
 
     companion object {

@@ -17,19 +17,15 @@ limitations under the License.
 package com.example.makeitso.screens.login
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.R.string as AppText
-import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
+import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,17 +34,12 @@ class LoginViewModel @Inject constructor(
     private val accountService: AccountService,
     private val firestoreService: FirestoreService,
     private val crashlyticsService: CrashlyticsService
-) : ViewModel() {
+) : MakeItSoViewModel(crashlyticsService) {
     var uiState = mutableStateOf(LoginUiState())
         private set
 
     private val email get() = uiState.value.email
     private val password get() = uiState.value.password
-
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        SnackbarManager.showMessage(AppText.generic_error)
-        viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
-    }
 
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
@@ -69,21 +60,21 @@ class LoginViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             accountService.authenticate(email, password) { task ->
-                task.onResult { linkWithEmail(restartApp) }
+                if (task.isSuccessful) linkWithEmail(restartApp) else onError(task.exception)
             }
         }
     }
 
     private fun linkWithEmail(restartApp: () -> Unit) {
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             accountService.linkAccount(email, password) { updateUserId(restartApp) }
         }
     }
 
     private fun updateUserId(restartApp: () -> Unit) {
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             val oldUserId = accountService.getAnonymousUserId()
             val newUserId = accountService.getUserId()
 
@@ -94,29 +85,16 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun Task<AuthResult>.onResult(successCallback: () -> Unit) {
-        if (this.isSuccessful) {
-            successCallback()
-        } else {
-            SnackbarManager.showMessage(this.exception.toSnackbarMessage())
-            crashlyticsService.logNonFatalCrash(this.exception)
-        }
-    }
-
     fun onForgotPasswordClick() {
         if (!email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
         }
 
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             accountService.sendRecoveryEmail(email) { error ->
-                if (error == null) {
-                    SnackbarManager.showMessage(AppText.recovery_email_sent)
-                } else {
-                    SnackbarManager.showMessage(error.toSnackbarMessage())
-                    crashlyticsService.logNonFatalCrash(error)
-                }
+                if (error != null) onError(error)
+                else SnackbarManager.showMessage(AppText.recovery_email_sent)
             }
         }
     }

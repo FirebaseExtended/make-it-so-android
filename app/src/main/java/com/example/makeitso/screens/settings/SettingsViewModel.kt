@@ -17,62 +17,48 @@ limitations under the License.
 package com.example.makeitso.screens.settings
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.makeitso.common.snackbar.SnackbarManager
-import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
-import com.example.makeitso.R.string as AppText
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.CrashlyticsService
 import com.example.makeitso.model.service.FirestoreService
+import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+    crashlyticsService: CrashlyticsService,
     private val accountService: AccountService,
-    private val firestoreService: FirestoreService,
-    private val crashlyticsService: CrashlyticsService
-) : ViewModel() {
+    private val firestoreService: FirestoreService
+) : MakeItSoViewModel(crashlyticsService) {
     var uiState = mutableStateOf(SettingsUiState())
         private set
-
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        SnackbarManager.showMessage(AppText.generic_error)
-        viewModelScope.launch { crashlyticsService.logNonFatalCrash(throwable) }
-    }
 
     fun initialize() {
         uiState.value = SettingsUiState(accountService.isAnonymousUser())
     }
 
     fun onSignOutClick(restartApp: () -> Unit) {
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             accountService.signOut()
             restartApp()
         }
     }
 
     fun onDeleteMyAccountClick(restartApp: () -> Unit) {
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             firestoreService.deleteAllForUser(accountService.getUserId()) { error ->
-                if (error == null) deleteAccount(restartApp) else error.onError()
+                if (error == null) deleteAccount(restartApp) else onError(error)
             }
         }
     }
 
     private fun deleteAccount(restartApp: () -> Unit) {
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(showErrorExceptionHandler) {
             accountService.deleteAccount { error ->
-                if (error == null) restartApp() else error.onError()
+                if (error == null) restartApp() else onError(error)
             }
         }
-    }
-
-    private fun Throwable.onError() {
-        SnackbarManager.showMessage(this.toSnackbarMessage())
-        crashlyticsService.logNonFatalCrash(this)
     }
 }

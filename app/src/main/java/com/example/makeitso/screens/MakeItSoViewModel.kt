@@ -17,12 +17,10 @@ limitations under the License.
 package com.example.makeitso.screens
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import com.example.makeitso.model.service.LogService
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.launch
 
 open class MakeItSoViewModel(private val logService: LogService) : ViewModel() {
     open val showErrorExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -30,11 +28,11 @@ open class MakeItSoViewModel(private val logService: LogService) : ViewModel() {
     }
 
     open val logErrorExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        viewModelScope.launch { logService.logNonFatalCrash(throwable) }
+        logService.logNonFatalCrash(throwable)
     }
 
     open fun onError(error: Throwable?) {
         SnackbarManager.showMessage(error.toSnackbarMessage())
-        viewModelScope.launch { logService.logNonFatalCrash(error) }
+        logService.logNonFatalCrash(error)
     }
 }

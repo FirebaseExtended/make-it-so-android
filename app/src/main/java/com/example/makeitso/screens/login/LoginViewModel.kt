@@ -79,8 +79,7 @@ class LoginViewModel @Inject constructor(
             val newUserId = accountService.getUserId()
 
             storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error == null) popUpScreen()
-                else viewModelScope.launch { logService.logNonFatalCrash(error) }
+                if (error == null) popUpScreen() else logService.logNonFatalCrash(error)
             }
         }
     }

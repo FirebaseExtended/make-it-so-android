@@ -31,7 +31,7 @@ open class MakeItSoViewModel(private val logService: LogService) : ViewModel() {
         logService.logNonFatalCrash(throwable)
     }
 
-    open fun onError(error: Throwable?) {
+    open fun onError(error: Throwable) {
         SnackbarManager.showMessage(error.toSnackbarMessage())
         logService.logNonFatalCrash(error)
     }

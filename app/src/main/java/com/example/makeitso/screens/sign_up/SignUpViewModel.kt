@@ -73,14 +73,19 @@ class SignUpViewModel @Inject constructor(
 
         viewModelScope.launch(showErrorExceptionHandler) {
             accountService.createAccount(email, password) { error ->
-                if (error == null) linkWithEmail(popUpScreen) else onError(error)
+                if (error == null) {
+                    linkWithEmail()
+                    updateUserId(popUpScreen)
+                } else onError(error)
             }
         }
     }
 
-    private fun linkWithEmail(popUpScreen: () -> Unit) {
+    private fun linkWithEmail() {
         viewModelScope.launch(showErrorExceptionHandler) {
-            accountService.linkAccount(email, password) { updateUserId(popUpScreen) }
+            accountService.linkAccount(email, password) { error ->
+                if (error != null) logService.logNonFatalCrash(error)
+            }
         }
     }
 

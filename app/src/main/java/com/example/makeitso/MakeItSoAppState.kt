@@ -54,7 +54,7 @@ class MakeItSoAppState(
         }
     }
 
-    fun popUpAndNavigate(route: String, popUp: String) {
+    fun navigateAndPopUp(route: String, popUp: String) {
         navController.navigate(route) {
             launchSingleTop = true
             popUpTo(popUp) { inclusive = true }

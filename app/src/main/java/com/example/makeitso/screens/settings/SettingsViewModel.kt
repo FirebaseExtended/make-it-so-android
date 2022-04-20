@@ -18,6 +18,9 @@ package com.example.makeitso.screens.settings
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.example.makeitso.LOGIN_SCREEN
+import com.example.makeitso.SIGN_UP_SCREEN
+import com.example.makeitso.SPLASH_SCREEN
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
@@ -39,14 +42,18 @@ class SettingsViewModel @Inject constructor(
         uiState.value = SettingsUiState(accountService.isAnonymousUser())
     }
 
-    fun onSignOutClick(restartApp: () -> Unit) {
+    fun onLoginClick(openScreen: (String) -> Unit) = openScreen(LOGIN_SCREEN)
+
+    fun onSignUpClick(openScreen: (String) -> Unit) = openScreen(SIGN_UP_SCREEN)
+
+    fun onSignOutClick(restartApp: (String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             accountService.signOut()
-            restartApp()
+            restartApp(SPLASH_SCREEN)
         }
     }
 
-    fun onDeleteMyAccountClick(restartApp: () -> Unit) {
+    fun onDeleteMyAccountClick(restartApp: (String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             storageService.deleteAllForUser(accountService.getUserId()) { error ->
                 if (error == null) deleteAccount(restartApp) else onError(error)
@@ -54,10 +61,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun deleteAccount(restartApp: () -> Unit) {
+    private fun deleteAccount(restartApp: (String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             accountService.deleteAccount { error ->
-                if (error == null) restartApp() else onError(error)
+                if (error == null) restartApp(SPLASH_SCREEN) else onError(error)
             }
         }
     }

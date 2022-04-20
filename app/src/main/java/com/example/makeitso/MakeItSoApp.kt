@@ -94,31 +94,26 @@ fun resources(): Resources {
 @ExperimentalMaterialApi
 fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
     composable(SPLASH_SCREEN) {
-        SplashScreen(openTasks = { appState.popUpAndNavigate(TASKS_SCREEN, SPLASH_SCREEN) })
+        SplashScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
     composable(SETTINGS_SCREEN) {
         SettingsScreen(
-            restartApp = { appState.clearAndNavigate(SPLASH_SCREEN) },
-            openLogin = { appState.navigate(LOGIN_SCREEN) },
-            openSignUp = { appState.navigate(SIGN_UP_SCREEN) }
+            restartApp = { route -> appState.clearAndNavigate(route) },
+            openScreen = { route -> appState.navigate(route) }
         )
     }
 
     composable(LOGIN_SCREEN) {
-        LoginScreen(popUpScreen = { appState.popUpAndNavigate(SETTINGS_SCREEN, LOGIN_SCREEN) })
+        LoginScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
     composable(SIGN_UP_SCREEN) {
-        SignUpScreen(popUpScreen = { appState.popUpAndNavigate(SETTINGS_SCREEN, SIGN_UP_SCREEN) })
+        SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
     composable(TASKS_SCREEN) {
-        TasksScreen(
-            openAddTask = { appState.navigate(EDIT_TASK_SCREEN) },
-            openEditTask = { id -> appState.navigate("$EDIT_TASK_SCREEN?$TASK_ID={$id}")},
-            openSettings = { appState.navigate(SETTINGS_SCREEN) }
-        )
+        TasksScreen(openScreen = { route -> appState.navigate(route) })
     }
 
     composable(

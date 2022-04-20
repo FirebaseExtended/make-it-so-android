@@ -17,6 +17,8 @@ limitations under the License.
 package com.example.makeitso.screens.splash
 
 import androidx.lifecycle.viewModelScope
+import com.example.makeitso.SPLASH_SCREEN
+import com.example.makeitso.TASKS_SCREEN
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.screens.MakeItSoViewModel
@@ -29,15 +31,16 @@ class SplashViewModel @Inject constructor(
     private val accountService: AccountService,
     private val logService: LogService
 ) : MakeItSoViewModel(logService) {
-    fun onAppStart(openTasks: () -> Unit) {
-        if (accountService.hasUser()) openTasks()
-        else createAnonymousAccount(openTasks)
+    fun onAppStart(openAndPopUp: (String, String) -> Unit) {
+        if (accountService.hasUser()) openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
+        else createAnonymousAccount(openAndPopUp)
     }
 
-    private fun createAnonymousAccount(openTasks: () -> Unit) {
+    private fun createAnonymousAccount(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch(logErrorExceptionHandler) {
             accountService.createAnonymousAccount { error ->
-                if (error == null) openTasks() else logService.logNonFatalCrash(error)
+                if (error != null) logService.logNonFatalCrash(error)
+                else openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
             }
         }
     }

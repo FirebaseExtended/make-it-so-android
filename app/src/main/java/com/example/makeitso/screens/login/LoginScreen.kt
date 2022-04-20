@@ -31,7 +31,7 @@ import com.example.makeitso.common.ext.textButton
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun LoginScreen(popUpScreen: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(openAndPopUp: (String, String) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState
 
     BasicToolbar(AppText.login_details)
@@ -48,7 +48,7 @@ fun LoginScreen(popUpScreen: () -> Unit, viewModel: LoginViewModel = hiltViewMod
         PasswordField(uiState.password, Modifier.fieldModifier(), viewModel::onPasswordChange)
 
         BasicButton(AppText.sign_in, Modifier.basicButton()) {
-            viewModel.onSignInClick(popUpScreen)
+            viewModel.onSignInClick(openAndPopUp)
         }
 
         BasicTextButton(AppText.forgot_password, Modifier.textButton()) {

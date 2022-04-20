@@ -34,23 +34,18 @@ import com.example.makeitso.R.string as AppText
 
 @Composable
 @ExperimentalMaterialApi
-fun TasksScreen(
-    openAddTask: () -> Unit,
-    openEditTask: (String) -> Unit,
-    openSettings: () -> Unit,
-    viewModel: TasksViewModel = hiltViewModel()
-) {
+fun TasksScreen(openScreen: (String) -> Unit, viewModel: TasksViewModel = hiltViewModel()) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = openAddTask,
+                onClick = { viewModel.onAddClick(openScreen) },
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = MaterialTheme.colors.onPrimary,
                 modifier = Modifier.padding(16.dp)
             ) { Icon(Icons.Filled.Add, "Add") }
         }
     ) {
-        ScreenContent(openEditTask, openSettings, viewModel)
+        ScreenContent(openScreen, viewModel)
     }
 
     DisposableEffect(viewModel) {
@@ -61,21 +56,15 @@ fun TasksScreen(
 
 @Composable
 @ExperimentalMaterialApi
-private fun ScreenContent(
-    openEditTask: (String) -> Unit,
-    openSettings: () -> Unit,
-    viewModel: TasksViewModel
-) {
+private fun ScreenContent(openScreen: (String) -> Unit, viewModel: TasksViewModel) {
     val tasks = viewModel.tasks
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()) {
+    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         ActionToolbar(
             title = AppText.tasks,
             modifier = Modifier.toolbarActions(),
             endActionIcon = AppIcon.ic_settings,
-            endAction = openSettings
+            endAction = { viewModel.onSettingsClick(openScreen) }
         )
 
         Spacer(modifier = Modifier.smallSpacer())
@@ -86,7 +75,7 @@ private fun ScreenContent(
                     task = taskItem,
                     onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
                     onActionClick = { action ->
-                        viewModel.onTaskActionClick(openEditTask, taskItem, action)
+                        viewModel.onTaskActionClick(openScreen, taskItem, action)
                     }
                 )
             }

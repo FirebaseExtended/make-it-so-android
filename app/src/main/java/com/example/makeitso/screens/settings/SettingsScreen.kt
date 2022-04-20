@@ -34,9 +34,8 @@ import com.example.makeitso.common.ext.spacer
 @ExperimentalMaterialApi
 @Composable
 fun SettingsScreen(
-    restartApp: () -> Unit,
-    openLogin: () -> Unit,
-    openSignUp: () -> Unit,
+    restartApp: (String) -> Unit,
+    openScreen: (String) -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState
@@ -56,11 +55,11 @@ fun SettingsScreen(
 
         if (uiState.isAnonymousAccount) {
             RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.card()) {
-                openLogin()
+                viewModel.onLoginClick(openScreen)
             }
 
             RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "", Modifier.card()) {
-                openSignUp()
+                viewModel.onSignUpClick(openScreen)
             }
         } else {
             SignOutCard(restartApp, viewModel)
@@ -71,7 +70,7 @@ fun SettingsScreen(
 
 @ExperimentalMaterialApi
 @Composable
-private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
+private fun SignOutCard(restartApp: (String) -> Unit, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
     RegularCardEditor(AppText.sign_out, AppIcon.ic_exit, "", Modifier.card()) {
@@ -96,7 +95,7 @@ private fun SignOutCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
 
 @ExperimentalMaterialApi
 @Composable
-private fun DeleteMyAccountCard(restartApp: () -> Unit, viewModel: SettingsViewModel) {
+private fun DeleteMyAccountCard(restartApp: (String) -> Unit, viewModel: SettingsViewModel) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
     DangerousCardEditor(AppText.delete_my_account, AppIcon.ic_delete_my_account, "", Modifier.card()) {

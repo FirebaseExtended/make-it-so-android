@@ -18,6 +18,9 @@ package com.example.makeitso.screens.tasks
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
+import com.example.makeitso.EDIT_TASK_SCREEN
+import com.example.makeitso.SETTINGS_SCREEN
+import com.example.makeitso.TASK_ID
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
@@ -56,9 +59,13 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    fun onTaskActionClick(openEditTask: (String) -> Unit, task: Task, action: String) {
+    fun onAddClick(openScreen: (String) -> Unit) = openScreen(EDIT_TASK_SCREEN)
+
+    fun onSettingsClick(openScreen: (String) -> Unit) = openScreen(SETTINGS_SCREEN)
+
+    fun onTaskActionClick(openScreen: (String) -> Unit, task: Task, action: String) {
         when (TaskActionOption.getByTitle(action)) {
-            TaskActionOption.EditTask -> openEditTask(task.id)
+            TaskActionOption.EditTask -> openScreen("$EDIT_TASK_SCREEN?$TASK_ID={${task.id}}")
             TaskActionOption.ToggleFlag -> onFlagTaskClick(task)
             TaskActionOption.DeleteTask -> onDeleteTaskClick(task)
         }

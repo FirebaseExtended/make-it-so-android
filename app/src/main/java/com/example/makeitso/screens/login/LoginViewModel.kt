@@ -18,6 +18,8 @@ package com.example.makeitso.screens.login
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.example.makeitso.LOGIN_SCREEN
+import com.example.makeitso.SETTINGS_SCREEN
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.snackbar.SnackbarManager
@@ -49,7 +51,7 @@ class LoginViewModel @Inject constructor(
         uiState.value = uiState.value.copy(password = newValue)
     }
 
-    fun onSignInClick(popUpScreen: () -> Unit) {
+    fun onSignInClick(openAndPopUp: (String, String) -> Unit) {
         if (!email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -64,7 +66,7 @@ class LoginViewModel @Inject constructor(
             accountService.authenticate(email, password) { error ->
                 if (error == null) {
                     linkWithEmail()
-                    updateUserId(popUpScreen)
+                    updateUserId(openAndPopUp)
                 } else onError(error)
             }
         }
@@ -78,13 +80,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun updateUserId(popUpScreen: () -> Unit) {
+    private fun updateUserId(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             val oldUserId = accountService.getAnonymousUserId()
             val newUserId = accountService.getUserId()
 
             storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error == null) popUpScreen() else logService.logNonFatalCrash(error)
+                if (error != null) logService.logNonFatalCrash(error)
+                else openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
             }
         }
     }

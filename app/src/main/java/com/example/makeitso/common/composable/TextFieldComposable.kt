@@ -35,25 +35,25 @@ import com.example.makeitso.R.string as AppText
 @Composable
 fun BasicField(
     @StringRes text: Int,
-    initialValue: String,
+    value: String,
     modifier: Modifier,
     onNewValue: (String) -> Unit
 ) {
     OutlinedTextField(
         singleLine = true,
         modifier = modifier,
-        value = initialValue,
+        value = value,
         onValueChange = { onNewValue(it) },
         placeholder = { Text(stringResource(text)) }
     )
 }
 
 @Composable
-fun EmailField(initialValue: String,  modifier: Modifier, onNewValue: (String) -> Unit) {
+fun EmailField(value: String, modifier: Modifier, onNewValue: (String) -> Unit) {
     OutlinedTextField(
         singleLine = true,
         modifier = modifier,
-        value = initialValue,
+        value = value,
         onValueChange = { onNewValue(it) },
         placeholder = { Text(stringResource(AppText.email)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
@@ -61,18 +61,18 @@ fun EmailField(initialValue: String,  modifier: Modifier, onNewValue: (String) -
 }
 
 @Composable
-fun PasswordField(initialValue: String,  modifier: Modifier, onNewValue: (String) -> Unit) {
-    PasswordField(initialValue, AppText.password, modifier, onNewValue)
+fun PasswordField(value: String, modifier: Modifier, onNewValue: (String) -> Unit) {
+    PasswordField(value, AppText.password, modifier, onNewValue)
 }
 
 @Composable
-fun RepeatPasswordField(initialValue: String,  modifier: Modifier, onNewValue: (String) -> Unit) {
-    PasswordField(initialValue, AppText.repeat_password, modifier, onNewValue)
+fun RepeatPasswordField(value: String, modifier: Modifier, onNewValue: (String) -> Unit) {
+    PasswordField(value, AppText.repeat_password, modifier, onNewValue)
 }
 
 @Composable
 private fun PasswordField(
-    initialValue: String,
+    value: String,
     @StringRes placeholder: Int,
     modifier: Modifier,
     onNewValue: (String) -> Unit
@@ -87,7 +87,7 @@ private fun PasswordField(
 
     OutlinedTextField(
         modifier = modifier,
-        value = initialValue,
+        value = value,
         onValueChange = { onNewValue(it) },
         placeholder = { Text(text = stringResource(placeholder)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Lock") },

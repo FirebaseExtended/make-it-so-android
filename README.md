@@ -1,7 +1,8 @@
 <p align="center">
-  <a href="https://github.com/marinacoelho/MakeItSo">
-    <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Logo">
-  </a>
+<video controls width="350">
+    <source src="app/src/main/res/videos/MakeItSo-Android.mp4" type="video/mp4">
+    Sorry, your browser doesn't support embedded videos.
+</video>
 </p>
 
 ## Make it So

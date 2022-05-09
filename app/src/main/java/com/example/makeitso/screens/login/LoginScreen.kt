@@ -44,8 +44,8 @@ fun LoginScreen(openAndPopUp: (String, String) -> Unit, viewModel: LoginViewMode
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EmailField(uiState.email, Modifier.fieldModifier(), viewModel::onEmailChange)
-        PasswordField(uiState.password, Modifier.fieldModifier(), viewModel::onPasswordChange)
+        EmailField(uiState.email, viewModel::onEmailChange, Modifier.fieldModifier())
+        PasswordField(uiState.password, viewModel::onPasswordChange, Modifier.fieldModifier())
 
         BasicButton(AppText.sign_in, Modifier.basicButton()) {
             viewModel.onSignInClick(openAndPopUp)

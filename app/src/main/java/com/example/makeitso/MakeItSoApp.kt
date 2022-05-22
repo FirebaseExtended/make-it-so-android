@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -43,6 +44,7 @@ import com.example.makeitso.screens.tasks.TasksScreen
 import com.example.makeitso.theme.MakeItSoTheme
 import kotlinx.coroutines.CoroutineScope
 
+@Preview
 @Composable
 @ExperimentalMaterialApi
 fun MakeItSoApp() {
@@ -93,14 +95,17 @@ fun resources(): Resources {
 
 @ExperimentalMaterialApi
 fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
+
     composable(SPLASH_SCREEN) {
         SplashScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
     composable(SETTINGS_SCREEN) {
         SettingsScreen(
+
             restartApp = { route -> appState.clearAndNavigate(route) },
             openScreen = { route -> appState.navigate(route) }
+
         )
     }
 
@@ -125,4 +130,6 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
             taskId = it.arguments?.getString(TASK_ID) ?: TASK_DEFAULT_ID
         )
     }
+
+
 }

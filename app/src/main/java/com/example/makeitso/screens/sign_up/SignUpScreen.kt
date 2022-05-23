@@ -29,14 +29,18 @@ import com.example.makeitso.common.ext.fieldModifier
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun SignUpScreen(openAndPopUp: (String, String) -> Unit, viewModel: SignUpViewModel = hiltViewModel()) {
+fun SignUpScreen(
+    openAndPopUp: (String, String) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SignUpViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState
     val fieldModifier = Modifier.fieldModifier()
 
     BasicToolbar(AppText.create_account)
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .verticalScroll(rememberScrollState()),

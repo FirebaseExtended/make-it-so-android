@@ -31,13 +31,17 @@ import com.example.makeitso.common.ext.textButton
 import com.example.makeitso.R.string as AppText
 
 @Composable
-fun LoginScreen(openAndPopUp: (String, String) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(
+    openAndPopUp: (String, String) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState
 
     BasicToolbar(AppText.login_details)
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .verticalScroll(rememberScrollState()),

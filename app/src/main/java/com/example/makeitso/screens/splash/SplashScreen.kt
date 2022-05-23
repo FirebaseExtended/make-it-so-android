@@ -34,10 +34,11 @@ private const val SPLASH_TIMEOUT = 1000L
 @Composable
 fun SplashScreen(
     openAndPopUp: (String, String) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .background(color = MaterialTheme.colors.background)

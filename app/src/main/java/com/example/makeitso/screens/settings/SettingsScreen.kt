@@ -36,6 +36,7 @@ import com.example.makeitso.common.ext.spacer
 fun SettingsScreen(
     restartApp: (String) -> Unit,
     openScreen: (String) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState
@@ -43,7 +44,7 @@ fun SettingsScreen(
     LaunchedEffect(Unit) { viewModel.initialize() }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .verticalScroll(rememberScrollState()),
@@ -62,15 +63,15 @@ fun SettingsScreen(
                 viewModel.onSignUpClick(openScreen)
             }
         } else {
-            SignOutCard(restartApp, viewModel)
-            DeleteMyAccountCard(restartApp, viewModel)
+            SignOutCard { viewModel.onSignOutClick(restartApp) }
+            DeleteMyAccountCard { viewModel.onDeleteMyAccountClick(restartApp) }
         }
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
-private fun SignOutCard(restartApp: (String) -> Unit, viewModel: SettingsViewModel) {
+private fun SignOutCard(signOut: () -> Unit) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
     RegularCardEditor(AppText.sign_out, AppIcon.ic_exit, "", Modifier.card()) {
@@ -84,7 +85,7 @@ private fun SignOutCard(restartApp: (String) -> Unit, viewModel: SettingsViewMod
             dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
             confirmButton = {
                 DialogConfirmButton(AppText.sign_out) {
-                    viewModel.onSignOutClick(restartApp)
+                    signOut()
                     showWarningDialog = false
                 }
             },
@@ -95,7 +96,7 @@ private fun SignOutCard(restartApp: (String) -> Unit, viewModel: SettingsViewMod
 
 @ExperimentalMaterialApi
 @Composable
-private fun DeleteMyAccountCard(restartApp: (String) -> Unit, viewModel: SettingsViewModel) {
+private fun DeleteMyAccountCard(deleteMyAccount: () -> Unit) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
     DangerousCardEditor(AppText.delete_my_account, AppIcon.ic_delete_my_account, "", Modifier.card()) {
@@ -109,7 +110,7 @@ private fun DeleteMyAccountCard(restartApp: (String) -> Unit, viewModel: Setting
             dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
             confirmButton = {
                 DialogConfirmButton(AppText.delete_my_account) {
-                    viewModel.onDeleteMyAccountClick(restartApp)
+                    deleteMyAccount()
                     showWarningDialog = false
                 }
             },

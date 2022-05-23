@@ -34,51 +34,49 @@ import com.example.makeitso.R.string as AppText
 
 @Composable
 @ExperimentalMaterialApi
-fun TasksScreen(openScreen: (String) -> Unit, viewModel: TasksViewModel = hiltViewModel()) {
+fun TasksScreen(
+    openScreen: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: TasksViewModel = hiltViewModel()
+) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { viewModel.onAddClick(openScreen) },
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = MaterialTheme.colors.onPrimary,
-                modifier = Modifier.padding(16.dp)
+                modifier = modifier.padding(16.dp)
             ) { Icon(Icons.Filled.Add, "Add") }
         }
     ) {
-        ScreenContent(openScreen, viewModel)
+        val tasks = viewModel.tasks
+
+        Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+            ActionToolbar(
+                title = AppText.tasks,
+                modifier = Modifier.toolbarActions(),
+                endActionIcon = AppIcon.ic_settings,
+                endAction = { viewModel.onSettingsClick(openScreen) }
+            )
+
+            Spacer(modifier = Modifier.smallSpacer())
+
+            LazyColumn {
+                items(tasks, key = { it.id }) { taskItem ->
+                    TaskItem(
+                        task = taskItem,
+                        onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
+                        onActionClick = { action ->
+                            viewModel.onTaskActionClick(openScreen, taskItem, action)
+                        }
+                    )
+                }
+            }
+        }
     }
 
     DisposableEffect(viewModel) {
         viewModel.addListener()
         onDispose { viewModel.removeListener() }
-    }
-}
-
-@Composable
-@ExperimentalMaterialApi
-private fun ScreenContent(openScreen: (String) -> Unit, viewModel: TasksViewModel) {
-    val tasks = viewModel.tasks
-
-    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-        ActionToolbar(
-            title = AppText.tasks,
-            modifier = Modifier.toolbarActions(),
-            endActionIcon = AppIcon.ic_settings,
-            endAction = { viewModel.onSettingsClick(openScreen) }
-        )
-
-        Spacer(modifier = Modifier.smallSpacer())
-
-        LazyColumn {
-            items(tasks, key = { it.id }) { taskItem ->
-                TaskItem(
-                    task = taskItem,
-                    onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
-                    onActionClick = { action ->
-                        viewModel.onTaskActionClick(openScreen, taskItem, action)
-                    }
-                )
-            }
-        }
     }
 }

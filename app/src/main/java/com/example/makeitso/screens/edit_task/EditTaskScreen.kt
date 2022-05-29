@@ -75,10 +75,9 @@ fun EditTaskScreen(popUpScreen: () -> Unit, taskId: String, viewModel: EditTaskV
 
 @Composable
 private fun BasicFields(task: Task, viewModel: EditTaskViewModel) {
-    val fieldModifier = Modifier.fieldModifier()
-    BasicField(AppText.title, task.title, viewModel::onTitleChange, fieldModifier)
-    BasicField(AppText.description, task.description, viewModel::onDescriptionChange, fieldModifier)
-    BasicField(AppText.url, task.url, viewModel::onUrlChange, fieldModifier)
+    BasicField(AppText.title, task.title, Modifier.fieldModifier(), viewModel::onTitleChange)
+    BasicField(AppText.description, task.description, Modifier.fieldModifier(), viewModel::onDescriptionChange)
+    BasicField(AppText.url, task.url, Modifier.fieldModifier(), viewModel::onUrlChange)
 }
 
 @ExperimentalMaterialApi

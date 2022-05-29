@@ -49,9 +49,14 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+<<<<<<< HEAD
 
         EmailField(uiState.email, viewModel::onEmailChange, Modifier.fieldModifier())
         PasswordField(uiState.password, viewModel::onPasswordChange, Modifier.fieldModifier())
+=======
+        EmailField(uiState.email, Modifier.fieldModifier(), viewModel::onEmailChange)
+        PasswordField(uiState.password, Modifier.fieldModifier(), viewModel::onPasswordChange)
+>>>>>>> parent of 593445c (Added Performance Monitoring and updated modifier parameter position to match Compose best practices)
 
         BasicButton(AppText.sign_in, Modifier.basicButton()) {
             viewModel.onSignInClick(openAndPopUp)

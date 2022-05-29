@@ -36,8 +36,8 @@ import com.example.makeitso.R.string as AppText
 fun BasicField(
     @StringRes text: Int,
     value: String,
-    onNewValue: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier,
+    onNewValue: (String) -> Unit
 ) {
     OutlinedTextField(
         singleLine = true,
@@ -49,7 +49,7 @@ fun BasicField(
 }
 
 @Composable
-fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier) {
+fun EmailField(value: String, modifier: Modifier, onNewValue: (String) -> Unit) {
     OutlinedTextField(
         singleLine = true,
         modifier = modifier,
@@ -61,21 +61,21 @@ fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier =
 }
 
 @Composable
-fun PasswordField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier) {
-    PasswordField(value, AppText.password, onNewValue, modifier)
+fun PasswordField(value: String, modifier: Modifier, onNewValue: (String) -> Unit) {
+    PasswordField(value, AppText.password, modifier, onNewValue)
 }
 
 @Composable
-fun RepeatPasswordField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier) {
-    PasswordField(value, AppText.repeat_password, onNewValue, modifier)
+fun RepeatPasswordField(value: String, modifier: Modifier, onNewValue: (String) -> Unit) {
+    PasswordField(value, AppText.repeat_password, modifier, onNewValue)
 }
 
 @Composable
 private fun PasswordField(
     value: String,
     @StringRes placeholder: Int,
-    onNewValue: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier,
+    onNewValue: (String) -> Unit
 ) {
     var isVisible by remember { mutableStateOf(false) }
 

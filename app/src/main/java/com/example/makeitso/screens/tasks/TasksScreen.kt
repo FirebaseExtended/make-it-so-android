@@ -96,7 +96,7 @@ fun TaskScreenPreview() {
             Task(title = "Clean up the house"),
             Task(title = "Groceries"),
             Task(title = "Prepare dinner", completed = true),
-            Task(title = "Watch Brazil vs Argentina football game", dueTime = "Today at 9PM")
+            Task(title = "Watch Brazil vs Argentina football game", dueTime = "Today at 10PM")
         )
 
         TasksScreen(

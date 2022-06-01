@@ -19,17 +19,15 @@ package com.example.makeitso
 import android.content.res.Resources
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
@@ -40,6 +38,7 @@ import com.example.makeitso.screens.settings.SettingsScreen
 import com.example.makeitso.screens.sign_up.SignUpScreen
 import com.example.makeitso.screens.splash.SplashScreen
 import com.example.makeitso.screens.tasks.TasksScreen
+import com.example.makeitso.screens.tasks.TasksViewModel
 import com.example.makeitso.theme.MakeItSoTheme
 import kotlinx.coroutines.CoroutineScope
 
@@ -113,7 +112,21 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
     }
 
     composable(TASKS_SCREEN) {
-        TasksScreen(openScreen = { route -> appState.navigate(route) })
+        val viewModel = hiltViewModel<TasksViewModel>()
+
+        TasksScreen(
+            tasks = viewModel.tasks,
+            openScreen = { route -> appState.navigate(route) },
+            onSettingsClick = viewModel::onSettingsClick,
+            onAddClick = viewModel::onAddClick,
+            onTaskActionClick = viewModel::onTaskActionClick,
+            onTaskCheckChange = viewModel::onTaskCheckChange
+        )
+
+        DisposableEffect(viewModel) {
+            viewModel.addListener()
+            onDispose { viewModel.removeListener() }
+        }
     }
 
     composable(

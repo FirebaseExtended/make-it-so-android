@@ -16,19 +16,23 @@ limitations under the License.
 
 package com.example.makeitso.screens.tasks
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.common.composable.ActionToolbar
 import com.example.makeitso.common.ext.smallSpacer
 import com.example.makeitso.common.ext.toolbarActions
+import com.example.makeitso.model.Task
+import com.example.makeitso.theme.MakeItSoTheme
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
@@ -37,26 +41,32 @@ import com.example.makeitso.R.string as AppText
 fun TasksScreen(
     openScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: TasksViewModel = hiltViewModel()
+    tasks: List<Task>,
+    onTaskCheckChange: (Task) -> Unit,
+    onSettingsClick: ((String) -> Unit) -> Unit,
+    onAddClick: ((String) -> Unit) -> Unit,
+    onTaskActionClick: ((String) -> Unit, Task, String) -> Unit
 ) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.onAddClick(openScreen) },
+                onClick = { onAddClick(openScreen) },
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = MaterialTheme.colors.onPrimary,
                 modifier = modifier.padding(16.dp)
             ) { Icon(Icons.Filled.Add, "Add") }
         }
     ) {
-        val tasks = viewModel.tasks
-
-        Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
             ActionToolbar(
                 title = AppText.tasks,
                 modifier = Modifier.toolbarActions(),
                 endActionIcon = AppIcon.ic_settings,
-                endAction = { viewModel.onSettingsClick(openScreen) }
+                endAction = { onSettingsClick(openScreen) }
             )
 
             Spacer(modifier = Modifier.smallSpacer())
@@ -65,18 +75,36 @@ fun TasksScreen(
                 items(tasks, key = { it.id }) { taskItem ->
                     TaskItem(
                         task = taskItem,
-                        onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
+                        onCheckChange = { onTaskCheckChange(taskItem) },
                         onActionClick = { action ->
-                            viewModel.onTaskActionClick(openScreen, taskItem, action)
+                            onTaskActionClick(openScreen, taskItem, action)
                         }
                     )
                 }
             }
         }
     }
+}
 
-    DisposableEffect(viewModel) {
-        viewModel.addListener()
-        onDispose { viewModel.removeListener() }
+@Composable
+@ExperimentalMaterialApi
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
+fun TaskScreenPreview() {
+    MakeItSoTheme {
+        val dummyTasks = listOf(
+            Task(title = "Clean up the house"),
+            Task(title = "Groceries"),
+            Task(title = "Prepare dinner", completed = true)
+        )
+
+        TasksScreen(
+            openScreen = {},
+            tasks = dummyTasks,
+            onTaskCheckChange = {},
+            onSettingsClick = {},
+            onAddClick = {},
+            onTaskActionClick = { _, _, _ -> }
+        )
     }
 }

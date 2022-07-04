@@ -16,7 +16,7 @@ limitations under the License.
 
 package com.example.makeitso.screens.tasks
 
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.EDIT_TASK_SCREEN
 import com.example.makeitso.SETTINGS_SCREEN
@@ -36,7 +36,7 @@ class TasksViewModel @Inject constructor(
     private val storageService: StorageService,
     private val accountService: AccountService
 ) : MakeItSoViewModel(logService) {
-    var tasks = mutableStateListOf<Task>()
+    var tasks = mutableStateMapOf<String, Task>()
         private set
 
     fun addListener() {
@@ -90,11 +90,6 @@ class TasksViewModel @Inject constructor(
     }
 
     private fun onDocumentEvent(wasDocumentDeleted: Boolean, task: Task) {
-        if (wasDocumentDeleted) tasks.remove(task) else updateTaskInList(task)
-    }
-
-    private fun updateTaskInList(task: Task) {
-        val index = tasks.indexOfFirst { it.id == task.id }
-        if (index < 0) tasks.add(task) else tasks[index] = task
+        if (wasDocumentDeleted) tasks.remove(task.id) else tasks[task.id] = task
     }
 }

@@ -62,7 +62,7 @@ fun TasksScreen(
             Spacer(modifier = Modifier.smallSpacer())
 
             LazyColumn {
-                items(tasks, key = { it.id }) { taskItem ->
+                items(tasks.values.toList(), key = { it.id }) { taskItem ->
                     TaskItem(
                         task = taskItem,
                         onCheckChange = { viewModel.onTaskCheckChange(taskItem) },

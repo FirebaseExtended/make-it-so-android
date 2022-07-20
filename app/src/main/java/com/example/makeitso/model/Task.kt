@@ -16,10 +16,8 @@ limitations under the License.
 
 package com.example.makeitso.model
 
-import java.util.UUID
-
 data class Task(
-    val id: String = UUID.randomUUID().toString(),
+    val id: String = "",
     val title: String = "",
     val priority: String = "",
     val dueDate: String = "",

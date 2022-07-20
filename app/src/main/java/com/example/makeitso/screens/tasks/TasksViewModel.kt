@@ -53,7 +53,7 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             val updatedTask = task.copy(completed = !task.completed)
 
-            storageService.saveTask(updatedTask) { error ->
+            storageService.updateTask(updatedTask) { error ->
                 if (error != null) onError(error)
             }
         }
@@ -75,7 +75,7 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             val updatedTask = task.copy(flag = !task.flag)
 
-            storageService.saveTask(updatedTask) { error ->
+            storageService.updateTask(updatedTask) { error ->
                 if (error != null) onError(error)
             }
         }

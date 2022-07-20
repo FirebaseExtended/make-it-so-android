@@ -43,7 +43,8 @@ class StorageServiceImpl @Inject constructor() : StorageService {
 
             value?.documentChanges?.forEach {
                 val wasDocumentDeleted = it.type == REMOVED
-                onDocumentEvent(wasDocumentDeleted, it.document.toObject())
+                val task = it.document.toObject<Task>().copy(id = it.document.id)
+                onDocumentEvent(wasDocumentDeleted, task)
             }
         }
     }
@@ -62,10 +63,20 @@ class StorageServiceImpl @Inject constructor() : StorageService {
             .document(taskId)
             .get()
             .addOnFailureListener { error -> onError(error) }
-            .addOnSuccessListener { result -> onSuccess(result.toObject() ?: Task()) }
+            .addOnSuccessListener { result ->
+                val task = result.toObject<Task>()?.copy(id = result.id)
+                onSuccess(task ?: Task())
+            }
     }
 
     override fun saveTask(task: Task, onResult: (Throwable?) -> Unit) {
+        Firebase.firestore
+            .collection(TASK_COLLECTION)
+            .add(task)
+            .addOnCompleteListener { onResult(it.exception) }
+    }
+
+    override fun updateTask(task: Task, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
             .collection(TASK_COLLECTION)
             .document(task.id)

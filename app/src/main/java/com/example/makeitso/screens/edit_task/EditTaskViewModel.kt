@@ -87,9 +87,20 @@ class EditTaskViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             val editedTask = task.value.copy(userId = accountService.getUserId())
 
-            storageService.saveTask(editedTask) { error ->
-                if (error == null) popUpScreen() else onError(error)
-            }
+            if (editedTask.id.isBlank()) saveTask(editedTask, popUpScreen)
+            else updateTask(editedTask, popUpScreen)
+        }
+    }
+
+    private fun saveTask(task: Task, popUpScreen: () -> Unit) {
+        storageService.saveTask(task) { error ->
+            if (error == null) popUpScreen() else onError(error)
+        }
+    }
+
+    private fun updateTask(task: Task, popUpScreen: () -> Unit) {
+        storageService.updateTask(task) { error ->
+            if (error == null) popUpScreen() else onError(error)
         }
     }
 

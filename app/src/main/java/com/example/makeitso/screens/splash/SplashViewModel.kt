@@ -16,11 +16,14 @@ limitations under the License.
 
 package com.example.makeitso.screens.splash
 
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.SPLASH_SCREEN
 import com.example.makeitso.TASKS_SCREEN
+import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
+import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,11 +32,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
+    configurationService: ConfigurationService,
     private val accountService: AccountService,
     private val logService: LogService
 ) : MakeItSoViewModel(logService) {
     var showError = mutableStateOf(false)
         private set
+
+    init {
+        configurationService.fetchConfiguration()
+    }
 
     fun onAppStart(openAndPopUp: (String, String) -> Unit) {
         showError.value = false

@@ -65,6 +65,7 @@ fun TasksScreen(
                 items(tasks.values.toList(), key = { it.id }) { taskItem ->
                     TaskItem(
                         task = taskItem,
+                        options = viewModel.options.value,
                         onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
                         onActionClick = { action ->
                             viewModel.onTaskActionClick(openScreen, taskItem, action)
@@ -77,6 +78,7 @@ fun TasksScreen(
 
     DisposableEffect(viewModel) {
         viewModel.addListener()
+        viewModel.loadTaskOptions()
         onDispose { viewModel.removeListener() }
     }
 }

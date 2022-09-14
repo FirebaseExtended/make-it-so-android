@@ -17,12 +17,14 @@ limitations under the License.
 package com.example.makeitso.screens.tasks
 
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.EDIT_TASK_SCREEN
 import com.example.makeitso.SETTINGS_SCREEN
 import com.example.makeitso.TASK_ID
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
+import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
@@ -34,9 +36,13 @@ import javax.inject.Inject
 class TasksViewModel @Inject constructor(
     logService: LogService,
     private val storageService: StorageService,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val configurationService: ConfigurationService
 ) : MakeItSoViewModel(logService) {
     var tasks = mutableStateMapOf<String, Task>()
+        private set
+
+    var options = mutableStateOf<List<String>>(listOf())
         private set
 
     fun addListener() {
@@ -47,6 +53,11 @@ class TasksViewModel @Inject constructor(
 
     fun removeListener() {
         viewModelScope.launch(showErrorExceptionHandler) { storageService.removeListener() }
+    }
+
+    fun loadTaskOptions() {
+        val hasEditOption = configurationService.getShowTaskEditButtonConfig()
+        options.value = TaskActionOption.getOptions(hasEditOption)
     }
 
     fun onTaskCheckChange(task: Task) {

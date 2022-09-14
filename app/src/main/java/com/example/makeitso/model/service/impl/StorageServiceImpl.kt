@@ -23,6 +23,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.metrics.AddTrace
 import javax.inject.Inject
 
 class StorageServiceImpl @Inject constructor() : StorageService {
@@ -53,6 +54,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
         listenerRegistration?.remove()
     }
 
+    @AddTrace(name = "fetchTaskFromFirestore")
     override fun getTask(
         taskId: String,
         onError: (Throwable) -> Unit,
@@ -69,6 +71,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
             }
     }
 
+    @AddTrace(name = "saveTaskInFirestore")
     override fun saveTask(task: Task, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
             .collection(TASK_COLLECTION)

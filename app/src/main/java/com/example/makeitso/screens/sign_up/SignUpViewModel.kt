@@ -29,6 +29,8 @@ import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.ktx.performance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -76,10 +78,15 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             val oldUserId = accountService.getUserId()
             accountService.createAccount(email, password) { error ->
+                val updateUserTrace = Firebase.performance.newTrace(UPDATE_USER_TRACE)
+                updateUserTrace.start()
+
                 if (error == null) {
                     linkWithEmail()
                     updateUserId(oldUserId, openAndPopUp)
                 } else onError(error)
+
+                updateUserTrace.stop()
             }
         }
     }
@@ -101,5 +108,9 @@ class SignUpViewModel @Inject constructor(
                 else openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
             }
         }
+    }
+
+    companion object {
+        const val UPDATE_USER_TRACE = "updateUserTrace"
     }
 }

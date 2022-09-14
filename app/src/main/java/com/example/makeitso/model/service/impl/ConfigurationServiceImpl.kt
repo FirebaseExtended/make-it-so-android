@@ -21,6 +21,7 @@ import com.example.makeitso.R.xml as AppConfig
 import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.LogService
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -42,6 +43,7 @@ class ConfigurationServiceImpl @Inject constructor(
         remoteConfig.setDefaultsAsync(AppConfig.remote_config_defaults)
     }
 
+    @AddTrace(name = "fetchAndActivateRemoteConfig")
     override fun fetchConfiguration() {
         remoteConfig.fetchAndActivate()
             .addOnFailureListener {

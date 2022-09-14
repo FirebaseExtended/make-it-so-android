@@ -26,8 +26,8 @@ import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.ext.passwordMatches
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.service.AccountService
-import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
+import com.example.makeitso.model.service.LogService
 import com.example.makeitso.screens.MakeItSoViewModel
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.perf.ktx.performance
@@ -75,42 +75,18 @@ class SignUpViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch(showErrorExceptionHandler) {
-            val oldUserId = accountService.getUserId()
-            val createAccountTrace = Firebase.performance.newTrace(CREATE_ACCOUNT_TRACE)
-            createAccountTrace.start()
-
-            accountService.createAccount(email, password) { error ->
-                createAccountTrace.stop()
-
-                if (error == null) {
-                    linkWithEmail()
-                    updateUserId(oldUserId, openAndPopUp)
-                } else onError(error)
-            }
+        launchCatching {
+            val oldUserId = accountService.currentUserId
+            val newUser = accountService.createAccount(email, password)
+            linkWithEmail()
+            storageService.updateUserId(oldUserId, newUser.id)
+            openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
         }
     }
 
     private fun linkWithEmail() {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            accountService.linkAccount(email, password) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
-            }
+        launchCatching {
+            accountService.linkAccount(email, password)
         }
-    }
-
-    private fun updateUserId(oldUserId: String, openAndPopUp: (String, String) -> Unit) {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            val newUserId = accountService.getUserId()
-
-            storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
-                else openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
-            }
-        }
-    }
-
-    companion object {
-        private const val CREATE_ACCOUNT_TRACE = "createAccount"
     }
 }

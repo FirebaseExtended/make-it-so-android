@@ -16,48 +16,48 @@ limitations under the License.
 
 package com.example.makeitso.screens.splash
 
-import androidx.compose.runtime.mutableStateMapOf
+import com.google.firebase.auth.FirebaseAuthException
+
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
 import com.example.makeitso.SPLASH_SCREEN
 import com.example.makeitso.TASKS_SCREEN
-import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     configurationService: ConfigurationService,
     private val accountService: AccountService,
-    private val logService: LogService
+    logService: LogService
 ) : MakeItSoViewModel(logService) {
     val showError = mutableStateOf(false)
 
     init {
-        configurationService.fetchConfiguration()
+        launchCatching {
+            configurationService.fetchConfiguration()
+        }
     }
 
     fun onAppStart(openAndPopUp: (String, String) -> Unit) {
-        showError.value = false
 
-        if (accountService.hasUser()) openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
+        showError.value = false
+        if (accountService.hasUser) openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
         else createAnonymousAccount(openAndPopUp)
     }
 
     private fun createAnonymousAccount(openAndPopUp: (String, String) -> Unit) {
-        viewModelScope.launch(logErrorExceptionHandler) {
-            accountService.createAnonymousAccount { error ->
-                if (error != null) {
-                    showError.value = true
-                    logService.logNonFatalCrash(error)
-                }
-                else openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
+        launchCatching(snackbar = false) {
+            try {
+                accountService.createAnonymousAccount()
+            }catch (ex: FirebaseAuthException) {
+                showError.value = true
+                throw ex
             }
+            openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
         }
     }
 }

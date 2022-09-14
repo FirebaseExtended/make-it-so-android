@@ -17,19 +17,16 @@ limitations under the License.
 package com.example.makeitso.model.service
 
 import com.example.makeitso.model.Task
+import kotlinx.coroutines.flow.Flow
 
 interface StorageService {
-    fun addListener(
-        userId: String,
-        onDocumentEvent: (Boolean, Task) -> Unit,
-        onError: (Throwable) -> Unit
-    )
+    val tasks: Flow<List<Task>>
 
-    fun removeListener()
-    fun getTask(taskId: String, onError: (Throwable) -> Unit, onSuccess: (Task) -> Unit)
-    fun saveTask(task: Task, onResult: (Throwable?) -> Unit)
-    fun updateTask(task: Task, onResult: (Throwable?) -> Unit)
-    fun deleteTask(taskId: String, onResult: (Throwable?) -> Unit)
-    fun deleteAllForUser(userId: String, onResult: (Throwable?) -> Unit)
-    fun updateUserId(oldUserId: String, newUserId: String, onResult: (Throwable?) -> Unit)
+    suspend fun getTask(taskId: String): Task?
+
+    suspend fun save(task: Task)
+    suspend fun update(task: Task)
+    suspend fun delete(taskId: String)
+    suspend fun deleteAllForUser(userId: String)
+    suspend fun updateUserId(oldUserId: String, newUserId: String)
 }

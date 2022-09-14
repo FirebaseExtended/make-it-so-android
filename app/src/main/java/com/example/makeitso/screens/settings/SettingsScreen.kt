@@ -39,9 +39,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState
-
-    LaunchedEffect(Unit) { viewModel.initialize() }
+    val uiState by viewModel.uiState.collectAsState(initial = SettingsUiState(false))
 
     Column(
         modifier = modifier

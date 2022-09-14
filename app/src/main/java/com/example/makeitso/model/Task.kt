@@ -16,8 +16,10 @@ limitations under the License.
 
 package com.example.makeitso.model
 
+import com.google.firebase.firestore.DocumentId
+
 data class Task(
-    val id: String = "",
+    @DocumentId val id: String = "",
     val title: String = "",
     val priority: String = "",
     val dueDate: String = "",

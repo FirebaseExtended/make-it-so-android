@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.example.makeitso.screens.tasks
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,6 +33,7 @@ import com.example.makeitso.common.ext.toolbarActions
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterialApi
 fun TasksScreen(
@@ -49,9 +51,11 @@ fun TasksScreen(
             ) { Icon(Icons.Filled.Add, "Add") }
         }
     ) {
-        val tasks = viewModel.tasks
+        val tasks = viewModel.tasks.collectAsState(emptyList())
 
-        Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()) {
             ActionToolbar(
                 title = AppText.tasks,
                 modifier = Modifier.toolbarActions(),
@@ -62,7 +66,7 @@ fun TasksScreen(
             Spacer(modifier = Modifier.smallSpacer())
 
             LazyColumn {
-                items(tasks.values.toList(), key = { it.id }) { taskItem ->
+                items(tasks.value, key = { it.id }) { taskItem ->
                     TaskItem(
                         task = taskItem,
                         options = viewModel.options.value,
@@ -76,9 +80,7 @@ fun TasksScreen(
         }
     }
 
-    DisposableEffect(viewModel) {
-        viewModel.addListener()
+    LaunchedEffect(viewModel) {
         viewModel.loadTaskOptions()
-        onDispose { viewModel.removeListener() }
     }
 }

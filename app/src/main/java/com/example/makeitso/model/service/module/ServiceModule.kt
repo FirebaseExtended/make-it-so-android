@@ -22,8 +22,8 @@ import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.model.service.impl.AccountServiceImpl
 import com.example.makeitso.model.service.impl.ConfigurationServiceImpl
-import com.example.makeitso.model.service.impl.LogServiceImpl
 import com.example.makeitso.model.service.impl.StorageServiceImpl
+import com.example.makeitso.model.service.impl.LogServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

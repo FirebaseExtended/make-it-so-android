@@ -16,7 +16,4 @@ limitations under the License.
 
 package com.example.makeitso.model.service
 
-interface ConfigurationService {
-    suspend fun fetchConfiguration(): Boolean
-    val isShowTaskEditButtonConfig: Boolean
-}
+data class User(val id: String = "", val isAnonymous: Boolean = true)

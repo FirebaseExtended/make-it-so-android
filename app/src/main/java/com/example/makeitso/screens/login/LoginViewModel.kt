@@ -17,25 +17,23 @@ limitations under the License.
 package com.example.makeitso.screens.login
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
 import com.example.makeitso.LOGIN_SCREEN
 import com.example.makeitso.SETTINGS_SCREEN
-import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.service.AccountService
-import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
+import com.example.makeitso.model.service.LogService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.makeitso.R.string as AppText
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val accountService: AccountService,
     private val storageService: StorageService,
-    private val logService: LogService
+    logService: LogService
 ) : MakeItSoViewModel(logService) {
     var uiState = mutableStateOf(LoginUiState())
         private set
@@ -62,33 +60,8 @@ class LoginViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch(showErrorExceptionHandler) {
-            val oldUserId = accountService.getUserId()
-            accountService.authenticate(email, password) { error ->
-                if (error == null) {
-                    linkWithEmail()
-                    updateUserId(oldUserId, openAndPopUp)
-                } else onError(error)
-            }
-        }
-    }
-
-    private fun linkWithEmail() {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            accountService.linkAccount(email, password) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
-            }
-        }
-    }
-
-    private fun updateUserId(oldUserId: String, openAndPopUp: (String, String) -> Unit) {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            val newUserId = accountService.getUserId()
-
-            storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
-                else openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
-            }
+        launchCatching {
+            accountService.authenticate(email, password)
         }
     }
 
@@ -98,11 +71,10 @@ class LoginViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch(showErrorExceptionHandler) {
-            accountService.sendRecoveryEmail(email) { error ->
-                if (error != null) onError(error)
-                else SnackbarManager.showMessage(AppText.recovery_email_sent)
-            }
+        launchCatching {
+            accountService.sendRecoveryEmail(email)
+            SnackbarManager.showMessage(AppText.recovery_email_sent)
         }
+
     }
 }

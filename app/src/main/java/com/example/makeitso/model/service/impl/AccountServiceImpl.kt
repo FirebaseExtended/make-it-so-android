@@ -20,7 +20,6 @@ import com.example.makeitso.model.service.AccountService
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.perf.metrics.AddTrace
 import javax.inject.Inject
 
 class AccountServiceImpl @Inject constructor() : AccountService {
@@ -36,13 +35,11 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         return Firebase.auth.currentUser?.uid.orEmpty()
     }
 
-    @AddTrace(name = "signInUsingEmail")
     override fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit) {
         Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { onResult(it.exception) }
     }
 
-    @AddTrace(name = "signUpUsingEmail")
     override fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
         Firebase.auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { onResult(it.exception) }
@@ -53,13 +50,11 @@ class AccountServiceImpl @Inject constructor() : AccountService {
             .addOnCompleteListener { onResult(it.exception) }
     }
 
-    @AddTrace(name = "signUpAnonymously")
     override fun createAnonymousAccount(onResult: (Throwable?) -> Unit) {
         Firebase.auth.signInAnonymously()
             .addOnCompleteListener { onResult(it.exception) }
     }
 
-    @AddTrace(name = "linkAccounts")
     override fun linkAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
         val credential = EmailAuthProvider.getCredential(email, password)
 

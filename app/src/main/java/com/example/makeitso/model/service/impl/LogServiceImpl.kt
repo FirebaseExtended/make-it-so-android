@@ -22,7 +22,7 @@ import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
 class LogServiceImpl @Inject constructor() : LogService {
-    override fun logNonFatalCrash(throwable: Throwable) {
-        Firebase.crashlytics.recordException(throwable)
+    override fun logNonFatalCrash(throwable: Throwable?) {
+        if (throwable != null) Firebase.crashlytics.recordException(throwable)
     }
 }

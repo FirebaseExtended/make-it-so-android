@@ -21,7 +21,7 @@ import com.example.makeitso.R.xml as AppConfig
 import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.LogService
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.perf.metrics.AddTrace
+import com.google.firebase.perf.ktx.performance
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -43,11 +43,14 @@ class ConfigurationServiceImpl @Inject constructor(
         remoteConfig.setDefaultsAsync(AppConfig.remote_config_defaults)
     }
 
-    @AddTrace(name = "fetchAndActivateRemoteConfig")
     override fun fetchConfiguration() {
+        val fetchConfigTrace = Firebase.performance.newTrace(FETCH_CONFIG_TRACE)
+        fetchConfigTrace.start()
+
         remoteConfig.fetchAndActivate()
-            .addOnFailureListener {
-                logService.logNonFatalCrash(it.fillInStackTrace())
+            .addOnCompleteListener {
+                fetchConfigTrace.stop()
+                if (!it.isSuccessful) logService.logNonFatalCrash(it.exception)
             }
     }
 
@@ -57,5 +60,6 @@ class ConfigurationServiceImpl @Inject constructor(
 
     companion object {
         private const val SHOW_TASK_EDIT_BUTTON_KEY = "show_task_edit_button"
+        private const val FETCH_CONFIG_TRACE = "fetchConfig"
     }
 }

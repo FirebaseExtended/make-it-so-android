@@ -25,6 +25,8 @@ import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.ktx.performance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -93,13 +95,21 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private fun saveTask(task: Task, popUpScreen: () -> Unit) {
+        val saveTaskTrace = Firebase.performance.newTrace(SAVE_TASK_TRACE)
+        saveTaskTrace.start()
+
         storageService.saveTask(task) { error ->
+            saveTaskTrace.stop()
             if (error == null) popUpScreen() else onError(error)
         }
     }
 
     private fun updateTask(task: Task, popUpScreen: () -> Unit) {
+        val updateTaskTrace = Firebase.performance.newTrace(UPDATE_TASK_TRACE)
+        updateTaskTrace.start()
+
         storageService.updateTask(task) { error ->
+            updateTaskTrace.stop()
             if (error == null) popUpScreen() else onError(error)
         }
     }
@@ -111,5 +121,7 @@ class EditTaskViewModel @Inject constructor(
     companion object {
         private const val UTC = "UTC"
         private const val DATE_FORMAT = "EEE, d MMM yyyy"
+        private const val SAVE_TASK_TRACE = "saveTask"
+        private const val UPDATE_TASK_TRACE = "updateTask"
     }
 }

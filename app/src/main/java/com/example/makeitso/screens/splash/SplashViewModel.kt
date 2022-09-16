@@ -36,8 +36,7 @@ class SplashViewModel @Inject constructor(
     private val accountService: AccountService,
     private val logService: LogService
 ) : MakeItSoViewModel(logService) {
-    var showError = mutableStateOf(false)
-        private set
+    val showError = mutableStateOf(false)
 
     init {
         configurationService.fetchConfiguration()

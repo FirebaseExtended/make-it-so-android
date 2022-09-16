@@ -30,9 +30,13 @@ enum class TaskActionOption(val title: String) {
             return EditTask
         }
 
-       fun getOptions(): List<String> {
+       fun getOptions(hasEditOption: Boolean): List<String> {
             val options = mutableListOf<String>()
-            values().forEach { taskAction -> options.add(taskAction.title) }
+            values().forEach { taskAction ->
+                if (hasEditOption || taskAction != EditTask) {
+                    options.add(taskAction.title)
+                }
+            }
             return options
         }
     }

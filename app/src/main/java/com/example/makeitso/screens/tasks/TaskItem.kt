@@ -38,6 +38,7 @@ import java.lang.StringBuilder
 @ExperimentalMaterialApi
 fun TaskItem(
     task: Task,
+    options: List<String>,
     onCheckChange: () -> Unit,
     onActionClick: (String) -> Unit
 ) {
@@ -70,7 +71,7 @@ fun TaskItem(
                 )
             }
 
-            DropdownContextMenu(TaskActionOption.getOptions(), Modifier.contextMenu(), onActionClick)
+            DropdownContextMenu(options, Modifier.contextMenu(), onActionClick)
         }
     }
 }

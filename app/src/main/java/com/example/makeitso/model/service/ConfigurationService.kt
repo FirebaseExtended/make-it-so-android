@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.example.makeitso.model.service
 
-interface LogService {
-    fun logNonFatalCrash(throwable: Throwable?)
+interface ConfigurationService {
+    fun fetchConfiguration()
+    fun getShowTaskEditButtonConfig(): Boolean
 }

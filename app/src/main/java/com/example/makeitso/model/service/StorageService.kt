@@ -20,13 +20,13 @@ import com.example.makeitso.model.Task
 import kotlinx.coroutines.flow.Flow
 
 interface StorageService {
-    val tasks: Flow<List<Task>>
+  val tasks: Flow<List<Task>>
 
-    suspend fun getTask(taskId: String): Task?
+  suspend fun getTask(taskId: String): Task?
 
-    suspend fun save(task: Task)
-    suspend fun update(task: Task)
-    suspend fun delete(taskId: String)
-    suspend fun deleteAllForUser(userId: String)
-    suspend fun updateUserId(oldUserId: String, newUserId: String)
+  suspend fun save(task: Task)
+  suspend fun update(task: Task)
+  suspend fun delete(taskId: String)
+  suspend fun deleteAllForUser(userId: String)
+  suspend fun updateUserId(oldUserId: String, newUserId: String)
 }

@@ -29,41 +29,40 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.BasicButton
 import com.example.makeitso.common.ext.basicButton
 import kotlinx.coroutines.delay
-import com.example.makeitso.R.string as AppText
 
 private const val SPLASH_TIMEOUT = 1000L
 
 @Composable
 fun SplashScreen(
-    openAndPopUp: (String, String) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: SplashViewModel = hiltViewModel()
+  openAndPopUp: (String, String) -> Unit,
+  modifier: Modifier = Modifier,
+  viewModel: SplashViewModel = hiltViewModel()
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(color = MaterialTheme.colors.background)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (viewModel.showError.value) {
-            Text(text = stringResource(AppText.generic_error))
+  Column(
+    modifier =
+      modifier
+        .fillMaxWidth()
+        .fillMaxHeight()
+        .background(color = MaterialTheme.colors.background)
+        .verticalScroll(rememberScrollState()),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    if (viewModel.showError.value) {
+      Text(text = stringResource(AppText.generic_error))
 
-            BasicButton(AppText.try_again, Modifier.basicButton()) {
-                viewModel.onAppStart(openAndPopUp)
-            }
-        } else {
-            CircularProgressIndicator(color = MaterialTheme.colors.onBackground)
-        }
+      BasicButton(AppText.try_again, Modifier.basicButton()) { viewModel.onAppStart(openAndPopUp) }
+    } else {
+      CircularProgressIndicator(color = MaterialTheme.colors.onBackground)
     }
+  }
 
-    LaunchedEffect(true) {
-        delay(SPLASH_TIMEOUT)
-        viewModel.onAppStart(openAndPopUp)
-    }
+  LaunchedEffect(true) {
+    delay(SPLASH_TIMEOUT)
+    viewModel.onAppStart(openAndPopUp)
+  }
 }

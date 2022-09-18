@@ -6,6 +6,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
     id 'dagger.hilt.android.plugin'
+    id "com.ncorti.ktfmt.gradle" version "0.10.0"
 }
 
 android {
@@ -48,6 +49,10 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+}
+
+ktfmt {
+    googleStyle()
 }
 
 dependencies {

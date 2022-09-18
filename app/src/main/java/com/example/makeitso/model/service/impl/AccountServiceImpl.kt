@@ -16,69 +16,69 @@ limitations under the License.
 
 package com.example.makeitso.model.service.impl
 
-import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.User
+import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.trace
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 class AccountServiceImpl @Inject constructor() : AccountService {
-    override val currentUserId: String
-        get() = Firebase.auth.currentUser?.uid.orEmpty()
-    override val hasUser: Boolean
-        get() = Firebase.auth.currentUser != null
-    override val currentUser: Flow<User>
-        get() = callbackFlow {
-            val listener = FirebaseAuth.AuthStateListener { auth ->
-                this.trySend(auth.currentUser
-                    ?.let { User(it.uid, it.isAnonymous) } ?: User())
-            }
-            Firebase.auth.addAuthStateListener(listener)
-            awaitClose { Firebase.auth.removeAuthStateListener(listener) }
+  override val currentUserId: String
+    get() = Firebase.auth.currentUser?.uid.orEmpty()
+  override val hasUser: Boolean
+    get() = Firebase.auth.currentUser != null
+  override val currentUser: Flow<User>
+    get() = callbackFlow {
+      val listener =
+        FirebaseAuth.AuthStateListener { auth ->
+          this.trySend(auth.currentUser?.let { User(it.uid, it.isAnonymous) } ?: User())
         }
-
-    override suspend fun authenticate(email: String, password: String) {
-        Firebase.auth.signInWithEmailAndPassword(email, password).await()
+      Firebase.auth.addAuthStateListener(listener)
+      awaitClose { Firebase.auth.removeAuthStateListener(listener) }
     }
 
-    override suspend fun createAccount(email: String, password: String): User =
-        trace(CREATE_ACCOUNT_TRACE) {
-            val result = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+  override suspend fun authenticate(email: String, password: String) {
+    Firebase.auth.signInWithEmailAndPassword(email, password).await()
+  }
 
-            // user is never null after successful account creation.
-            return with(result.user!!) { User(uid, isAnonymous) }
-        }
+  override suspend fun createAccount(email: String, password: String): User =
+    trace(CREATE_ACCOUNT_TRACE) {
+      val result = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
 
-    override suspend fun sendRecoveryEmail(email: String) {
-        Firebase.auth.sendPasswordResetEmail(email).await()
+      // user is never null after successful account creation.
+      return with(result.user!!) { User(uid, isAnonymous) }
     }
 
-    override suspend fun createAnonymousAccount() {
-        Firebase.auth.signInAnonymously().await()
-    }
+  override suspend fun sendRecoveryEmail(email: String) {
+    Firebase.auth.sendPasswordResetEmail(email).await()
+  }
 
-    override suspend fun linkAccount(email: String, password: String) {
-        val credential = EmailAuthProvider.getCredential(email, password)
+  override suspend fun createAnonymousAccount() {
+    Firebase.auth.signInAnonymously().await()
+  }
 
-        Firebase.auth.currentUser!!.linkWithCredential(credential).await()
-    }
+  override suspend fun linkAccount(email: String, password: String) {
+    val credential = EmailAuthProvider.getCredential(email, password)
 
-    override suspend fun deleteAccount() {
-        Firebase.auth.currentUser!!.delete().await()
-    }
+    Firebase.auth.currentUser!!.linkWithCredential(credential).await()
+  }
 
-    override suspend fun signOut() {
-        Firebase.auth.signOut()
-    }
+  override suspend fun deleteAccount() {
+    Firebase.auth.currentUser!!.delete().await()
+  }
 
-    companion object {
-        private const val CREATE_ACCOUNT_TRACE = "createAccount"
-    }
+  override suspend fun signOut() {
+    Firebase.auth.signOut()
+  }
+
+  companion object {
+    private const val CREATE_ACCOUNT_TRACE = "createAccount"
+  }
 }

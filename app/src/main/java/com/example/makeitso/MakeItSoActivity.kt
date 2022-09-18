@@ -25,9 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 @ExperimentalMaterialApi
 class MakeItSoActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        setContent { MakeItSoApp() }
-    }
+    setContent { MakeItSoApp() }
+  }
 }

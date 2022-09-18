@@ -24,39 +24,34 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.ext.basicButton
 import com.example.makeitso.common.ext.fieldModifier
 import com.example.makeitso.common.ext.textButton
-import com.example.makeitso.R.string as AppText
 
 @Composable
 fun LoginScreen(
-    openAndPopUp: (String, String) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = hiltViewModel()
+  openAndPopUp: (String, String) -> Unit,
+  modifier: Modifier = Modifier,
+  viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState
+  val uiState by viewModel.uiState
 
-    BasicToolbar(AppText.login_details)
+  BasicToolbar(AppText.login_details)
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        EmailField(uiState.email, viewModel::onEmailChange, Modifier.fieldModifier())
-        PasswordField(uiState.password, viewModel::onPasswordChange, Modifier.fieldModifier())
+  Column(
+    modifier = modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    EmailField(uiState.email, viewModel::onEmailChange, Modifier.fieldModifier())
+    PasswordField(uiState.password, viewModel::onPasswordChange, Modifier.fieldModifier())
 
-        BasicButton(AppText.sign_in, Modifier.basicButton()) {
-            viewModel.onSignInClick(openAndPopUp)
-        }
+    BasicButton(AppText.sign_in, Modifier.basicButton()) { viewModel.onSignInClick(openAndPopUp) }
 
-        BasicTextButton(AppText.forgot_password, Modifier.textButton()) {
-            viewModel.onForgotPasswordClick()
-        }
+    BasicTextButton(AppText.forgot_password, Modifier.textButton()) {
+      viewModel.onForgotPasswordClick()
     }
+  }
 }

@@ -14,6 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.example.makeitso.model.service
+package com.example.makeitso.model
 
 data class User(val id: String = "", val isAnonymous: Boolean = true)

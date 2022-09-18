@@ -33,11 +33,6 @@ import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-private const val TASK_COLLECTION = "Task"
-private const val USER_ID = "userId"
-private const val SAVE_TASK_TRACE = "saveTask"
-private const val UPDATE_TASK_TRACE = "updateTask"
-
 class StorageServiceImpl @Inject constructor(private val auth: AccountService) : StorageService {
 
     override val tasks: Flow<List<Task>>
@@ -85,4 +80,10 @@ class StorageServiceImpl @Inject constructor(private val auth: AccountService) :
         matchingTasks.map { it.reference.update(USER_ID, newUserId).asDeferred() }.awaitAll()
     }
 
+    companion object {
+        private const val TASK_COLLECTION = "Task"
+        private const val USER_ID = "userId"
+        private const val SAVE_TASK_TRACE = "saveTask"
+        private const val UPDATE_TASK_TRACE = "updateTask"
+    }
 }

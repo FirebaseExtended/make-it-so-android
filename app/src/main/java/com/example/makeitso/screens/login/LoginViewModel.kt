@@ -32,7 +32,6 @@ import com.example.makeitso.R.string as AppText
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val accountService: AccountService,
-    private val storageService: StorageService,
     logService: LogService
 ) : MakeItSoViewModel(logService) {
     var uiState = mutableStateOf(LoginUiState())
@@ -62,6 +61,7 @@ class LoginViewModel @Inject constructor(
 
         launchCatching {
             accountService.authenticate(email, password)
+            openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
         }
     }
 

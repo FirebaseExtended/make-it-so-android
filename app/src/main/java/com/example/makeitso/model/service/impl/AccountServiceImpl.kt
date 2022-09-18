@@ -17,7 +17,7 @@ limitations under the License.
 package com.example.makeitso.model.service.impl
 
 import com.example.makeitso.model.service.AccountService
-import com.example.makeitso.model.service.User
+import com.example.makeitso.model.User
 import com.example.makeitso.model.service.trace
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -28,8 +28,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-
-private const val CREATE_ACCOUNT_TRACE = "createAccount"
 
 class AccountServiceImpl @Inject constructor() : AccountService {
     override val currentUserId: String
@@ -78,5 +76,9 @@ class AccountServiceImpl @Inject constructor() : AccountService {
 
     override suspend fun signOut() {
         Firebase.auth.signOut()
+    }
+
+    companion object {
+        private const val CREATE_ACCOUNT_TRACE = "createAccount"
     }
 }

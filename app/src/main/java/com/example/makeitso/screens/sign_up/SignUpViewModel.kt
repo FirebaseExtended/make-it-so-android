@@ -26,7 +26,6 @@ import com.example.makeitso.common.ext.passwordMatches
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
-import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -34,11 +33,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel
 @Inject
-constructor(
-  private val accountService: AccountService,
-  private val storageService: StorageService,
-  private val logService: LogService
-) : MakeItSoViewModel(logService) {
+constructor(private val accountService: AccountService, logService: LogService) :
+  MakeItSoViewModel(logService) {
   var uiState = mutableStateOf(SignUpUiState())
     private set
 
@@ -76,15 +72,8 @@ constructor(
     }
 
     launchCatching {
-      val oldUserId = accountService.currentUserId
-      val newUser = accountService.createAccount(email, password)
-      linkWithEmail()
-      storageService.updateUserId(oldUserId, newUser.id)
+      accountService.linkAccount(email, password)
       openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
     }
-  }
-
-  private fun linkWithEmail() {
-    launchCatching { accountService.linkAccount(email, password) }
   }
 }

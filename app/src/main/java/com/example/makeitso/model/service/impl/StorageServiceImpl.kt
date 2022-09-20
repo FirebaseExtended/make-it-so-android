@@ -20,6 +20,7 @@ import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.model.service.trace
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
@@ -38,47 +39,37 @@ class StorageServiceImpl @Inject constructor(private val auth: AccountService) :
   override val tasks: Flow<List<Task>>
     get() =
       auth.currentUser.flatMapLatest { user ->
-        Firebase.firestore
-          .collection(TASK_COLLECTION)
-          .whereEqualTo(USER_ID, user.id)
-          .snapshots()
-          .map { snapshot -> snapshot.toObjects() }
+        currentCollection(user.id).snapshots().map { snapshot -> snapshot.toObjects() }
       }
 
   override suspend fun getTask(taskId: String): Task? =
-    Firebase.firestore.collection(TASK_COLLECTION).document(taskId).get().await().toObject()
+    currentCollection(auth.currentUserId).document(taskId).get().await().toObject()
 
   override suspend fun save(task: Task): Unit =
-    trace(SAVE_TASK_TRACE) {
-      val newTask = if (task.userId.isEmpty()) task.copy(userId = auth.currentUserId) else task
-      Firebase.firestore.collection(TASK_COLLECTION).add(newTask).await()
-    }
+    trace(SAVE_TASK_TRACE) { currentCollection(auth.currentUserId).add(task).await() }
 
   override suspend fun update(task: Task): Unit =
     trace(UPDATE_TASK_TRACE) {
-      Firebase.firestore.collection(TASK_COLLECTION).document(task.id).set(task).await()
+      currentCollection(auth.currentUserId).document(task.id).set(task).await()
     }
 
   override suspend fun delete(taskId: String) {
-    Firebase.firestore.collection(TASK_COLLECTION).document(taskId).delete().await()
+    currentCollection(auth.currentUserId).document(taskId).delete().await()
   }
 
+  // TODO: It's not recommended to delete on the client:
+  // https://firebase.google.com/docs/firestore/manage-data/delete-data#kotlin+ktx_2
   override suspend fun deleteAllForUser(userId: String) {
-    val matchingTasks =
-      Firebase.firestore.collection(TASK_COLLECTION).whereEqualTo(USER_ID, userId).get().await()
+    val matchingTasks = currentCollection(userId).get().await()
     matchingTasks.map { it.reference.delete().asDeferred() }.awaitAll()
   }
 
-  override suspend fun updateUserId(oldUserId: String, newUserId: String) {
-    val matchingTasks =
-      Firebase.firestore.collection(TASK_COLLECTION).whereEqualTo(USER_ID, oldUserId).get().await()
-
-    matchingTasks.map { it.reference.update(USER_ID, newUserId).asDeferred() }.awaitAll()
-  }
+  private fun currentCollection(uid: String): CollectionReference =
+    Firebase.firestore.collection(USER_COLLECTION).document(uid).collection(TASK_COLLECTION)
 
   companion object {
-    private const val TASK_COLLECTION = "Task"
-    private const val USER_ID = "userId"
+    private const val USER_COLLECTION = "users"
+    private const val TASK_COLLECTION = "tasks"
     private const val SAVE_TASK_TRACE = "saveTask"
     private const val UPDATE_TASK_TRACE = "updateTask"
   }

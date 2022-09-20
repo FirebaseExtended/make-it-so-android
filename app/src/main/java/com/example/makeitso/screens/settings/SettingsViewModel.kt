@@ -51,12 +51,6 @@ constructor(
   fun onDeleteMyAccountClick(restartApp: (String) -> Unit) {
     launchCatching {
       storageService.deleteAllForUser(accountService.currentUserId)
-      deleteAccount(restartApp)
-    }
-  }
-
-  private fun deleteAccount(restartApp: (String) -> Unit) {
-    launchCatching {
       accountService.deleteAccount()
       restartApp(SPLASH_SCREEN)
     }

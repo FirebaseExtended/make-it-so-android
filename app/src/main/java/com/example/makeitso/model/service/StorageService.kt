@@ -28,5 +28,4 @@ interface StorageService {
   suspend fun update(task: Task)
   suspend fun delete(taskId: String)
   suspend fun deleteAllForUser(userId: String)
-  suspend fun updateUserId(oldUserId: String, newUserId: String)
 }

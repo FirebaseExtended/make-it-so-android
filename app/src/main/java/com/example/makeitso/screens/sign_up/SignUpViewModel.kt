@@ -17,100 +17,63 @@ limitations under the License.
 package com.example.makeitso.screens.sign_up
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
+import com.example.makeitso.R.string as AppText
 import com.example.makeitso.SETTINGS_SCREEN
 import com.example.makeitso.SIGN_UP_SCREEN
-import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.ext.isValidPassword
 import com.example.makeitso.common.ext.passwordMatches
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
-import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.perf.ktx.performance
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
-    private val accountService: AccountService,
-    private val storageService: StorageService,
-    private val logService: LogService
-) : MakeItSoViewModel(logService) {
-    var uiState = mutableStateOf(SignUpUiState())
-        private set
+class SignUpViewModel
+@Inject
+constructor(private val accountService: AccountService, logService: LogService) :
+  MakeItSoViewModel(logService) {
+  var uiState = mutableStateOf(SignUpUiState())
+    private set
 
-    private val email get() = uiState.value.email
-    private val password get() = uiState.value.password
+  private val email
+    get() = uiState.value.email
+  private val password
+    get() = uiState.value.password
 
-    fun onEmailChange(newValue: String) {
-        uiState.value = uiState.value.copy(email = newValue)
+  fun onEmailChange(newValue: String) {
+    uiState.value = uiState.value.copy(email = newValue)
+  }
+
+  fun onPasswordChange(newValue: String) {
+    uiState.value = uiState.value.copy(password = newValue)
+  }
+
+  fun onRepeatPasswordChange(newValue: String) {
+    uiState.value = uiState.value.copy(repeatPassword = newValue)
+  }
+
+  fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
+    if (!email.isValidEmail()) {
+      SnackbarManager.showMessage(AppText.email_error)
+      return
     }
 
-    fun onPasswordChange(newValue: String) {
-        uiState.value = uiState.value.copy(password = newValue)
+    if (!password.isValidPassword()) {
+      SnackbarManager.showMessage(AppText.password_error)
+      return
     }
 
-    fun onRepeatPasswordChange(newValue: String) {
-        uiState.value = uiState.value.copy(repeatPassword = newValue)
+    if (!password.passwordMatches(uiState.value.repeatPassword)) {
+      SnackbarManager.showMessage(AppText.password_match_error)
+      return
     }
 
-    fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
-        if (!email.isValidEmail()) {
-            SnackbarManager.showMessage(AppText.email_error)
-            return
-        }
-
-        if (!password.isValidPassword()) {
-            SnackbarManager.showMessage(AppText.password_error)
-            return
-        }
-
-        if (!password.passwordMatches(uiState.value.repeatPassword)) {
-            SnackbarManager.showMessage(AppText.password_match_error)
-            return
-        }
-
-        viewModelScope.launch(showErrorExceptionHandler) {
-            val oldUserId = accountService.getUserId()
-            val createAccountTrace = Firebase.performance.newTrace(CREATE_ACCOUNT_TRACE)
-            createAccountTrace.start()
-
-            accountService.createAccount(email, password) { error ->
-                createAccountTrace.stop()
-
-                if (error == null) {
-                    linkWithEmail()
-                    updateUserId(oldUserId, openAndPopUp)
-                } else onError(error)
-            }
-        }
+    launchCatching {
+      accountService.linkAccount(email, password)
+      openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
     }
-
-    private fun linkWithEmail() {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            accountService.linkAccount(email, password) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
-            }
-        }
-    }
-
-    private fun updateUserId(oldUserId: String, openAndPopUp: (String, String) -> Unit) {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            val newUserId = accountService.getUserId()
-
-            storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
-                else openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
-            }
-        }
-    }
-
-    companion object {
-        private const val CREATE_ACCOUNT_TRACE = "createAccount"
-    }
+  }
 }

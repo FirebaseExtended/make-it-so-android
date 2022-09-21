@@ -29,33 +29,30 @@ import androidx.compose.ui.res.stringResource
 
 @Composable
 fun BasicToolbar(@StringRes title: Int) {
-    TopAppBar(
-        title = { Text(stringResource(title)) },
-        backgroundColor = toolbarColor()
-    )
+  TopAppBar(title = { Text(stringResource(title)) }, backgroundColor = toolbarColor())
 }
 
 @Composable
 fun ActionToolbar(
-    @StringRes title: Int,
-    @DrawableRes endActionIcon: Int,
-    modifier: Modifier,
-    endAction: () -> Unit
+  @StringRes title: Int,
+  @DrawableRes endActionIcon: Int,
+  modifier: Modifier,
+  endAction: () -> Unit
 ) {
-    TopAppBar(
-        title = { Text(stringResource(title)) },
-        backgroundColor = toolbarColor(),
-        actions = {
-            Box(modifier) {
-                IconButton(onClick = endAction) {
-                    Icon(painter = painterResource(endActionIcon), contentDescription = "Action")
-                }
-            }
+  TopAppBar(
+    title = { Text(stringResource(title)) },
+    backgroundColor = toolbarColor(),
+    actions = {
+      Box(modifier) {
+        IconButton(onClick = endAction) {
+          Icon(painter = painterResource(endActionIcon), contentDescription = "Action")
         }
-    )
+      }
+    }
+  )
 }
 
 @Composable
 private fun toolbarColor(darkTheme: Boolean = isSystemInDarkTheme()): Color {
-    return if (darkTheme) MaterialTheme.colors.secondary else MaterialTheme.colors.primaryVariant
+  return if (darkTheme) MaterialTheme.colors.secondary else MaterialTheme.colors.primaryVariant
 }

@@ -17,7 +17,7 @@ limitations under the License.
 package com.example.makeitso.screens.sign_up
 
 data class SignUpUiState(
-    val email: String = "",
-    val password: String = "",
-    val repeatPassword: String = ""
+  val email: String = "",
+  val password: String = "",
+  val repeatPassword: String = ""
 )

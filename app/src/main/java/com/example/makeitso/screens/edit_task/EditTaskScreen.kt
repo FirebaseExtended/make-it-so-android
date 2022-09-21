@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.makeitso.R.drawable as AppIcon
+import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.ext.card
 import com.example.makeitso.common.ext.fieldModifier
@@ -36,102 +38,97 @@ import com.example.makeitso.model.Task
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.example.makeitso.R.drawable as AppIcon
-import com.example.makeitso.R.string as AppText
 
 @Composable
 @ExperimentalMaterialApi
 fun EditTaskScreen(
-    popUpScreen: () -> Unit,
-    taskId: String,
-    modifier: Modifier = Modifier,
-    viewModel: EditTaskViewModel = hiltViewModel()
+  popUpScreen: () -> Unit,
+  taskId: String,
+  modifier: Modifier = Modifier,
+  viewModel: EditTaskViewModel = hiltViewModel()
 ) {
-    val task by viewModel.task
+  val task by viewModel.task
 
-    LaunchedEffect(Unit) {
-        viewModel.initialize(taskId)
-    }
+  LaunchedEffect(Unit) { viewModel.initialize(taskId) }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        ActionToolbar(
-            title = AppText.edit_task,
-            modifier = Modifier.toolbarActions(),
-            endActionIcon = AppIcon.ic_check,
-            endAction = { viewModel.onDoneClick(popUpScreen) }
-        )
+  Column(
+    modifier = modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    ActionToolbar(
+      title = AppText.edit_task,
+      modifier = Modifier.toolbarActions(),
+      endActionIcon = AppIcon.ic_check,
+      endAction = { viewModel.onDoneClick(popUpScreen) }
+    )
 
-        Spacer(modifier = Modifier.spacer())
+    Spacer(modifier = Modifier.spacer())
 
-        val fieldModifier = Modifier.fieldModifier()
-        BasicField(AppText.title, task.title, viewModel::onTitleChange, fieldModifier)
-        BasicField(AppText.description, task.description, viewModel::onDescriptionChange, fieldModifier)
-        BasicField(AppText.url, task.url, viewModel::onUrlChange, fieldModifier)
+    val fieldModifier = Modifier.fieldModifier()
+    BasicField(AppText.title, task.title, viewModel::onTitleChange, fieldModifier)
+    BasicField(AppText.description, task.description, viewModel::onDescriptionChange, fieldModifier)
+    BasicField(AppText.url, task.url, viewModel::onUrlChange, fieldModifier)
 
-        Spacer(modifier = Modifier.spacer())
-        CardEditors(task, viewModel::onDateChange, viewModel::onTimeChange)
-        CardSelectors(task, viewModel::onPriorityChange, viewModel::onFlagToggle)
+    Spacer(modifier = Modifier.spacer())
+    CardEditors(task, viewModel::onDateChange, viewModel::onTimeChange)
+    CardSelectors(task, viewModel::onPriorityChange, viewModel::onFlagToggle)
 
-        Spacer(modifier = Modifier.spacer())
-    }
+    Spacer(modifier = Modifier.spacer())
+  }
 }
 
 @ExperimentalMaterialApi
 @Composable
-private fun CardEditors(task: Task, onDateChange: (Long) -> Unit, onTimeChange: (Int, Int) -> Unit) {
-    val activity = LocalContext.current as AppCompatActivity
+private fun CardEditors(
+  task: Task,
+  onDateChange: (Long) -> Unit,
+  onTimeChange: (Int, Int) -> Unit
+) {
+  val activity = LocalContext.current as AppCompatActivity
 
-    RegularCardEditor(AppText.date, AppIcon.ic_calendar, task.dueDate, Modifier.card()) {
-        showDatePicker(activity, onDateChange)
-    }
+  RegularCardEditor(AppText.date, AppIcon.ic_calendar, task.dueDate, Modifier.card()) {
+    showDatePicker(activity, onDateChange)
+  }
 
-    RegularCardEditor(AppText.time, AppIcon.ic_clock, task.dueTime, Modifier.card()) {
-        showTimePicker(activity, onTimeChange)
-    }
+  RegularCardEditor(AppText.time, AppIcon.ic_clock, task.dueTime, Modifier.card()) {
+    showTimePicker(activity, onTimeChange)
+  }
 }
 
 @Composable
 @ExperimentalMaterialApi
 private fun CardSelectors(
-    task: Task,
-    onPriorityChange: (String) -> Unit,
-    onFlagToggle: (String) -> Unit
+  task: Task,
+  onPriorityChange: (String) -> Unit,
+  onFlagToggle: (String) -> Unit
 ) {
-    val prioritySelection = Priority.getByName(task.priority).name
-    CardSelector(AppText.priority, Priority.getOptions(), prioritySelection, Modifier.card()) { newValue ->
-        onPriorityChange(newValue)
-    }
+  val prioritySelection = Priority.getByName(task.priority).name
+  CardSelector(AppText.priority, Priority.getOptions(), prioritySelection, Modifier.card()) {
+    newValue ->
+    onPriorityChange(newValue)
+  }
 
-    val flagSelection = EditFlagOption.getByCheckedState(task.flag).name
-    CardSelector(AppText.flag, EditFlagOption.getOptions(), flagSelection, Modifier.card()) { newValue ->
-        onFlagToggle(newValue)
-    }
+  val flagSelection = EditFlagOption.getByCheckedState(task.flag).name
+  CardSelector(AppText.flag, EditFlagOption.getOptions(), flagSelection, Modifier.card()) { newValue
+    ->
+    onFlagToggle(newValue)
+  }
 }
 
 private fun showDatePicker(activity: AppCompatActivity?, onDateChange: (Long) -> Unit) {
-    val picker = MaterialDatePicker.Builder.datePicker().build()
+  val picker = MaterialDatePicker.Builder.datePicker().build()
 
-    activity?.let {
-        picker.show(it.supportFragmentManager, picker.toString())
-        picker.addOnPositiveButtonClickListener { timeInMillis ->
-            onDateChange(timeInMillis)
-        }
-    }
+  activity?.let {
+    picker.show(it.supportFragmentManager, picker.toString())
+    picker.addOnPositiveButtonClickListener { timeInMillis -> onDateChange(timeInMillis) }
+  }
 }
 
 private fun showTimePicker(activity: AppCompatActivity?, onTimeChange: (Int, Int) -> Unit) {
-    val picker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).build()
+  val picker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).build()
 
-    activity?.let {
-        picker.show(it.supportFragmentManager, picker.toString())
-        picker.addOnPositiveButtonClickListener {
-            onTimeChange(picker.hour, picker.minute)
-        }
-    }
+  activity?.let {
+    picker.show(it.supportFragmentManager, picker.toString())
+    picker.addOnPositiveButtonClickListener { onTimeChange(picker.hour, picker.minute) }
+  }
 }

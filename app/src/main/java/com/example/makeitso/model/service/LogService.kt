@@ -17,5 +17,5 @@ limitations under the License.
 package com.example.makeitso.model.service
 
 interface LogService {
-    fun logNonFatalCrash(throwable: Throwable?)
+  fun logNonFatalCrash(throwable: Throwable)
 }

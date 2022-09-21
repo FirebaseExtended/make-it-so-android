@@ -16,58 +16,75 @@ limitations under the License.
 
 package com.example.makeitso.model.service.impl
 
+import com.example.makeitso.model.User
 import com.example.makeitso.model.service.AccountService
+import com.example.makeitso.model.service.trace
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 class AccountServiceImpl @Inject constructor() : AccountService {
-    override fun hasUser(): Boolean {
-        return Firebase.auth.currentUser != null
+  override val currentUserId: String
+    get() = Firebase.auth.currentUser?.uid.orEmpty()
+  override val hasUser: Boolean
+    get() = Firebase.auth.currentUser != null
+  override val currentUser: Flow<User>
+    get() = callbackFlow {
+      val listener =
+        FirebaseAuth.AuthStateListener { auth ->
+          this.trySend(auth.currentUser?.let { User(it.uid, it.isAnonymous) } ?: User())
+        }
+      Firebase.auth.addAuthStateListener(listener)
+      awaitClose { Firebase.auth.removeAuthStateListener(listener) }
     }
 
-    override fun isAnonymousUser(): Boolean {
-        return Firebase.auth.currentUser?.isAnonymous ?: true
+  override suspend fun authenticate(email: String, password: String) {
+    Firebase.auth.signInWithEmailAndPassword(email, password).await()
+  }
+
+  override suspend fun createAccount(email: String, password: String): User =
+    trace(CREATE_ACCOUNT_TRACE) {
+      val result = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+
+      // user is never null after successful account creation.
+      return with(result.user!!) { User(uid, isAnonymous) }
     }
 
-    override fun getUserId(): String {
-        return Firebase.auth.currentUser?.uid.orEmpty()
-    }
+  override suspend fun sendRecoveryEmail(email: String) {
+    Firebase.auth.sendPasswordResetEmail(email).await()
+  }
 
-    override fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        Firebase.auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { onResult(it.exception) }
-    }
+  override suspend fun createAnonymousAccount() {
+    Firebase.auth.signInAnonymously().await()
+  }
 
-    override fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        Firebase.auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { onResult(it.exception) }
-    }
+  override suspend fun linkAccount(email: String, password: String) {
+    val credential = EmailAuthProvider.getCredential(email, password)
 
-    override fun sendRecoveryEmail(email: String, onResult: (Throwable?) -> Unit) {
-        Firebase.auth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { onResult(it.exception) }
-    }
+    Firebase.auth.currentUser!!.linkWithCredential(credential).await()
+  }
 
-    override fun createAnonymousAccount(onResult: (Throwable?) -> Unit) {
-        Firebase.auth.signInAnonymously()
-            .addOnCompleteListener { onResult(it.exception) }
-    }
+  override suspend fun deleteAccount() {
+    Firebase.auth.currentUser!!.delete().await()
+  }
 
-    override fun linkAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        val credential = EmailAuthProvider.getCredential(email, password)
-
-        Firebase.auth.currentUser!!.linkWithCredential(credential)
-            .addOnCompleteListener { onResult(it.exception) }
+  override suspend fun signOut() {
+    if (Firebase.auth.currentUser!!.isAnonymous) {
+      Firebase.auth.currentUser!!.delete()
     }
+    Firebase.auth.signOut()
 
-    override fun deleteAccount(onResult: (Throwable?) -> Unit) {
-        Firebase.auth.currentUser!!.delete()
-            .addOnCompleteListener { onResult(it.exception) }
-    }
+    // Sign the user back in anonymously.
+    createAnonymousAccount()
+  }
 
-    override fun signOut() {
-        Firebase.auth.signOut()
-    }
+  companion object {
+    private const val CREATE_ACCOUNT_TRACE = "createAccount"
+  }
 }

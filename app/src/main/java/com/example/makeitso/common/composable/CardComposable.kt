@@ -32,69 +32,67 @@ import com.example.makeitso.common.ext.dropdownSelector
 @ExperimentalMaterialApi
 @Composable
 fun DangerousCardEditor(
-    @StringRes title: Int,
-    @DrawableRes icon: Int,
-    content: String,
-    modifier: Modifier,
-    onEditClick: () -> Unit
+  @StringRes title: Int,
+  @DrawableRes icon: Int,
+  content: String,
+  modifier: Modifier,
+  onEditClick: () -> Unit
 ) {
-    CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.primary, modifier)
+  CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.primary, modifier)
 }
 
 @ExperimentalMaterialApi
 @Composable
 fun RegularCardEditor(
-    @StringRes title: Int,
-    @DrawableRes icon: Int,
-    content: String,
-    modifier: Modifier,
-    onEditClick: () -> Unit
+  @StringRes title: Int,
+  @DrawableRes icon: Int,
+  content: String,
+  modifier: Modifier,
+  onEditClick: () -> Unit
 ) {
-    CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.onSurface, modifier)
+  CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.onSurface, modifier)
 }
 
 @ExperimentalMaterialApi
 @Composable
 private fun CardEditor(
-    @StringRes title: Int,
-    @DrawableRes icon: Int,
-    content: String,
-    onEditClick: () -> Unit,
-    highlightColor: Color,
-    modifier: Modifier
+  @StringRes title: Int,
+  @DrawableRes icon: Int,
+  content: String,
+  onEditClick: () -> Unit,
+  highlightColor: Color,
+  modifier: Modifier
 ) {
-    Card(backgroundColor = MaterialTheme.colors.onPrimary, modifier = modifier, onClick = onEditClick) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(stringResource(title), color = highlightColor)
-            }
+  Card(
+    backgroundColor = MaterialTheme.colors.onPrimary,
+    modifier = modifier,
+    onClick = onEditClick
+  ) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.fillMaxWidth().padding(16.dp)
+    ) {
+      Column(modifier = Modifier.weight(1f)) { Text(stringResource(title), color = highlightColor) }
 
-            if (content.isNotBlank()) {
-                Text(text = content, modifier = Modifier.padding(16.dp, 0.dp))
-            }
+      if (content.isNotBlank()) {
+        Text(text = content, modifier = Modifier.padding(16.dp, 0.dp))
+      }
 
-            Icon(
-                painter = painterResource(icon),
-                contentDescription = "Icon",
-                tint = highlightColor
-            )
-        }
+      Icon(painter = painterResource(icon), contentDescription = "Icon", tint = highlightColor)
     }
+  }
 }
 
 @Composable
 @ExperimentalMaterialApi
 fun CardSelector(
-    @StringRes label: Int,
-    options: List<String>,
-    selection: String,
-    modifier: Modifier,
-    onNewValue: (String) -> Unit
+  @StringRes label: Int,
+  options: List<String>,
+  selection: String,
+  modifier: Modifier,
+  onNewValue: (String) -> Unit
 ) {
-    Card(backgroundColor = MaterialTheme.colors.onPrimary, modifier = modifier) {
-        DropdownSelector(label, options, selection, Modifier.dropdownSelector(), onNewValue)
-    }
+  Card(backgroundColor = MaterialTheme.colors.onPrimary, modifier = modifier) {
+    DropdownSelector(label, options, selection, Modifier.dropdownSelector(), onNewValue)
+  }
 }

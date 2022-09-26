@@ -48,14 +48,6 @@ class AccountServiceImpl @Inject constructor() : AccountService {
     Firebase.auth.signInWithEmailAndPassword(email, password).await()
   }
 
-  override suspend fun createAccount(email: String, password: String): User =
-    trace(CREATE_ACCOUNT_TRACE) {
-      val result = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
-
-      // user is never null after successful account creation.
-      return with(result.user!!) { User(uid, isAnonymous) }
-    }
-
   override suspend fun sendRecoveryEmail(email: String) {
     Firebase.auth.sendPasswordResetEmail(email).await()
   }
@@ -64,11 +56,12 @@ class AccountServiceImpl @Inject constructor() : AccountService {
     Firebase.auth.signInAnonymously().await()
   }
 
-  override suspend fun linkAccount(email: String, password: String) {
-    val credential = EmailAuthProvider.getCredential(email, password)
+  override suspend fun linkAccount(email: String, password: String): Unit =
+    trace(LINK_ACCOUNT_TRACE) {
+      val credential = EmailAuthProvider.getCredential(email, password)
 
-    Firebase.auth.currentUser!!.linkWithCredential(credential).await()
-  }
+     Firebase.auth.currentUser!!.linkWithCredential(credential).await()
+    }
 
   override suspend fun deleteAccount() {
     Firebase.auth.currentUser!!.delete().await()
@@ -85,6 +78,6 @@ class AccountServiceImpl @Inject constructor() : AccountService {
   }
 
   companion object {
-    private const val CREATE_ACCOUNT_TRACE = "createAccount"
+    private const val LINK_ACCOUNT_TRACE = "linkAccount"
   }
 }

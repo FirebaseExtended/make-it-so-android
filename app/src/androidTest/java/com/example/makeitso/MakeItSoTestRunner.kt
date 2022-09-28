@@ -14,18 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.example.makeitso.model.service
+package com.example.makeitso
 
-import com.example.makeitso.model.Task
-import kotlinx.coroutines.flow.Flow
+import android.app.Application
+import android.content.Context
+import androidx.test.runner.AndroidJUnitRunner
+import dagger.hilt.android.testing.HiltTestApplication
 
-interface StorageService {
-  val tasks: Flow<List<Task>>
-
-  suspend fun getTask(taskId: String): Task?
-
-  suspend fun save(task: Task): String
-  suspend fun update(task: Task)
-  suspend fun delete(taskId: String)
-  suspend fun deleteAllForUser(userId: String)
+class MakeItSoTestRunner : AndroidJUnitRunner() {
+  override fun newApplication(
+    cl: ClassLoader?,
+    className: String?,
+    context: Context?
+  ): Application {
+    return super.newApplication(cl, HiltTestApplication::class.java.name, context)
+  }
 }

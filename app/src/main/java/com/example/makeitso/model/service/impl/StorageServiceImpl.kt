@@ -21,11 +21,10 @@ import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.model.service.trace
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
-import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
@@ -34,7 +33,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 
-class StorageServiceImpl @Inject constructor(private val auth: AccountService) : StorageService {
+class StorageServiceImpl
+@Inject
+constructor(private val firestore: FirebaseFirestore, private val auth: AccountService) :
+  StorageService {
 
   override val tasks: Flow<List<Task>>
     get() =
@@ -45,8 +47,8 @@ class StorageServiceImpl @Inject constructor(private val auth: AccountService) :
   override suspend fun getTask(taskId: String): Task? =
     currentCollection(auth.currentUserId).document(taskId).get().await().toObject()
 
-  override suspend fun save(task: Task): Unit =
-    trace(SAVE_TASK_TRACE) { currentCollection(auth.currentUserId).add(task).await() }
+  override suspend fun save(task: Task): String =
+    trace(SAVE_TASK_TRACE) { currentCollection(auth.currentUserId).add(task).await().id }
 
   override suspend fun update(task: Task): Unit =
     trace(UPDATE_TASK_TRACE) {
@@ -65,7 +67,7 @@ class StorageServiceImpl @Inject constructor(private val auth: AccountService) :
   }
 
   private fun currentCollection(uid: String): CollectionReference =
-    Firebase.firestore.collection(USER_COLLECTION).document(uid).collection(TASK_COLLECTION)
+    firestore.collection(USER_COLLECTION).document(uid).collection(TASK_COLLECTION)
 
   companion object {
     private const val USER_COLLECTION = "users"

@@ -29,10 +29,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel
-@Inject
-constructor(private val accountService: AccountService, logService: LogService) :
-  MakeItSoViewModel(logService) {
+class LoginViewModel @Inject constructor(
+  private val accountService: AccountService,
+  logService: LogService
+) : MakeItSoViewModel(logService) {
   var uiState = mutableStateOf(LoginUiState())
     private set
 

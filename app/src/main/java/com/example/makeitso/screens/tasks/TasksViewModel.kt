@@ -29,9 +29,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class TasksViewModel
-@Inject
-constructor(
+class TasksViewModel @Inject constructor(
   logService: LogService,
   private val storageService: StorageService,
   private val configurationService: ConfigurationService

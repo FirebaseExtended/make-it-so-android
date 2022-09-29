@@ -28,9 +28,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
-class SettingsViewModel
-@Inject
-constructor(
+class SettingsViewModel @Inject constructor(
   logService: LogService,
   private val accountService: AccountService,
   private val storageService: StorageService

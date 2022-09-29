@@ -29,9 +29,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class EditTaskViewModel
-@Inject
-constructor(
+class EditTaskViewModel @Inject constructor(
   logService: LogService,
   private val storageService: StorageService,
 ) : MakeItSoViewModel(logService) {

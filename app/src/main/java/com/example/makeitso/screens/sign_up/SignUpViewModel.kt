@@ -80,21 +80,12 @@ class SignUpViewModel @Inject constructor(
             val createAccountTrace = Firebase.performance.newTrace(CREATE_ACCOUNT_TRACE)
             createAccountTrace.start()
 
-            accountService.createAccount(email, password) { error ->
+            accountService.linkAccount(email, password) { error ->
                 createAccountTrace.stop()
 
                 if (error == null) {
-                    linkWithEmail()
                     updateUserId(oldUserId, openAndPopUp)
                 } else onError(error)
-            }
-        }
-    }
-
-    private fun linkWithEmail() {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            accountService.linkAccount(email, password) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
             }
         }
     }

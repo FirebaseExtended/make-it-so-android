@@ -27,7 +27,6 @@ import com.example.makeitso.common.ext.passwordMatches
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
-import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.perf.ktx.performance
@@ -38,8 +37,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val accountService: AccountService,
-    private val storageService: StorageService,
-    private val logService: LogService
+    logService: LogService
 ) : MakeItSoViewModel(logService) {
     var uiState = mutableStateOf(SignUpUiState())
         private set
@@ -76,7 +74,6 @@ class SignUpViewModel @Inject constructor(
         }
 
         viewModelScope.launch(showErrorExceptionHandler) {
-            val oldUserId = accountService.getUserId()
             val createAccountTrace = Firebase.performance.newTrace(CREATE_ACCOUNT_TRACE)
             createAccountTrace.start()
 
@@ -84,19 +81,8 @@ class SignUpViewModel @Inject constructor(
                 createAccountTrace.stop()
 
                 if (error == null) {
-                    updateUserId(oldUserId, openAndPopUp)
+                    openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
                 } else onError(error)
-            }
-        }
-    }
-
-    private fun updateUserId(oldUserId: String, openAndPopUp: (String, String) -> Unit) {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            val newUserId = accountService.getUserId()
-
-            storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
-                else openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
             }
         }
     }

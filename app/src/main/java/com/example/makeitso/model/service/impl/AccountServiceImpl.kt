@@ -40,11 +40,6 @@ class AccountServiceImpl @Inject constructor() : AccountService {
             .addOnCompleteListener { onResult(it.exception) }
     }
 
-    override fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        Firebase.auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { onResult(it.exception) }
-    }
-
     override fun sendRecoveryEmail(email: String, onResult: (Throwable?) -> Unit) {
         Firebase.auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { onResult(it.exception) }

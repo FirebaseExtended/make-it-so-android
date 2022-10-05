@@ -16,12 +16,10 @@ limitations under the License.
 
 package com.example.makeitso.screens.splash
 
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.makeitso.SPLASH_SCREEN
 import com.example.makeitso.TASKS_SCREEN
-import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.LogService

@@ -25,7 +25,6 @@ import com.example.makeitso.common.ext.isValidEmail
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.LogService
-import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -34,8 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val accountService: AccountService,
-    private val storageService: StorageService,
-    private val logService: LogService
+    logService: LogService
 ) : MakeItSoViewModel(logService) {
     var uiState = mutableStateOf(LoginUiState())
         private set
@@ -63,22 +61,10 @@ class LoginViewModel @Inject constructor(
         }
 
         viewModelScope.launch(showErrorExceptionHandler) {
-            val oldUserId = accountService.getUserId()
             accountService.authenticate(email, password) { error ->
                 if (error == null) {
-                    updateUserId(oldUserId, openAndPopUp)
+                    openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
                 } else onError(error)
-            }
-        }
-    }
-
-    private fun updateUserId(oldUserId: String, openAndPopUp: (String, String) -> Unit) {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            val newUserId = accountService.getUserId()
-
-            storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error != null) logService.logNonFatalCrash(error)
-                else openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
             }
         }
     }

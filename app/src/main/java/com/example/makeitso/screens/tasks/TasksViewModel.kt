@@ -52,6 +52,7 @@ class TasksViewModel @Inject constructor(
     }
 
     fun removeListener() {
+        tasks.clear()
         viewModelScope.launch(showErrorExceptionHandler) { storageService.removeListener() }
     }
 

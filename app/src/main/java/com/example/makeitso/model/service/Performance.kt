@@ -14,26 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.example.makeitso.screens.edit_task
+package com.example.makeitso.model.service
 
-enum class EditFlagOption {
-  On,
-  Off;
+import com.google.firebase.perf.ktx.trace
+import com.google.firebase.perf.metrics.Trace
 
-  companion object {
-    fun getByCheckedState(checkedState: Boolean?): EditFlagOption {
-      val hasFlag = checkedState ?: false
-      return if (hasFlag) On else Off
-    }
-
-    fun getBooleanValue(flagOption: String): Boolean {
-      return flagOption == On.name
-    }
-
-    fun getOptions(): List<String> {
-      val options = mutableListOf<String>()
-      values().forEach { flagOption -> options.add(flagOption.name) }
-      return options
-    }
-  }
-}
+/**
+ * Trace a block with Firebase performance.
+ *
+ * Supports both suspend and regular methods.
+ */
+inline fun <T> trace(name: String, block: Trace.() -> T): T = Trace.create(name).trace(block)

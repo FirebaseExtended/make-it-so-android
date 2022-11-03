@@ -14,14 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.example.makeitso.model.service.impl
+package com.example.makeitso.model.service.module
 
-import com.example.makeitso.model.service.LogService
-import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import javax.inject.Inject
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-class LogServiceImpl @Inject constructor() : LogService {
-  override fun logNonFatalCrash(throwable: Throwable) =
-    Firebase.crashlytics.recordException(throwable)
+@Module
+@InstallIn(SingletonComponent::class)
+object FirebaseModule {
+  @Provides fun auth(): FirebaseAuth = Firebase.auth
+
+  @Provides fun firestore(): FirebaseFirestore = Firebase.firestore
 }

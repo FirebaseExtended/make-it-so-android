@@ -27,20 +27,17 @@ import com.example.makeitso.model.service.impl.StorageServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 abstract class ServiceModule {
-    @Binds
-    abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
+  @Binds abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
 
-    @Binds
-    abstract fun provideLogService(impl: LogServiceImpl): LogService
+  @Binds abstract fun provideLogService(impl: LogServiceImpl): LogService
 
-    @Binds
-    abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
+  @Binds abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
 
-    @Binds
-    abstract fun provideConfigurationService(impl: ConfigurationServiceImpl): ConfigurationService
+  @Binds
+  abstract fun provideConfigurationService(impl: ConfigurationServiceImpl): ConfigurationService
 }

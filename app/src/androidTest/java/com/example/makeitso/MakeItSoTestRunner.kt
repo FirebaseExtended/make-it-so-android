@@ -14,26 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.example.makeitso.screens.edit_task
+package com.example.makeitso
 
-enum class EditFlagOption {
-  On,
-  Off;
+import android.app.Application
+import android.content.Context
+import androidx.test.runner.AndroidJUnitRunner
+import dagger.hilt.android.testing.HiltTestApplication
 
-  companion object {
-    fun getByCheckedState(checkedState: Boolean?): EditFlagOption {
-      val hasFlag = checkedState ?: false
-      return if (hasFlag) On else Off
-    }
-
-    fun getBooleanValue(flagOption: String): Boolean {
-      return flagOption == On.name
-    }
-
-    fun getOptions(): List<String> {
-      val options = mutableListOf<String>()
-      values().forEach { flagOption -> options.add(flagOption.name) }
-      return options
-    }
+class MakeItSoTestRunner : AndroidJUnitRunner() {
+  override fun newApplication(
+    cl: ClassLoader?,
+    className: String?,
+    context: Context?
+  ): Application {
+    return super.newApplication(cl, HiltTestApplication::class.java.name, context)
   }
 }

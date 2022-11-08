@@ -57,6 +57,7 @@ fun TasksScreen(
     }
   ) {
     val tasks = viewModel.tasks.collectAsStateWithLifecycle(emptyList())
+    val options by viewModel.options
 
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
       ActionToolbar(
@@ -72,7 +73,7 @@ fun TasksScreen(
         items(tasks.value, key = { it.id }) { taskItem ->
           TaskItem(
             task = taskItem,
-            options = viewModel.options.value,
+            options = options,
             onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
             onActionClick = { action -> viewModel.onTaskActionClick(openScreen, taskItem, action) }
           )

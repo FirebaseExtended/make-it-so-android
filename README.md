@@ -23,4 +23,4 @@ In order for this app to work, you will need to create a [Firebase project](http
 
 ## Contact
 
-Twitter: [@coelho_dev](https://twitter.com/coelho_dev)
+Please navigate to the [discussions page](https://github.com/FirebaseExtended/make-it-so-android/discussions/) if you have any questions or want to suggest changes to the Make it So app.

@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,7 @@ class StorageServiceImpl
 constructor(private val firestore: FirebaseFirestore, private val auth: AccountService) :
   StorageService {
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   override val tasks: Flow<List<Task>>
     get() =
       auth.currentUser.flatMapLatest { user ->

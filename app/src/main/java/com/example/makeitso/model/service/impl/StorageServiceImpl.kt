@@ -61,13 +61,6 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
     currentCollection(auth.currentUserId).document(taskId).delete().await()
   }
 
-  // TODO: It's not recommended to delete on the client:
-  // https://firebase.google.com/docs/firestore/manage-data/delete-data#kotlin+ktx_2
-  override suspend fun deleteAllForUser(userId: String) {
-    val matchingTasks = currentCollection(userId).get().await()
-    matchingTasks.map { it.reference.delete().asDeferred() }.awaitAll()
-  }
-
   private fun currentCollection(uid: String): CollectionReference =
     firestore.collection(USER_COLLECTION).document(uid).collection(TASK_COLLECTION)
 

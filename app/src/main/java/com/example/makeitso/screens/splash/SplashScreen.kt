@@ -16,9 +16,6 @@ limitations under the License.
 
 package com.example.makeitso.screens.splash
 
-import android.Manifest
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -34,13 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.BasicButton
-import com.example.makeitso.common.composable.PermissionDialog
-import com.example.makeitso.common.composable.RationaleDialog
 import com.example.makeitso.common.ext.basicButton
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.delay
 
 private const val SPLASH_TIMEOUT = 1000L
@@ -51,10 +42,6 @@ fun SplashScreen(
   modifier: Modifier = Modifier,
   viewModel: SplashViewModel = hiltViewModel()
 ) {
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-    RequestNotificationPermissionDialog()
-  }
-
   Column(
     modifier =
       modifier
@@ -77,18 +64,5 @@ fun SplashScreen(
   LaunchedEffect(true) {
     delay(SPLASH_TIMEOUT)
     viewModel.onAppStart(openAndPopUp)
-  }
-}
-
-//TODO: Find a better place to request for permissions
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun RequestNotificationPermissionDialog() {
-  val permissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-
-  if (!permissionState.status.isGranted) {
-    if (permissionState.status.shouldShowRationale) RationaleDialog()
-    else PermissionDialog { permissionState.launchPermissionRequest() }
   }
 }

@@ -37,6 +37,10 @@ fun Modifier.contextMenu(): Modifier {
   return this.wrapContentWidth()
 }
 
+fun Modifier.alertDialog(): Modifier {
+  return this.wrapContentWidth().wrapContentHeight()
+}
+
 fun Modifier.dropdownSelector(): Modifier {
   return this.fillMaxWidth()
 }

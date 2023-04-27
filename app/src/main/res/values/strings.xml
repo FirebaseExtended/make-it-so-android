@@ -8,6 +8,7 @@
     <string name="email_error">Please insert a valid email.</string>
     <string name="cancel">Cancel</string>
     <string name="try_again">Try again</string>
+    <string name="ok">OK</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
@@ -44,4 +45,11 @@
     <string name="sign_out_description">You will have to sign in again to see your tasks.</string>
     <string name="delete_account_title">Delete account?</string>
     <string name="delete_account_description">You will lose all your tasks and your account will be deleted. This action is irreversible.</string>
+
+    <!-- FCM -->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="request_notification_permission">Request permission</string>
+    <string name="notification_permission_title">Notification permission</string>
+    <string name="notification_permission_description">The notification permission is important for this app. Please grant the permission.</string>
+    <string name="notification_permission_settings">The notification permission is important for this app. Please navigate to your device settings and enable notifications for Make it So.</string>
 </resources>

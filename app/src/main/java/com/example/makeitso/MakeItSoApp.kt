@@ -16,7 +16,10 @@ limitations under the License.
 
 package com.example.makeitso
 
+import android.Manifest
 import android.content.res.Resources
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -33,6 +36,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.makeitso.common.composable.PermissionDialog
+import com.example.makeitso.common.composable.RationaleDialog
 import com.example.makeitso.common.snackbar.SnackbarManager
 import com.example.makeitso.screens.edit_task.EditTaskScreen
 import com.example.makeitso.screens.login.LoginScreen
@@ -41,12 +46,20 @@ import com.example.makeitso.screens.sign_up.SignUpScreen
 import com.example.makeitso.screens.splash.SplashScreen
 import com.example.makeitso.screens.tasks.TasksScreen
 import com.example.makeitso.theme.MakeItSoTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 @ExperimentalMaterialApi
 fun MakeItSoApp() {
   MakeItSoTheme {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      RequestNotificationPermissionDialog()
+    }
+
     Surface(color = MaterialTheme.colors.background) {
       val appState = rememberAppState()
 
@@ -71,6 +84,18 @@ fun MakeItSoApp() {
         }
       }
     }
+  }
+}
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestNotificationPermissionDialog() {
+  val permissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+
+  if (!permissionState.status.isGranted) {
+    if (permissionState.status.shouldShowRationale) RationaleDialog()
+    else PermissionDialog { permissionState.launchPermissionRequest() }
   }
 }
 

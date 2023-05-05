@@ -32,7 +32,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
-    flavorDimensions.add("environment")
+    flavorDimensions += "environment"
     productFlavors {
         create("dev")
         create("staging")

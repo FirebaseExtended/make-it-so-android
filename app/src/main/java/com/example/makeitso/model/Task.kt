@@ -27,5 +27,6 @@ data class Task(
   val description: String = "",
   val url: String = "",
   val flag: Boolean = false,
-  val completed: Boolean = false
+  val completed: Boolean = false,
+  val userId: String = ""
 )

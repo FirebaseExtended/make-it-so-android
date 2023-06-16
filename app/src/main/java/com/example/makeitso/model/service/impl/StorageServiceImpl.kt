@@ -20,18 +20,13 @@ import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.model.service.trace
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.snapshots
+import com.google.firebase.firestore.ktx.dataObjects
 import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.ktx.toObjects
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 
 class StorageServiceImpl
@@ -43,29 +38,29 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
   override val tasks: Flow<List<Task>>
     get() =
       auth.currentUser.flatMapLatest { user ->
-        currentCollection(user.id).snapshots().map { snapshot -> snapshot.toObjects() }
+        firestore.collection(TASK_COLLECTION).whereEqualTo(USER_ID_FIELD, user.id).dataObjects()
       }
 
   override suspend fun getTask(taskId: String): Task? =
-    currentCollection(auth.currentUserId).document(taskId).get().await().toObject()
+    firestore.collection(TASK_COLLECTION).document(taskId).get().await().toObject()
 
   override suspend fun save(task: Task): String =
-    trace(SAVE_TASK_TRACE) { currentCollection(auth.currentUserId).add(task).await().id }
+    trace(SAVE_TASK_TRACE) {
+      val taskWithUserId = task.copy(userId = auth.currentUserId)
+      firestore.collection(TASK_COLLECTION).add(taskWithUserId).await().id
+    }
 
   override suspend fun update(task: Task): Unit =
     trace(UPDATE_TASK_TRACE) {
-      currentCollection(auth.currentUserId).document(task.id).set(task).await()
+      firestore.collection(TASK_COLLECTION).document(task.id).set(task).await()
     }
 
   override suspend fun delete(taskId: String) {
-    currentCollection(auth.currentUserId).document(taskId).delete().await()
+    firestore.collection(TASK_COLLECTION).document(taskId).delete().await()
   }
 
-  private fun currentCollection(uid: String): CollectionReference =
-    firestore.collection(USER_COLLECTION).document(uid).collection(TASK_COLLECTION)
-
   companion object {
-    private const val USER_COLLECTION = "users"
+    private const val USER_ID_FIELD = "userId"
     private const val TASK_COLLECTION = "tasks"
     private const val SAVE_TASK_TRACE = "saveTask"
     private const val UPDATE_TASK_TRACE = "updateTask"

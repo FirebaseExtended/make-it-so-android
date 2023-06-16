@@ -10,17 +10,15 @@ plugins {
 }
 
 android {
-    compileSdk = 33
-    compileSdkPreview = "UpsideDownCake"
+    compileSdk = 34
     namespace = "com.example.makeitso"
 
     defaultConfig {
         applicationId = "com.example.makeitso"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        targetSdkPreview = "UpsideDownCake"
 
         testInstrumentationRunner = "com.example.makeitso.MakeItSoTestRunner"
         vectorDrawables.useSupportLibrary = true
@@ -73,8 +71,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.8.0-alpha03")
-    implementation("androidx.navigation:navigation-compose:2.6.0-alpha09")
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.navigation:navigation-compose:2.6.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")

@@ -19,7 +19,7 @@ In order for this app to work, you will need to create a [Firebase project](http
 * [Create a Cloud Firestore database](https://firebase.google.com/docs/firestore/quickstart#create) in your Firebase project
 * [Enable Anonymous Authentication](https://firebase.google.com/docs/auth/android/anonymous-auth#before-you-begin) in your Firebase project
 * [Enable Email/Password Authentication](https://firebase.google.com/docs/auth/android/password-auth#before_you_begin) in your Firebase project
-* Run the app using Android Studio Flamingo+ on a device/emulator with API "UpsideDownCake" or above
+* Run the app using Android Studio Flamingo+ on a device/emulator with API level 21 or above
 
 ## Contact
 

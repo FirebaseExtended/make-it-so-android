@@ -33,6 +33,7 @@ import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.ActionToolbar
 import com.example.makeitso.common.ext.smallSpacer
 import com.example.makeitso.common.ext.toolbarActions
+import com.example.makeitso.model.Task
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -55,9 +56,6 @@ fun TasksScreen(
       }
     }
   ) {
-    val tasks = viewModel.tasks.collectAsStateWithLifecycle(emptyList())
-    val options by viewModel.options
-
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
       ActionToolbar(
         title = AppText.tasks,
@@ -69,10 +67,10 @@ fun TasksScreen(
       Spacer(modifier = Modifier.smallSpacer())
 
       LazyColumn {
-        items(tasks.value, key = { it.id }) { taskItem ->
+        items(emptyList<Task>(), key = { it.id }) { taskItem ->
           TaskItem(
             task = taskItem,
-            options = options,
+            options = listOf(),
             onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
             onActionClick = { action -> viewModel.onTaskActionClick(openScreen, taskItem, action) }
           )

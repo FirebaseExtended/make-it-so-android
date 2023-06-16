@@ -33,7 +33,7 @@ class SettingsViewModel @Inject constructor(
   private val accountService: AccountService,
   private val storageService: StorageService
 ) : MakeItSoViewModel(logService) {
-  val uiState = accountService.currentUser.map { SettingsUiState(it.isAnonymous) }
+  val uiState = SettingsUiState(isAnonymousAccount = true)
 
   fun onLoginClick(openScreen: (String) -> Unit) = openScreen(LOGIN_SCREEN)
 

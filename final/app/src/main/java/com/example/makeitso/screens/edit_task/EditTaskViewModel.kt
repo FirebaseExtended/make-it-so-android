@@ -17,7 +17,8 @@ limitations under the License.
 package com.example.makeitso.screens.edit_task
 
 import androidx.compose.runtime.mutableStateOf
-import com.example.makeitso.TASK_DEFAULT_ID
+import androidx.lifecycle.SavedStateHandle
+import com.example.makeitso.TASK_ID
 import com.example.makeitso.common.ext.idFromParameter
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.LogService
@@ -30,14 +31,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
+  savedStateHandle: SavedStateHandle,
   logService: LogService,
   private val storageService: StorageService,
 ) : MakeItSoViewModel(logService) {
   val task = mutableStateOf(Task())
 
-  fun initialize(taskId: String) {
-    launchCatching {
-      if (taskId != TASK_DEFAULT_ID) {
+  init {
+    val taskId = savedStateHandle.get<String>(TASK_ID)
+    if (taskId != null) {
+      launchCatching {
         task.value = storageService.getTask(taskId.idFromParameter()) ?: Task()
       }
     }

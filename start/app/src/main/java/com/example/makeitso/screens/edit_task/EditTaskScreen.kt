@@ -43,13 +43,10 @@ import com.google.android.material.timepicker.TimeFormat
 @ExperimentalMaterialApi
 fun EditTaskScreen(
   popUpScreen: () -> Unit,
-  taskId: String,
   modifier: Modifier = Modifier,
   viewModel: EditTaskViewModel = hiltViewModel()
 ) {
   val task by viewModel.task
-
-  LaunchedEffect(Unit) { viewModel.initialize(taskId) }
 
   Column(
     modifier = modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),

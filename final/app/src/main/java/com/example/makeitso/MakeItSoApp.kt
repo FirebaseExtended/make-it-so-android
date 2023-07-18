@@ -143,8 +143,10 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
 
   composable(
     route = "$EDIT_TASK_SCREEN$TASK_ID_ARG",
-    arguments = listOf(navArgument(TASK_ID) { nullable = true
-      defaultValue = null })
+    arguments = listOf(navArgument(TASK_ID) {
+      nullable = true
+      defaultValue = null
+    })
   ) {
     EditTaskScreen(
       popUpScreen = { appState.popUp() }

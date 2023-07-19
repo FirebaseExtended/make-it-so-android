@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("com.google.firebase.firebase-perf")
@@ -77,7 +77,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
     implementation("com.google.accompanist:accompanist-permissions:0.30.1")
     implementation("com.google.dagger:hilt-android:2.47")
-    kapt("com.google.dagger:hilt-compiler:2.47")
+    ksp("com.google.dagger:hilt-compiler:2.47")
 
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:31.5.0"))
@@ -95,10 +95,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.43.2")
     androidTestImplementation("com.google.truth:truth:1.1.3")
-    kaptAndroidTest("com.google.dagger:hilt-compiler:2.47")
+    kspAndroidTest("com.google.dagger:hilt-compiler:2.47")
     debugImplementation("androidx.compose.ui:ui-tooling")
-}
-
-kapt {
-    correctErrorTypes = true
 }

@@ -39,6 +39,7 @@ class MakeItSoAppState(
       snackbarManager.snackbarMessages.filterNotNull().collect { snackbarMessage ->
         val text = snackbarMessage.toMessage(resources)
         scaffoldState.snackbarHostState.showSnackbar(text)
+        snackbarManager.clearSnackbarState()
       }
     }
   }

@@ -41,27 +41,23 @@ fun SettingsScreen(
   viewModel: SettingsViewModel = hiltViewModel()
 ) {
   SettingsScreenContent(
-    restartApp = restartApp,
-    openScreen = openScreen,
     uiState = viewModel.uiState,
-    onLoginClick = viewModel::onLoginClick,
-    onSignUpClick = viewModel::onSignUpClick,
-    onSignOutClick = viewModel::onSignOutClick,
-    onDeleteMyAccountClick = viewModel::onDeleteMyAccountClick
+    onLoginClick = { viewModel.onLoginClick(openScreen) },
+    onSignUpClick = { viewModel.onSignUpClick(openScreen) },
+    onSignOutClick = { viewModel.onSignOutClick(restartApp) },
+    onDeleteMyAccountClick = { viewModel.onDeleteMyAccountClick(restartApp) }
   )
 }
 
 @ExperimentalMaterialApi
 @Composable
 fun SettingsScreenContent(
-  restartApp: (String) -> Unit,
-  openScreen: (String) -> Unit,
   modifier: Modifier = Modifier,
   uiState: SettingsUiState,
-  onLoginClick: ((String) -> Unit) -> Unit,
-  onSignUpClick: ((String) -> Unit) -> Unit,
-  onSignOutClick: ((String) -> Unit) -> Unit,
-  onDeleteMyAccountClick: ((String) -> Unit) -> Unit
+  onLoginClick: () -> Unit,
+  onSignUpClick: () -> Unit,
+  onSignOutClick: () -> Unit,
+  onDeleteMyAccountClick: () -> Unit
 ) {
   Column(
     modifier = modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),
@@ -73,15 +69,15 @@ fun SettingsScreenContent(
 
     if (uiState.isAnonymousAccount) {
       RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.card()) {
-        onLoginClick(openScreen)
+        onLoginClick()
       }
 
       RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "", Modifier.card()) {
-        onSignUpClick(openScreen)
+        onSignUpClick()
       }
     } else {
-      SignOutCard { onSignOutClick(restartApp) }
-      DeleteMyAccountCard { onDeleteMyAccountClick(restartApp) }
+      SignOutCard { onSignOutClick() }
+      DeleteMyAccountCard { onDeleteMyAccountClick() }
     }
   }
 }
@@ -149,8 +145,6 @@ fun SettingsScreenPreview() {
 
   MakeItSoTheme {
     SettingsScreenContent(
-      restartApp = { },
-      openScreen = { },
       uiState = uiState,
       onLoginClick = { },
       onSignUpClick = { },

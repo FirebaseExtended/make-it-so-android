@@ -40,23 +40,21 @@ fun LoginScreen(
   val uiState by viewModel.uiState
 
   LoginScreenContent(
-    openAndPopUp = openAndPopUp,
     uiState = uiState,
     onEmailChange = viewModel::onEmailChange,
     onPasswordChange = viewModel::onPasswordChange,
-    onSignInClick = viewModel::onSignInClick,
+    onSignInClick = { viewModel.onSignInClick(openAndPopUp) },
     onForgotPasswordClick = viewModel::onForgotPasswordClick
   )
 }
 
 @Composable
 fun LoginScreenContent(
-  openAndPopUp: (String, String) -> Unit,
   modifier: Modifier = Modifier,
   uiState: LoginUiState,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
-  onSignInClick: (openAndPopUp: (String, String) -> Unit) -> Unit,
+  onSignInClick: () -> Unit,
   onForgotPasswordClick: () -> Unit
 ) {
   BasicToolbar(AppText.login_details)
@@ -72,7 +70,7 @@ fun LoginScreenContent(
     EmailField(uiState.email, onEmailChange, Modifier.fieldModifier())
     PasswordField(uiState.password, onPasswordChange, Modifier.fieldModifier())
 
-    BasicButton(AppText.sign_in, Modifier.basicButton()) { onSignInClick(openAndPopUp) }
+    BasicButton(AppText.sign_in, Modifier.basicButton()) { onSignInClick() }
 
     BasicTextButton(AppText.forgot_password, Modifier.textButton()) {
       onForgotPasswordClick()
@@ -89,7 +87,6 @@ fun LoginScreenPreview() {
 
   MakeItSoTheme {
     LoginScreenContent(
-      openAndPopUp = { _, _ -> },
       uiState = uiState,
       onEmailChange = { },
       onPasswordChange = { },

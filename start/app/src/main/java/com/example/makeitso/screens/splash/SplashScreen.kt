@@ -44,33 +44,31 @@ fun SplashScreen(
   viewModel: SplashViewModel = hiltViewModel()
 ) {
   SplashScreenContent(
-    openAndPopUp = openAndPopUp,
-    onAppStart = viewModel::onAppStart,
+    onAppStart = { viewModel.onAppStart(openAndPopUp) },
     shouldShowError = viewModel.showError.value
   )
 }
 
 @Composable
 fun SplashScreenContent(
-  openAndPopUp: (String, String) -> Unit,
   modifier: Modifier = Modifier,
-  onAppStart: (openAndPopUp: (String, String) -> Unit) -> Unit,
+  onAppStart: () -> Unit,
   shouldShowError: Boolean
 ) {
   Column(
     modifier =
-      modifier
-        .fillMaxWidth()
-        .fillMaxHeight()
-        .background(color = MaterialTheme.colors.background)
-        .verticalScroll(rememberScrollState()),
+    modifier
+      .fillMaxWidth()
+      .fillMaxHeight()
+      .background(color = MaterialTheme.colors.background)
+      .verticalScroll(rememberScrollState()),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     if (shouldShowError) {
       Text(text = stringResource(AppText.generic_error))
 
-      BasicButton(AppText.try_again, Modifier.basicButton()) { onAppStart(openAndPopUp) }
+      BasicButton(AppText.try_again, Modifier.basicButton()) { onAppStart() }
     } else {
       CircularProgressIndicator(color = MaterialTheme.colors.onBackground)
     }
@@ -78,7 +76,7 @@ fun SplashScreenContent(
 
   LaunchedEffect(true) {
     delay(SPLASH_TIMEOUT)
-    onAppStart(openAndPopUp)
+    onAppStart()
   }
 }
 
@@ -87,7 +85,6 @@ fun SplashScreenContent(
 fun SplashScreenPreview() {
   MakeItSoTheme {
     SplashScreenContent(
-      openAndPopUp = { _, _ -> },
       onAppStart = { },
       shouldShowError = true
     )

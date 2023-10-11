@@ -51,9 +51,8 @@ fun EditTaskScreen(
   val activity = LocalContext.current as AppCompatActivity
 
   EditTaskScreenContent(
-    popUpScreen = popUpScreen,
     task = task,
-    onDoneClick = viewModel::onDoneClick,
+    onDoneClick = { viewModel.onDoneClick(popUpScreen) },
     onTitleChange = viewModel::onTitleChange,
     onDescriptionChange = viewModel::onDescriptionChange,
     onUrlChange = viewModel::onUrlChange,
@@ -68,10 +67,9 @@ fun EditTaskScreen(
 @Composable
 @ExperimentalMaterialApi
 fun EditTaskScreenContent(
-  popUpScreen: () -> Unit,
   modifier: Modifier = Modifier,
   task: Task,
-  onDoneClick: (() -> Unit) -> Unit,
+  onDoneClick: () -> Unit,
   onTitleChange: (String) -> Unit,
   onDescriptionChange: (String) -> Unit,
   onUrlChange: (String) -> Unit,
@@ -92,7 +90,7 @@ fun EditTaskScreenContent(
       title = AppText.edit_task,
       modifier = Modifier.toolbarActions(),
       endActionIcon = AppIcon.ic_check,
-      endAction = { onDoneClick(popUpScreen) }
+      endAction = { onDoneClick() }
     )
 
     Spacer(modifier = Modifier.spacer())
@@ -177,7 +175,6 @@ fun EditTaskScreenPreview() {
 
   MakeItSoTheme {
     EditTaskScreenContent(
-      popUpScreen = { },
       task = task,
       onDoneClick = { },
       onTitleChange = { },

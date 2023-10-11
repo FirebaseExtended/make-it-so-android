@@ -43,11 +43,11 @@ fun TasksScreen(
   viewModel: TasksViewModel = hiltViewModel()
 ) {
   TasksScreenContent(
-    openScreen = openScreen,
     onAddClick = viewModel::onAddClick,
     onSettingsClick = viewModel::onSettingsClick,
     onTaskCheckChange = viewModel::onTaskCheckChange,
-    onTaskActionClick = viewModel::onTaskActionClick
+    onTaskActionClick = viewModel::onTaskActionClick,
+    openScreen = openScreen
   )
 
   LaunchedEffect(viewModel) { viewModel.loadTaskOptions() }
@@ -57,12 +57,12 @@ fun TasksScreen(
 @Composable
 @ExperimentalMaterialApi
 fun TasksScreenContent(
-  openScreen: (String) -> Unit,
   modifier: Modifier = Modifier,
   onAddClick: ((String) -> Unit) -> Unit,
   onSettingsClick: ((String) -> Unit) -> Unit,
   onTaskCheckChange: (Task) -> Unit,
-  onTaskActionClick: ((String) -> Unit, Task, String) -> Unit
+  onTaskActionClick: ((String) -> Unit, Task, String) -> Unit,
+  openScreen: (String) -> Unit
 ) {
   Scaffold(
     floatingActionButton = {
@@ -106,11 +106,11 @@ fun TasksScreenContent(
 fun TasksScreenPreview() {
   MakeItSoTheme {
     TasksScreenContent(
-      openScreen = { },
       onAddClick = { },
       onSettingsClick = { },
       onTaskCheckChange = { },
-      onTaskActionClick = { _, _, _ -> }
+      onTaskActionClick = { _, _, _ -> },
+      openScreen = { }
     )
   }
 }

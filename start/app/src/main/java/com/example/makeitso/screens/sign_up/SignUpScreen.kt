@@ -38,24 +38,22 @@ fun SignUpScreen(
   val uiState by viewModel.uiState
 
   SignUpScreenContent(
-    openAndPopUp = openAndPopUp,
     uiState = uiState,
     onEmailChange = viewModel::onEmailChange,
     onPasswordChange = viewModel::onPasswordChange,
     onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
-    onSignUpClick = viewModel::onSignUpClick
+    onSignUpClick = { viewModel.onSignUpClick(openAndPopUp) }
   )
 }
 
 @Composable
 fun SignUpScreenContent(
-  openAndPopUp: (String, String) -> Unit,
   modifier: Modifier = Modifier,
   uiState: SignUpUiState,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onRepeatPasswordChange: (String) -> Unit,
-  onSignUpClick: ((String, String) -> Unit) -> Unit
+  onSignUpClick: () -> Unit
 ) {
   val fieldModifier = Modifier.fieldModifier()
 
@@ -71,7 +69,7 @@ fun SignUpScreenContent(
     RepeatPasswordField(uiState.repeatPassword, onRepeatPasswordChange, fieldModifier)
 
     BasicButton(AppText.create_account, Modifier.basicButton()) {
-      onSignUpClick(openAndPopUp)
+      onSignUpClick()
     }
   }
 }
@@ -85,7 +83,6 @@ fun SignUpScreenPreview() {
 
   MakeItSoTheme {
     SignUpScreenContent(
-      openAndPopUp = { _, _ -> },
       uiState = uiState,
       onEmailChange = { },
       onPasswordChange = { },

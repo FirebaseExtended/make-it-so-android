@@ -28,10 +28,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.BasicButton
 import com.example.makeitso.common.ext.basicButton
+import com.example.makeitso.theme.MakeItSoTheme
 import kotlinx.coroutines.delay
 
 private const val SPLASH_TIMEOUT = 1000L
@@ -41,6 +43,21 @@ fun SplashScreen(
   openAndPopUp: (String, String) -> Unit,
   modifier: Modifier = Modifier,
   viewModel: SplashViewModel = hiltViewModel()
+) {
+  SplashScreenContent(
+    openAndPopUp = openAndPopUp,
+    modifier = modifier,
+    onAppStart = viewModel::onAppStart,
+    shouldShowError = viewModel.showError.value
+  )
+}
+
+@Composable
+fun SplashScreenContent(
+  openAndPopUp: (String, String) -> Unit,
+  modifier: Modifier = Modifier,
+  onAppStart: (openAndPopUp: (String, String) -> Unit) -> Unit,
+  shouldShowError: Boolean
 ) {
   Column(
     modifier =
@@ -52,10 +69,10 @@ fun SplashScreen(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    if (viewModel.showError.value) {
+    if (shouldShowError) {
       Text(text = stringResource(AppText.generic_error))
 
-      BasicButton(AppText.try_again, Modifier.basicButton()) { viewModel.onAppStart(openAndPopUp) }
+      BasicButton(AppText.try_again, Modifier.basicButton()) { onAppStart(openAndPopUp) }
     } else {
       CircularProgressIndicator(color = MaterialTheme.colors.onBackground)
     }
@@ -63,6 +80,18 @@ fun SplashScreen(
 
   LaunchedEffect(true) {
     delay(SPLASH_TIMEOUT)
-    viewModel.onAppStart(openAndPopUp)
+    onAppStart(openAndPopUp)
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview() {
+  MakeItSoTheme {
+    SplashScreenContent(
+      openAndPopUp = { _, _ -> },
+      onAppStart = { },
+      shouldShowError = true
+    )
   }
 }

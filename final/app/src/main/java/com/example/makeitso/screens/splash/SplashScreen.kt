@@ -37,6 +37,7 @@ import com.example.makeitso.theme.MakeItSoTheme
 import kotlinx.coroutines.delay
 
 private const val SPLASH_TIMEOUT = 1000L
+
 @Composable
 fun SplashScreen(
   openAndPopUp: (String, String) -> Unit,
@@ -83,7 +84,7 @@ fun SplashScreenContent(
   }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
   MakeItSoTheme {

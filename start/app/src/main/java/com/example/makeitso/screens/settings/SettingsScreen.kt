@@ -24,23 +24,45 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.R.drawable as AppIcon
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.ext.card
 import com.example.makeitso.common.ext.spacer
+import com.example.makeitso.theme.MakeItSoTheme
 
 @ExperimentalMaterialApi
 @Composable
 fun SettingsScreen(
   restartApp: (String) -> Unit,
   openScreen: (String) -> Unit,
-  modifier: Modifier = Modifier,
   viewModel: SettingsViewModel = hiltViewModel()
 ) {
-  val uiState = viewModel.uiState
+  SettingsScreenContent(
+    restartApp = restartApp,
+    openScreen = openScreen,
+    uiState = viewModel.uiState,
+    onLoginClick = viewModel::onLoginClick,
+    onSignUpClick = viewModel::onSignUpClick,
+    onSignOutClick = viewModel::onSignOutClick,
+    onDeleteMyAccountClick = viewModel::onDeleteMyAccountClick
+  )
+}
 
+@ExperimentalMaterialApi
+@Composable
+fun SettingsScreenContent(
+  restartApp: (String) -> Unit,
+  openScreen: (String) -> Unit,
+  modifier: Modifier = Modifier,
+  uiState: SettingsUiState,
+  onLoginClick: ((String) -> Unit) -> Unit,
+  onSignUpClick: ((String) -> Unit) -> Unit,
+  onSignOutClick: ((String) -> Unit) -> Unit,
+  onDeleteMyAccountClick: ((String) -> Unit) -> Unit
+) {
   Column(
     modifier = modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),
     horizontalAlignment = Alignment.CenterHorizontally
@@ -51,15 +73,15 @@ fun SettingsScreen(
 
     if (uiState.isAnonymousAccount) {
       RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.card()) {
-        viewModel.onLoginClick(openScreen)
+        onLoginClick(openScreen)
       }
 
       RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "", Modifier.card()) {
-        viewModel.onSignUpClick(openScreen)
+        onSignUpClick(openScreen)
       }
     } else {
-      SignOutCard { viewModel.onSignOutClick(restartApp) }
-      DeleteMyAccountCard { viewModel.onDeleteMyAccountClick(restartApp) }
+      SignOutCard { onSignOutClick(restartApp) }
+      DeleteMyAccountCard { onDeleteMyAccountClick(restartApp) }
     }
   }
 }
@@ -115,6 +137,25 @@ private fun DeleteMyAccountCard(deleteMyAccount: () -> Unit) {
         }
       },
       onDismissRequest = { showWarningDialog = false }
+    )
+  }
+}
+
+@Preview(showBackground = true)
+@ExperimentalMaterialApi
+@Composable
+fun SettingsScreenPreview() {
+  val uiState = SettingsUiState(isAnonymousAccount = false)
+
+  MakeItSoTheme {
+    SettingsScreenContent(
+      restartApp = { },
+      openScreen = { },
+      uiState = uiState,
+      onLoginClick = { },
+      onSignUpClick = { },
+      onSignOutClick = { },
+      onDeleteMyAccountClick = { }
     )
   }
 }

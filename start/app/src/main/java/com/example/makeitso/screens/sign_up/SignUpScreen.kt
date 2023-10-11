@@ -33,14 +33,12 @@ import com.example.makeitso.theme.MakeItSoTheme
 @Composable
 fun SignUpScreen(
   openAndPopUp: (String, String) -> Unit,
-  modifier: Modifier = Modifier,
   viewModel: SignUpViewModel = hiltViewModel()
 ) {
   val uiState by viewModel.uiState
 
   SignUpScreenContent(
     openAndPopUp = openAndPopUp,
-    modifier = modifier,
     uiState = uiState,
     onEmailChange = viewModel::onEmailChange,
     onPasswordChange = viewModel::onPasswordChange,

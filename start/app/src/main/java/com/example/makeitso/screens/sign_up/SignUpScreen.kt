@@ -22,19 +22,39 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.makeitso.R.string as AppText
 import com.example.makeitso.common.composable.*
 import com.example.makeitso.common.ext.basicButton
 import com.example.makeitso.common.ext.fieldModifier
+import com.example.makeitso.theme.MakeItSoTheme
 
 @Composable
 fun SignUpScreen(
   openAndPopUp: (String, String) -> Unit,
-  modifier: Modifier = Modifier,
   viewModel: SignUpViewModel = hiltViewModel()
 ) {
   val uiState by viewModel.uiState
+
+  SignUpScreenContent(
+    uiState = uiState,
+    onEmailChange = viewModel::onEmailChange,
+    onPasswordChange = viewModel::onPasswordChange,
+    onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
+    onSignUpClick = { viewModel.onSignUpClick(openAndPopUp) }
+  )
+}
+
+@Composable
+fun SignUpScreenContent(
+  modifier: Modifier = Modifier,
+  uiState: SignUpUiState,
+  onEmailChange: (String) -> Unit,
+  onPasswordChange: (String) -> Unit,
+  onRepeatPasswordChange: (String) -> Unit,
+  onSignUpClick: () -> Unit
+) {
   val fieldModifier = Modifier.fieldModifier()
 
   BasicToolbar(AppText.create_account)
@@ -44,12 +64,30 @@ fun SignUpScreen(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    EmailField(uiState.email, viewModel::onEmailChange, fieldModifier)
-    PasswordField(uiState.password, viewModel::onPasswordChange, fieldModifier)
-    RepeatPasswordField(uiState.repeatPassword, viewModel::onRepeatPasswordChange, fieldModifier)
+    EmailField(uiState.email, onEmailChange, fieldModifier)
+    PasswordField(uiState.password, onPasswordChange, fieldModifier)
+    RepeatPasswordField(uiState.repeatPassword, onRepeatPasswordChange, fieldModifier)
 
     BasicButton(AppText.create_account, Modifier.basicButton()) {
-      viewModel.onSignUpClick(openAndPopUp)
+      onSignUpClick()
     }
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignUpScreenPreview() {
+  val uiState = SignUpUiState(
+    email = "email@test.com"
+  )
+
+  MakeItSoTheme {
+    SignUpScreenContent(
+      uiState = uiState,
+      onEmailChange = { },
+      onPasswordChange = { },
+      onRepeatPasswordChange = { },
+      onSignUpClick = { }
+    )
   }
 }

@@ -16,7 +16,7 @@ limitations under the License.
 
 package com.example.makeitso.model.service
 
-import com.google.firebase.perf.ktx.trace
+import com.google.firebase.perf.trace
 import com.google.firebase.perf.metrics.Trace
 
 /**

@@ -20,10 +20,10 @@ import com.example.makeitso.BuildConfig
 import com.example.makeitso.R.xml as AppConfig
 import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.trace
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.get
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 

@@ -17,8 +17,8 @@ limitations under the License.
 package com.example.makeitso.model.service.impl
 
 import com.example.makeitso.model.service.LogService
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.Firebase
 import javax.inject.Inject
 
 class LogServiceImpl @Inject constructor() : LogService {

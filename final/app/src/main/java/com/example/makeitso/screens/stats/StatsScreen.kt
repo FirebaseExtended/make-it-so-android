@@ -71,22 +71,23 @@ fun StatsScreenContent(
 fun StatsItem(titleRes: Int, value: String) {
   Card(
     backgroundColor = MaterialTheme.colors.background,
-    modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp),
+    modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 0.dp),
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 0.dp, vertical = 24.dp),
     ) {
       Column(
         modifier = Modifier.weight(1f),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        Spacer(modifier = Modifier.smallSpacer())
         Text(text = stringResource(id = titleRes), style = MaterialTheme.typography.subtitle1)
-        Text(text = value, fontSize = 72.sp)
+        Text(text = value, fontSize = 48.sp)
       }
     }
   }
+
+  Spacer(modifier = Modifier.smallSpacer())
 }
 
 @Preview(showBackground = true)

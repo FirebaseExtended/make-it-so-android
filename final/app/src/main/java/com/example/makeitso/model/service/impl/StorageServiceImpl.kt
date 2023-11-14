@@ -29,10 +29,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
 
-class StorageServiceImpl
-@Inject
-constructor(private val firestore: FirebaseFirestore, private val auth: AccountService) :
-  StorageService {
+class StorageServiceImpl @Inject constructor(
+  private val firestore: FirebaseFirestore,
+  private val auth: AccountService
+  ) : StorageService {
 
   @OptIn(ExperimentalCoroutinesApi::class)
   override val tasks: Flow<List<Task>>
@@ -57,6 +57,26 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
 
   override suspend fun delete(taskId: String) {
     firestore.collection(TASK_COLLECTION).document(taskId).delete().await()
+  }
+
+  override suspend fun getCompletedTasksCount(): Int {
+    return 456
+  }
+
+  override suspend fun getImportantCompletedTasksCount(): Int {
+    return 123
+  }
+
+  override suspend fun getAverageCompletionTime(): Int {
+    return 890
+  }
+
+  override suspend fun getMediumHighTasksToCompleteCount(): Int {
+    return 678
+  }
+
+  override suspend fun getOverdueTasksCount(): Int {
+    return 12
   }
 
   companion object {

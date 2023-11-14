@@ -29,4 +29,20 @@ class StatsViewModel @Inject constructor(
   private val storageService: StorageService
 ) : MakeItSoViewModel(logService) {
   val uiState = mutableStateOf(StatsUiState())
+
+  init {
+    launchCatching { loadStats() }
+  }
+
+  private suspend fun loadStats() {
+    val updatedUiState = StatsUiState(
+      completedTasks = storageService.getCompletedTasksCount().toString(),
+      importantCompletedTasks = storageService.getImportantCompletedTasksCount().toString(),
+      averageCompletionTime = storageService.getAverageCompletionTime().toString(),
+      mediumHighTasksToComplete = storageService.getMediumHighTasksToCompleteCount().toString(),
+      overdueTasks = storageService.getOverdueTasksCount().toString()
+    )
+
+    uiState.value = updatedUiState
+  }
 }

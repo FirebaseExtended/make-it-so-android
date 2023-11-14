@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Google LLC
+Copyright 2023 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,15 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.example.makeitso
+package com.example.makeitso.screens.stats
 
-const val SPLASH_SCREEN = "SplashScreen"
-const val SETTINGS_SCREEN = "SettingsScreen"
-const val LOGIN_SCREEN = "LoginScreen"
-const val SIGN_UP_SCREEN = "SignUpScreen"
-const val TASKS_SCREEN = "TasksScreen"
-const val EDIT_TASK_SCREEN = "EditTaskScreen"
-const val STATS_SCREEN = "StatsScreen"
-
-const val TASK_ID = "taskId"
-const val TASK_ID_ARG = "?$TASK_ID={$TASK_ID}"
+data class StatsUiState(
+    val completedTasks: String = "0",
+    val importantCompletedTasks: String = "0",
+    val averageCompletionTime: String = "0",
+    val mediumHighTasksToComplete: String = "0",
+    val overdueTasks: String = "0"
+)

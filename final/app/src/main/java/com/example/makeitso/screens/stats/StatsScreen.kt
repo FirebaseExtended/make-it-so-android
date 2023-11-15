@@ -24,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,7 +64,6 @@ fun StatsScreenContent(
     StatsItem(titleRes = AppText.important_completed_tasks, value = uiState.importantCompletedTasks)
     StatsItem(titleRes = AppText.average_completion_time, value = uiState.averageCompletionTime)
     StatsItem(titleRes = AppText.medium_high_tasks_to_complete, value = uiState.mediumHighTasksToComplete)
-    StatsItem(titleRes = AppText.overdue_tasks, value = uiState.overdueTasks)
   }
 }
 
@@ -81,7 +81,12 @@ fun StatsItem(titleRes: Int, value: String) {
         modifier = Modifier.weight(1f),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        Text(text = stringResource(id = titleRes), style = MaterialTheme.typography.subtitle1)
+        Text(
+          text = stringResource(id = titleRes),
+          style = MaterialTheme.typography.subtitle1,
+          textAlign = TextAlign.Center
+        )
+
         Text(text = value, fontSize = 48.sp)
       }
     }

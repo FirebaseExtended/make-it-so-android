@@ -20,6 +20,5 @@ data class StatsUiState(
     val completedTasks: String = "0",
     val importantCompletedTasks: String = "0",
     val averageCompletionTime: String = "0",
-    val mediumHighTasksToComplete: String = "0",
-    val overdueTasks: String = "0"
+    val mediumHighTasksToComplete: String = "0"
 )

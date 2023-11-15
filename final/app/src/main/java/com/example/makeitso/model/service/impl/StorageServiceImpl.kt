@@ -16,11 +16,16 @@ limitations under the License.
 
 package com.example.makeitso.model.service.impl
 
+import com.example.makeitso.model.Priority
 import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.model.service.trace
+import com.google.firebase.firestore.AggregateField
+import com.google.firebase.firestore.AggregateSource
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,6 +40,9 @@ class StorageServiceImpl @Inject constructor(
   private val firestore: FirebaseFirestore,
   private val auth: AccountService
   ) : StorageService {
+
+  private val collection get() = firestore.collection(TASK_COLLECTION)
+    .whereEqualTo(USER_ID_FIELD, auth.currentUserId)
 
   @OptIn(ExperimentalCoroutinesApi::class)
   override val tasks: Flow<List<Task>>
@@ -62,28 +70,46 @@ class StorageServiceImpl @Inject constructor(
     firestore.collection(TASK_COLLECTION).document(taskId).delete().await()
   }
 
-  override suspend fun getCompletedTasksCount(): Int {
-    return 456
+  override suspend fun getCompletedTasksCount(): Long {
+    val query = collection.whereEqualTo(COMPLETED_FIELD, true).count()
+    return query.get(AggregateSource.SERVER).await().count
   }
 
   override suspend fun getImportantCompletedTasksCount(): Int {
-    return 123
+    val query = collection.where(
+      Filter.and(
+        Filter.equalTo(COMPLETED_FIELD, true),
+        Filter.or(
+          Filter.equalTo(PRIORITY_FIELD, Priority.High.name),
+          Filter.equalTo(FLAG_FIELD, true)
+        )
+      )
+    )
+
+    return query.get(Source.SERVER).await().count()
   }
 
-  override suspend fun getAverageCompletionTime(): Int {
-    return 890
+  override suspend fun getAverageCompletionTime(): Long {
+    val query = collection.whereEqualTo(COMPLETED_FIELD, true)
+    val averageField = AggregateField.average(COMPLETION_TIME_FIELD)
+    val queryResult = query.aggregate(averageField).get(AggregateSource.SERVER).await()
+    return queryResult.getLong(averageField) ?: 0
   }
 
-  override suspend fun getMediumHighTasksToCompleteCount(): Int {
-    return 678
-  }
+  override suspend fun getMediumHighTasksToCompleteCount(): Long {
+    val query = collection
+      .whereEqualTo(COMPLETED_FIELD, false)
+      .whereIn(PRIORITY_FIELD, listOf(Priority.Medium.name, Priority.High.name)).count()
 
-  override suspend fun getOverdueTasksCount(): Int {
-    return 12
+    return query.get(AggregateSource.SERVER).await().count
   }
 
   companion object {
     private const val USER_ID_FIELD = "userId"
+    private const val COMPLETED_FIELD = "completed"
+    private const val PRIORITY_FIELD = "priority"
+    private const val FLAG_FIELD = "flag"
+    private const val COMPLETION_TIME_FIELD = "completionTime"
     private const val TASK_COLLECTION = "tasks"
     private const val SAVE_TASK_TRACE = "saveTask"
     private const val UPDATE_TASK_TRACE = "updateTask"

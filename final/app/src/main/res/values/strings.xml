@@ -46,7 +46,6 @@
     <string name="important_completed_tasks">Important completed tasks \n (high priority or flagged)</string>
     <string name="average_completion_time">Average time to complete a task \n (in hours)</string>
     <string name="medium_high_tasks_to_complete">Medium and high priority tasks to complete</string>
-    <string name="overdue_tasks">Overdue tasks</string>
 
     <!-- Dialogs -->
     <string name="sign_out_title">Sign out?</string>

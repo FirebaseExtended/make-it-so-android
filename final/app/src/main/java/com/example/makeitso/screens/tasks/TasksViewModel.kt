@@ -27,6 +27,7 @@ import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +46,15 @@ class TasksViewModel @Inject constructor(
   }
 
   fun onTaskCheckChange(task: Task) {
-    launchCatching { storageService.update(task.copy(completed = !task.completed)) }
+    launchCatching {
+      if (task.completed) {
+        storageService.update(task.copy(completed = false, completionTime = null))
+      } else {
+        val creationInstant = Instant.parse(task.creationInstant)
+        val completionTime = Instant.now().compareTo(creationInstant)
+        storageService.update(task.copy(completed = true, completionTime = completionTime))
+      }
+    }
   }
 
   fun onAddClick(openScreen: (String) -> Unit) = openScreen(EDIT_TASK_SCREEN)

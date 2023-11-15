@@ -20,6 +20,7 @@ import com.google.firebase.firestore.DocumentId
 
 data class Task(
   @DocumentId val id: String = "",
+  val creationInstant: String = "",
   val title: String = "",
   val priority: String = "",
   val dueDate: String = "",
@@ -28,5 +29,6 @@ data class Task(
   val url: String = "",
   val flag: Boolean = false,
   val completed: Boolean = false,
+  val completionTime: Int? = null,
   val userId: String = ""
 )

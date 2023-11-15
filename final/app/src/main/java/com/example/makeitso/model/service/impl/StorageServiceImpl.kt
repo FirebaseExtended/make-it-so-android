@@ -28,6 +28,8 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
+import java.time.Instant
+import java.time.format.DateTimeFormatter.ISO_INSTANT
 
 class StorageServiceImpl @Inject constructor(
   private val firestore: FirebaseFirestore,
@@ -46,8 +48,9 @@ class StorageServiceImpl @Inject constructor(
 
   override suspend fun save(task: Task): String =
     trace(SAVE_TASK_TRACE) {
-      val taskWithUserId = task.copy(userId = auth.currentUserId)
-      firestore.collection(TASK_COLLECTION).add(taskWithUserId).await().id
+      val instant = ISO_INSTANT.format(Instant.now())
+      val updatedTask = task.copy(userId = auth.currentUserId, creationInstant = instant)
+      firestore.collection(TASK_COLLECTION).add(updatedTask).await().id
     }
 
   override suspend fun update(task: Task): Unit =

@@ -27,8 +27,10 @@ import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
+import kotlin.time.toKotlinDuration
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
@@ -51,7 +53,8 @@ class TasksViewModel @Inject constructor(
         storageService.update(task.copy(completed = false, completionTime = null))
       } else {
         val creationInstant = Instant.parse(task.creationInstant)
-        val completionTime = Instant.now().compareTo(creationInstant)
+        val durationBetween = Duration.between(creationInstant, Instant.now())
+        val completionTime = durationBetween.toKotlinDuration().inWholeHours
         storageService.update(task.copy(completed = true, completionTime = completionTime))
       }
     }

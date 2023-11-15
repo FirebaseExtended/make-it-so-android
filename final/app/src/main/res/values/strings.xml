@@ -44,7 +44,7 @@
     <string name="stats">Statistics</string>
     <string name="completed_tasks">Completed tasks</string>
     <string name="important_completed_tasks">Important completed tasks \n (high priority or flagged)</string>
-    <string name="average_completion_time">Average time to complete a task</string>
+    <string name="average_completion_time">Average time to complete a task \n (in hours)</string>
     <string name="medium_high_tasks_to_complete">Medium and high priority tasks to complete</string>
     <string name="overdue_tasks">Overdue tasks</string>
 

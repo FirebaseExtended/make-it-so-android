@@ -26,11 +26,10 @@ import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
+import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Duration
-import java.time.Instant
 import javax.inject.Inject
-import kotlin.time.toKotlinDuration
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
@@ -52,12 +51,17 @@ class TasksViewModel @Inject constructor(
       if (task.completed) {
         storageService.update(task.copy(completed = false, completionTime = null))
       } else {
-        val creationInstant = Instant.parse(task.creationInstant)
-        val durationBetween = Duration.between(creationInstant, Instant.now())
-        val completionTime = durationBetween.toKotlinDuration().inWholeHours
+        val completionTime = getCompletionTime(task)
         storageService.update(task.copy(completed = true, completionTime = completionTime))
       }
     }
+  }
+
+  private fun getCompletionTime(task: Task): Long {
+    val now = Timestamp.now().toDate().toInstant()
+    val creationInstant = task.creationInstant.toInstant()
+    val completionTime = Duration.between(creationInstant, now)
+    return completionTime.toHours()
   }
 
   fun onAddClick(openScreen: (String) -> Unit) = openScreen(EDIT_TASK_SCREEN)

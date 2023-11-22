@@ -50,14 +50,14 @@ class TasksViewModel @Inject constructor(
     launchCatching {
       val updatedTask = task.copy(completed = !task.completed)
       val completionTime = getCompletionTime(updatedTask)
-      storageService.update(updatedTask.copy(completionTime = completionTime))
+      storageService.update(updatedTask.copy(averageCompletionTime = completionTime))
     }
   }
 
   private fun getCompletionTime(task: Task): Long? {
     return if (task.completed) {
       val now = Timestamp.now().toDate().toInstant()
-      val creationInstant = task.creationInstant.toInstant()
+      val creationInstant = task.createdAt.toInstant()
       val completionTime = Duration.between(creationInstant, now)
       return completionTime.toHours()
     } else null

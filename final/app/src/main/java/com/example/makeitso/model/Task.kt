@@ -22,7 +22,7 @@ import java.util.Date
 
 data class Task(
   @DocumentId val id: String = "",
-  @ServerTimestamp val creationInstant: Date = Date(),
+  @ServerTimestamp val createdAt: Date = Date(),
   val title: String = "",
   val priority: String = "",
   val dueDate: String = "",
@@ -31,6 +31,6 @@ data class Task(
   val url: String = "",
   val flag: Boolean = false,
   val completed: Boolean = false,
-  val completionTime: Long? = null,
+  val averageCompletionTime: Long? = null,
   val userId: String = ""
 )

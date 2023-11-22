@@ -105,7 +105,7 @@ class StorageServiceImpl @Inject constructor(
     private const val COMPLETED_FIELD = "completed"
     private const val PRIORITY_FIELD = "priority"
     private const val FLAG_FIELD = "flag"
-    private const val COMPLETION_TIME_FIELD = "completionTime"
+    private const val COMPLETION_TIME_FIELD = "averageCompletionTime"
     private const val TASK_COLLECTION = "tasks"
     private const val SAVE_TASK_TRACE = "saveTask"
     private const val UPDATE_TASK_TRACE = "updateTask"

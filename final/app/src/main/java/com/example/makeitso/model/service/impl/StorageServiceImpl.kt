@@ -25,7 +25,6 @@ import com.google.firebase.firestore.AggregateField
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -72,7 +71,7 @@ class StorageServiceImpl @Inject constructor(
     return query.get(AggregateSource.SERVER).await().count
   }
 
-  override suspend fun getImportantCompletedTasksCount(): Int {
+  override suspend fun getImportantCompletedTasksCount(): Long {
     val query = collection.where(
       Filter.and(
         Filter.equalTo(COMPLETED_FIELD, true),
@@ -83,7 +82,7 @@ class StorageServiceImpl @Inject constructor(
       )
     )
 
-    return query.get(Source.SERVER).await().count()
+    return query.count().get(AggregateSource.SERVER).await().count
   }
 
   override suspend fun getAverageCompletionTime(): Long {

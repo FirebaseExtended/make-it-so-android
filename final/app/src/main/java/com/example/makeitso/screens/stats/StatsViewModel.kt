@@ -36,10 +36,10 @@ class StatsViewModel @Inject constructor(
 
   private suspend fun loadStats() {
     val updatedUiState = StatsUiState(
-      completedTasks = storageService.getCompletedTasksCount().toString(),
-      importantCompletedTasks = storageService.getImportantCompletedTasksCount().toString(),
-      averageCompletionTime = storageService.getAverageCompletionTime().toString(),
-      mediumHighTasksToComplete = storageService.getMediumHighTasksToCompleteCount().toString()
+      completedTasksCount = storageService.getCompletedTasksCount(),
+      importantCompletedTasksCount = storageService.getImportantCompletedTasksCount(),
+      averageCompletionTime = storageService.getAverageCompletionTime(),
+      mediumHighTasksToCompleteCount = storageService.getMediumHighTasksToCompleteCount()
     )
 
     uiState.value = updatedUiState

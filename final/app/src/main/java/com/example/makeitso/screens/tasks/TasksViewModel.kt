@@ -48,20 +48,19 @@ class TasksViewModel @Inject constructor(
 
   fun onTaskCheckChange(task: Task) {
     launchCatching {
-      if (task.completed) {
-        storageService.update(task.copy(completed = false, completionTime = null))
-      } else {
-        val completionTime = getCompletionTime(task)
-        storageService.update(task.copy(completed = true, completionTime = completionTime))
-      }
+      val updatedTask = task.copy(completed = !task.completed)
+      val completionTime = getCompletionTime(updatedTask)
+      storageService.update(updatedTask.copy(completionTime = completionTime))
     }
   }
 
-  private fun getCompletionTime(task: Task): Long {
-    val now = Timestamp.now().toDate().toInstant()
-    val creationInstant = task.creationInstant.toInstant()
-    val completionTime = Duration.between(creationInstant, now)
-    return completionTime.toHours()
+  private fun getCompletionTime(task: Task): Long? {
+    return if (task.completed) {
+      val now = Timestamp.now().toDate().toInstant()
+      val creationInstant = task.creationInstant.toInstant()
+      val completionTime = Duration.between(creationInstant, now)
+      return completionTime.toHours()
+    } else null
   }
 
   fun onAddClick(openScreen: (String) -> Unit) = openScreen(EDIT_TASK_SCREEN)

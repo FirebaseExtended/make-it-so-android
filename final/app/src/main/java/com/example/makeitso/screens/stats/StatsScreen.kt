@@ -60,15 +60,15 @@ fun StatsScreenContent(
 
     Spacer(modifier = Modifier.smallSpacer())
 
-    StatsItem(titleRes = AppText.completed_tasks, value = uiState.completedTasks)
-    StatsItem(titleRes = AppText.important_completed_tasks, value = uiState.importantCompletedTasks)
+    StatsItem(titleRes = AppText.completed_tasks, value = uiState.completedTasksCount)
+    StatsItem(titleRes = AppText.important_completed_tasks, value = uiState.importantCompletedTasksCount)
     StatsItem(titleRes = AppText.average_completion_time, value = uiState.averageCompletionTime)
-    StatsItem(titleRes = AppText.medium_high_tasks_to_complete, value = uiState.mediumHighTasksToComplete)
+    StatsItem(titleRes = AppText.medium_high_tasks_to_complete, value = uiState.mediumHighTasksToCompleteCount)
   }
 }
 
 @Composable
-fun StatsItem(titleRes: Int, value: String) {
+fun StatsItem(titleRes: Int, value: Long) {
   Card(
     backgroundColor = MaterialTheme.colors.background,
     modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 0.dp),
@@ -87,7 +87,7 @@ fun StatsItem(titleRes: Int, value: String) {
           textAlign = TextAlign.Center
         )
 
-        Text(text = value, fontSize = 48.sp)
+        Text(text = "$value", fontSize = 48.sp)
       }
     }
   }

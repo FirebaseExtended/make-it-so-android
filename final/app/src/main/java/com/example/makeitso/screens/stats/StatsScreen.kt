@@ -62,7 +62,6 @@ fun StatsScreenContent(
 
     StatsItem(titleRes = AppText.completed_tasks, value = uiState.completedTasksCount)
     StatsItem(titleRes = AppText.important_completed_tasks, value = uiState.importantCompletedTasksCount)
-    StatsItem(titleRes = AppText.average_completion_time, value = uiState.averageCompletionTime)
     StatsItem(titleRes = AppText.medium_high_tasks_to_complete, value = uiState.mediumHighTasksToCompleteCount)
   }
 }

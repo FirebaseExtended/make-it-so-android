@@ -27,6 +27,5 @@ interface StorageService {
   suspend fun delete(taskId: String)
   suspend fun getCompletedTasksCount(): Long
   suspend fun getImportantCompletedTasksCount(): Long
-  suspend fun getAverageCompletionTime(): Long
   suspend fun getMediumHighTasksToCompleteCount(): Long
 }

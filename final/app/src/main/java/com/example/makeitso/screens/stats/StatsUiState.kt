@@ -19,6 +19,5 @@ package com.example.makeitso.screens.stats
 data class StatsUiState(
     val completedTasksCount: Long = 0,
     val importantCompletedTasksCount: Long = 0,
-    val averageCompletionTime: Long = 0,
     val mediumHighTasksToCompleteCount: Long = 0
 )

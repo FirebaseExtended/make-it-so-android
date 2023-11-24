@@ -26,9 +26,7 @@ import com.example.makeitso.model.service.ConfigurationService
 import com.example.makeitso.model.service.LogService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.screens.MakeItSoViewModel
-import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.Duration
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,20 +45,7 @@ class TasksViewModel @Inject constructor(
   }
 
   fun onTaskCheckChange(task: Task) {
-    launchCatching {
-      val updatedTask = task.copy(completed = !task.completed)
-      val completionTime = getCompletionTime(updatedTask)
-      storageService.update(updatedTask.copy(averageCompletionTime = completionTime))
-    }
-  }
-
-  private fun getCompletionTime(task: Task): Long? {
-    return if (task.completed) {
-      val now = Timestamp.now().toDate().toInstant()
-      val creationInstant = task.createdAt.toInstant()
-      val completionTime = Duration.between(creationInstant, now)
-      return completionTime.toHours()
-    } else null
+    launchCatching { storageService.update(task.copy(completed = !task.completed)) }
   }
 
   fun onAddClick(openScreen: (String) -> Unit) = openScreen(EDIT_TASK_SCREEN)

@@ -38,7 +38,6 @@ class StatsViewModel @Inject constructor(
     val updatedUiState = StatsUiState(
       completedTasksCount = storageService.getCompletedTasksCount(),
       importantCompletedTasksCount = storageService.getImportantCompletedTasksCount(),
-      averageCompletionTime = storageService.getAverageCompletionTime(),
       mediumHighTasksToCompleteCount = storageService.getMediumHighTasksToCompleteCount()
     )
 

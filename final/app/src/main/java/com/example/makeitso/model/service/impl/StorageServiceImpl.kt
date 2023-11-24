@@ -21,10 +21,10 @@ import com.example.makeitso.model.Task
 import com.example.makeitso.model.service.AccountService
 import com.example.makeitso.model.service.StorageService
 import com.example.makeitso.model.service.trace
-import com.google.firebase.firestore.AggregateField
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,7 +45,11 @@ class StorageServiceImpl @Inject constructor(
   override val tasks: Flow<List<Task>>
     get() =
       auth.currentUser.flatMapLatest { user ->
-        firestore.collection(TASK_COLLECTION).whereEqualTo(USER_ID_FIELD, user.id).dataObjects()
+        firestore
+          .collection(TASK_COLLECTION)
+          .whereEqualTo(USER_ID_FIELD, user.id)
+          .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
+          .dataObjects()
       }
 
   override suspend fun getTask(taskId: String): Task? =
@@ -85,13 +89,6 @@ class StorageServiceImpl @Inject constructor(
     return query.count().get(AggregateSource.SERVER).await().count
   }
 
-  override suspend fun getAverageCompletionTime(): Long {
-    val query = collection.whereEqualTo(COMPLETED_FIELD, true)
-    val averageField = AggregateField.average(COMPLETION_TIME_FIELD)
-    val queryResult = query.aggregate(averageField).get(AggregateSource.SERVER).await()
-    return queryResult.getLong(averageField) ?: 0
-  }
-
   override suspend fun getMediumHighTasksToCompleteCount(): Long {
     val query = collection
       .whereEqualTo(COMPLETED_FIELD, false)
@@ -105,7 +102,7 @@ class StorageServiceImpl @Inject constructor(
     private const val COMPLETED_FIELD = "completed"
     private const val PRIORITY_FIELD = "priority"
     private const val FLAG_FIELD = "flag"
-    private const val COMPLETION_TIME_FIELD = "averageCompletionTime"
+    private const val CREATED_AT_FIELD = "createdAt"
     private const val TASK_COLLECTION = "tasks"
     private const val SAVE_TASK_TRACE = "saveTask"
     private const val UPDATE_TASK_TRACE = "updateTask"

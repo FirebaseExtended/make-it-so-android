@@ -31,6 +31,5 @@ data class Task(
   val url: String = "",
   val flag: Boolean = false,
   val completed: Boolean = false,
-  val averageCompletionTime: Long? = null,
   val userId: String = ""
 )

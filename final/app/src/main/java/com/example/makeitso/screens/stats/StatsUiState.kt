@@ -17,7 +17,7 @@ limitations under the License.
 package com.example.makeitso.screens.stats
 
 data class StatsUiState(
-    val completedTasksCount: Long = 0,
-    val importantCompletedTasksCount: Long = 0,
-    val mediumHighTasksToCompleteCount: Long = 0
+    val completedTasksCount: Int = 0,
+    val importantCompletedTasksCount: Int = 0,
+    val mediumHighTasksToCompleteCount: Int = 0
 )

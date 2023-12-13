@@ -25,7 +25,7 @@ interface StorageService {
   suspend fun save(task: Task): String
   suspend fun update(task: Task)
   suspend fun delete(taskId: String)
-  suspend fun getCompletedTasksCount(): Long
-  suspend fun getImportantCompletedTasksCount(): Long
-  suspend fun getMediumHighTasksToCompleteCount(): Long
+  suspend fun getCompletedTasksCount(): Int
+  suspend fun getImportantCompletedTasksCount(): Int
+  suspend fun getMediumHighTasksToCompleteCount(): Int
 }

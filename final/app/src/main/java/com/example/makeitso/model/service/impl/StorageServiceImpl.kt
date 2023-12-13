@@ -70,12 +70,12 @@ class StorageServiceImpl @Inject constructor(
     firestore.collection(TASK_COLLECTION).document(taskId).delete().await()
   }
 
-  override suspend fun getCompletedTasksCount(): Long {
+  override suspend fun getCompletedTasksCount(): Int {
     val query = collection.whereEqualTo(COMPLETED_FIELD, true).count()
-    return query.get(AggregateSource.SERVER).await().count
+    return query.get(AggregateSource.SERVER).await().count.toInt()
   }
 
-  override suspend fun getImportantCompletedTasksCount(): Long {
+  override suspend fun getImportantCompletedTasksCount(): Int {
     val query = collection.where(
       Filter.and(
         Filter.equalTo(COMPLETED_FIELD, true),
@@ -86,15 +86,15 @@ class StorageServiceImpl @Inject constructor(
       )
     )
 
-    return query.count().get(AggregateSource.SERVER).await().count
+    return query.count().get(AggregateSource.SERVER).await().count.toInt()
   }
 
-  override suspend fun getMediumHighTasksToCompleteCount(): Long {
+  override suspend fun getMediumHighTasksToCompleteCount(): Int {
     val query = collection
       .whereEqualTo(COMPLETED_FIELD, false)
       .whereIn(PRIORITY_FIELD, listOf(Priority.Medium.name, Priority.High.name)).count()
 
-    return query.get(AggregateSource.SERVER).await().count
+    return query.get(AggregateSource.SERVER).await().count.toInt()
   }
 
   companion object {

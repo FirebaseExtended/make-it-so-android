@@ -67,7 +67,7 @@ fun StatsScreenContent(
 }
 
 @Composable
-fun StatsItem(titleRes: Int, value: Long) {
+fun StatsItem(titleRes: Int, value: Int) {
   Card(
     backgroundColor = MaterialTheme.colors.background,
     modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 0.dp),

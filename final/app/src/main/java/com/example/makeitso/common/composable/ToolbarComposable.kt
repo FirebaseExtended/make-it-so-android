@@ -20,8 +20,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -34,18 +38,29 @@ fun BasicToolbar(@StringRes title: Int) {
 
 @Composable
 fun ActionToolbar(
-  @StringRes title: Int,
-  @DrawableRes endActionIcon: Int,
   modifier: Modifier,
-  endAction: () -> Unit
+  @StringRes title: Int,
+  @DrawableRes primaryActionIcon: Int,
+  primaryAction: () -> Unit,
+  @DrawableRes secondaryActionIcon: Int? = null,
+  secondaryAction: (() -> Unit)? = null
 ) {
   TopAppBar(
     title = { Text(stringResource(title)) },
     backgroundColor = toolbarColor(),
     actions = {
       Box(modifier) {
-        IconButton(onClick = endAction) {
-          Icon(painter = painterResource(endActionIcon), contentDescription = "Action")
+        Row(
+          modifier = Modifier.wrapContentSize(),
+        ) {
+          IconButton(onClick = primaryAction) {
+            Icon(painter = painterResource(primaryActionIcon), contentDescription = "Primary Action")
+          }
+          if (secondaryAction != null && secondaryActionIcon != null) {
+            IconButton(onClick = secondaryAction) {
+              Icon(painter = painterResource(secondaryActionIcon), contentDescription = "Secondary Action")
+            }
+          }
         }
       }
     }

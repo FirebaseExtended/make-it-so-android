@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Google LLC
+Copyright 2023 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,18 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.example.makeitso.model.service
+package com.example.makeitso.screens.stats
 
-import com.example.makeitso.model.Task
-import kotlinx.coroutines.flow.Flow
-
-interface StorageService {
-  val tasks: Flow<List<Task>>
-  suspend fun getTask(taskId: String): Task?
-  suspend fun save(task: Task): String
-  suspend fun update(task: Task)
-  suspend fun delete(taskId: String)
-  suspend fun getCompletedTasksCount(): Int
-  suspend fun getImportantCompletedTasksCount(): Int
-  suspend fun getMediumHighTasksToCompleteCount(): Int
-}
+data class StatsUiState(
+    val completedTasksCount: Int = 0,
+    val importantCompletedTasksCount: Int = 0,
+    val mediumHighTasksToCompleteCount: Int = 0
+)

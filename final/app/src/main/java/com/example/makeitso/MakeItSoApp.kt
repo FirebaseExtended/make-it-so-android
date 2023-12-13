@@ -44,6 +44,7 @@ import com.example.makeitso.screens.login.LoginScreen
 import com.example.makeitso.screens.settings.SettingsScreen
 import com.example.makeitso.screens.sign_up.SignUpScreen
 import com.example.makeitso.screens.splash.SplashScreen
+import com.example.makeitso.screens.stats.StatsScreen
 import com.example.makeitso.screens.tasks.TasksScreen
 import com.example.makeitso.theme.MakeItSoTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -129,6 +130,10 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
       restartApp = { route -> appState.clearAndNavigate(route) },
       openScreen = { route -> appState.navigate(route) }
     )
+  }
+
+  composable(STATS_SCREEN) {
+    StatsScreen()
   }
 
   composable(LOGIN_SCREEN) {

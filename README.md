@@ -20,6 +20,12 @@ In order for this app to work, you will need to create a [Firebase project](http
 * [Enable Anonymous Authentication](https://firebase.google.com/docs/auth/android/anonymous-auth#before-you-begin) in your Firebase project
 * [Enable Email/Password Authentication](https://firebase.google.com/docs/auth/android/password-auth#before_you_begin) in your Firebase project
 * Run the app using Android Studio Flamingo+ on a device/emulator with API level 21 or above
+* Create your first to-do item, then open the Firestore dashboard on the Firebase console
+* Navigate to the Indexes tab and create a new index with the following configuration:
+  
+<img width="691" alt="index-config" src="https://github.com/FirebaseExtended/make-it-so-android/assets/14080129/256ff875-f0d8-41d5-b1ab-8fe2e2a18a4a">
+
+This is necessary when fetching documents because this app uses `where` and `orderBy` operators in different fields: `where` uses the `userId` field and `orderBy` uses the `createdAt` field (see `StorageServiceImpl`).
 
 ## Contact
 

@@ -21,11 +21,11 @@ In order for this app to work, you will need to create a [Firebase project](http
 * [Enable Email/Password Authentication](https://firebase.google.com/docs/auth/android/password-auth#before_you_begin) in your Firebase project
 * Run the app using Android Studio Flamingo+ on a device/emulator with API level 21 or above
 * Create your first to-do item in the app
-* In the Firebase console, navigate to the [Firestore Indexes tab](https://console.firebase.google.com/project/_/firestore/indexes) and create a new index with the following configuration:
-  
-<img width="691" alt="index-config" src="https://github.com/FirebaseExtended/make-it-so-android/assets/14080129/256ff875-f0d8-41d5-b1ab-8fe2e2a18a4a">
+* In the Firebase console, navigate to the [Firestore Indexes tab](https://console.firebase.google.com/project/_/firestore/indexes)
+* Create a new composite index for the collection `tasks` with 2 fields: `userId` and `createdAt` (both Ascending)
+* Choose the "Collection" option in Query scopes (you won't be using `collectionGroup` in this app)
 
-This is necessary when fetching documents because this app uses `where` and `orderBy` operators in different fields: `where` uses the `userId` field and `orderBy` uses the `createdAt` field (see `StorageServiceImpl`). Learn more on the Firebase documentation about [Index types](https://firebase.google.com/docs/firestore/query-data/index-overview#composite_indexes).
+This index is necessary when fetching documents because this app uses `where` and `orderBy` operators in different fields: `where` uses the `userId` field and `orderBy` uses the `createdAt` field (see `StorageServiceImpl`). Learn more on the Firebase documentation about [Index types](https://firebase.google.com/docs/firestore/query-data/index-overview#composite_indexes).
 
 ## Contact
 

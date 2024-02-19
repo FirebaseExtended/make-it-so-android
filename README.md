@@ -25,7 +25,7 @@ In order for this app to work, you will need to create a [Firebase project](http
   
 <img width="691" alt="index-config" src="https://github.com/FirebaseExtended/make-it-so-android/assets/14080129/256ff875-f0d8-41d5-b1ab-8fe2e2a18a4a">
 
-This is necessary when fetching documents because this app uses `where` and `orderBy` operators in different fields: `where` uses the `userId` field and `orderBy` uses the `createdAt` field (see `StorageServiceImpl`).
+This is necessary when fetching documents because this app uses `where` and `orderBy` operators in different fields: `where` uses the `userId` field and `orderBy` uses the `createdAt` field (see `StorageServiceImpl`). Learn more on the Firebase documentation about [Index types](https://firebase.google.com/docs/firestore/query-data/index-overview#composite_indexes).
 
 ## Contact
 

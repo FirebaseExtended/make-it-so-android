@@ -19,7 +19,7 @@
 
     <!-- SignUpScreen -->
     <string name="create_account">Create account</string>
-    <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
+    <string name="password_error">Your password should be at least six characters long and include one digit, one lowercase letter and one uppercase letter.</string>
     <string name="password_match_error">Passwords do not match.</string>
 
     <!-- TasksScreen -->

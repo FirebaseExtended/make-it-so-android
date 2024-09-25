@@ -26,7 +26,3 @@ In order for this app to work, you will need to create a [Firebase project](http
 * Choose the "Collection" option in Query scopes (you won't be using `collectionGroup` in this app)
 
 This index is necessary when fetching documents because this app uses `where` and `orderBy` operators in different fields: `where` uses the `userId` field and `orderBy` uses the `createdAt` field (see `StorageServiceImpl`). Learn more on the Firebase documentation about [Index types](https://firebase.google.com/docs/firestore/query-data/index-overview#composite_indexes).
-
-## Contact
-
-Please navigate to the [discussions page](https://github.com/FirebaseExtended/make-it-so-android/discussions/) if you have any questions or want to suggest changes to the Make it So app.

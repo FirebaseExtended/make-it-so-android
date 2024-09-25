@@ -1,0 +1,61 @@
+<resources>
+    <!-- Common -->
+    <string name="app_name">Make It So</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="generic_error">Something wrong happened. Please try again.</string>
+    <string name="email_error">Please insert a valid email.</string>
+    <string name="cancel">Cancel</string>
+    <string name="try_again">Try again</string>
+    <string name="ok">OK</string>
+
+    <!-- LoginScreen -->
+    <string name="sign_in">Sign in</string>
+    <string name="login_details">Enter your login details</string>
+    <string name="forgot_password">Forgot password? Click to get recovery email</string>
+    <string name="recovery_email_sent">Check your inbox for the recovery email.</string>
+    <string name="empty_password_error">Password cannot be empty.</string>
+
+    <!-- SignUpScreen -->
+    <string name="create_account">Create account</string>
+    <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
+    <string name="password_match_error">Passwords do not match.</string>
+
+    <!-- TasksScreen -->
+    <string name="tasks">Tasks</string>
+
+    <!-- EditTaskScreen -->
+    <string name="edit_task">Edit your task</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="url">URL</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="flag">Flag</string>
+    <string name="priority">Priority</string>
+
+    <!-- SettingsScreen -->
+    <string name="settings">Settings</string>
+    <string name="sign_out">Sign out</string>
+    <string name="delete_my_account">Delete my account</string>
+
+    <!-- StatsScreen -->
+    <string name="stats">Statistics</string>
+    <string name="completed_tasks">Completed tasks</string>
+    <string name="important_completed_tasks">Important completed tasks \n (high priority or flagged)</string>
+    <string name="medium_high_tasks_to_complete">Medium and high priority tasks to complete</string>
+
+    <!-- Dialogs -->
+    <string name="sign_out_title">Sign out?</string>
+    <string name="sign_out_description">You will have to sign in again to see your tasks.</string>
+    <string name="delete_account_title">Delete account?</string>
+    <string name="delete_account_description">You will lose all your tasks and your account will be deleted. This action is irreversible.</string>
+
+    <!-- FCM -->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="request_notification_permission">Request permission</string>
+    <string name="notification_permission_title">Notification permission</string>
+    <string name="notification_permission_description">The notification permission is important for this app. Please grant the permission.</string>
+    <string name="notification_permission_settings">The notification permission is important for this app. Please navigate to your device settings and enable notifications for Make it So.</string>
+</resources>

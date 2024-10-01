@@ -1,4 +1,4 @@
-package com.notes.makeitso
+package com.google.firebase.example.makeitso
 
 import org.junit.Test
 

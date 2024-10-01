@@ -1,6 +1,5 @@
-package com.notes.makeitso.ui.theme
+package com.google.firebase.example.makeitso.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

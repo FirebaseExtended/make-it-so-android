@@ -1,4 +1,4 @@
-package com.google.firebase.example.makeitso.theme
+package com.google.firebase.example.makeitso.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

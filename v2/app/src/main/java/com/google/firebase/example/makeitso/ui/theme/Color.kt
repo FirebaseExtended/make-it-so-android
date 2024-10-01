@@ -1,4 +1,4 @@
-package com.google.firebase.example.makeitso.theme
+package com.google.firebase.example.makeitso.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

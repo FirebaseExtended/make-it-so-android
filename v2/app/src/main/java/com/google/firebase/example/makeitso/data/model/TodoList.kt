@@ -2,10 +2,10 @@ package com.google.firebase.example.makeitso.data.model
 
 import com.google.firebase.firestore.DocumentId
 
-data class TodoItem(
+data class TodoList(
     @DocumentId val id: String = "",
     val title: String = "",
-    val priority: String = "",
-    val completed: Boolean = false,
-    val owner: String = ""
+    val owner: String = "",
+    val editors: List<String> = emptyList(),
+    val viewers: List<String> = emptyList()
 )

@@ -1,8 +1,9 @@
 package com.google.firebase.example.makeitso.data.repository
 
 import com.google.firebase.example.makeitso.data.datasource.TodoItemRemoteDataSource
+import javax.inject.Inject
 
-class TodoItemRepository(
+class TodoItemRepository @Inject constructor(
     private val todoItemRemoteDataSource: TodoItemRemoteDataSource
 ) {
 

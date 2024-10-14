@@ -1,4 +1,6 @@
 package com.google.firebase.example.makeitso.data.datasource
 
-class TodoListRemoteDataSource {
+import javax.inject.Inject
+
+class TodoListRemoteDataSource @Inject constructor() {
 }

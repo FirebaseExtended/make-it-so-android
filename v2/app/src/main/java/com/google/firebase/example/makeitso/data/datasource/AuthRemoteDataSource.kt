@@ -1,4 +1,7 @@
 package com.google.firebase.example.makeitso.data.datasource
 
-class AuthRemoteDataSource {
+import javax.inject.Inject
+
+class AuthRemoteDataSource @Inject constructor() {
+
 }

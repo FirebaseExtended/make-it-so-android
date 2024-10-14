@@ -5,5 +5,8 @@ sealed class SignInUiState {
 
     data class Error(val errorMessage: String?): SignInUiState()
 
-    data object Success: SignInUiState()
+    data class Success(
+        val email: String,
+        val password: String
+    ): SignInUiState()
 }

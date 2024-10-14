@@ -15,4 +15,10 @@ class SignInViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
     val uiState: StateFlow<SignInUiState>
         get() = _uiState.asStateFlow()
+
+    fun signIn(email: String, password: String) {
+        launchCatching {
+            authRepository.signIn(email, password)
+        }
+    }
 }

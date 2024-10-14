@@ -15,4 +15,15 @@ class SignUpViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Loading)
     val uiState: StateFlow<SignUpUiState>
         get() = _uiState.asStateFlow()
+
+    fun signUp(email: String, password: String, repeatPassword: String) {
+        if (password != repeatPassword) {
+            _uiState.value = SignUpUiState.Error("Passwords do not match")
+            return
+        }
+
+        launchCatching {
+            authRepository.signUp(email, password)
+        }
+    }
 }

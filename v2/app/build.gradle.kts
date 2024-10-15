@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.google.firebase.example.makeitso"
-        minSdk = 26
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

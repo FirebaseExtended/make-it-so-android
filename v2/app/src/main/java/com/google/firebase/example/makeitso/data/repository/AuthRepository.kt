@@ -24,6 +24,5 @@ class AuthRepository @Inject constructor(
 
     suspend fun signOut() {
         authRemoteDataSource.signOut()
-        authRemoteDataSource.createGuestAccount()
     }
 }

@@ -27,6 +27,7 @@ class HomeViewModel @Inject constructor(
     fun signOut() {
         launchCatching {
             authRepository.signOut()
+            authRepository.createGuestAccount()
         }
     }
 }

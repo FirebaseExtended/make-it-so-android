@@ -8,7 +8,7 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource
 ) {
-    val currentUser: Flow<User> = authRemoteDataSource.currentUser
+    val currentUser: Flow<User?> = authRemoteDataSource.currentUser
 
     suspend fun createGuestAccount() {
         authRemoteDataSource.createGuestAccount()

@@ -10,13 +10,13 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRemoteDataSource @Inject constructor(private val auth: FirebaseAuth) {
-    val currentUser: Flow<User>
+    val currentUser: Flow<User?>
         get() = callbackFlow {
             val listener =
                 FirebaseAuth.AuthStateListener { auth ->
                     this.trySend(auth.currentUser?.let {
                         User(it.uid, isAnonymous = it.isAnonymous)
-                    } ?: User())
+                    })
                 }
             auth.addAuthStateListener(listener)
             awaitClose { auth.removeAuthStateListener(listener) }

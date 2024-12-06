@@ -12,7 +12,7 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : MainViewModel() {
-    private val _uiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
+    private val _uiState = MutableStateFlow<SignInUiState>(SignInUiState.Success) //TODO: Revert to Loading
     val uiState: StateFlow<SignInUiState>
         get() = _uiState.asStateFlow()
 

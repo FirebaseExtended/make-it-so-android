@@ -12,13 +12,13 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : MainViewModel() {
-    private val _uiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Loading)
+    private val _uiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Success) //TODO: Revert to Loading
     val uiState: StateFlow<SignUpUiState>
         get() = _uiState.asStateFlow()
 
     fun signUp(email: String, password: String, repeatPassword: String) {
         if (password != repeatPassword) {
-            _uiState.value = SignUpUiState.Error("Passwords do not match")
+            //TODO: Set up error handling
             return
         }
 

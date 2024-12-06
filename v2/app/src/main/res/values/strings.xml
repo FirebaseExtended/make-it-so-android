@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Make it So</string>
+    <string name="sign_up_text">Don\’t have an account yet? \n Click here to sign up</string>
+    <string name="sign_in_with_google">Sign In with Google</string>
 </resources>

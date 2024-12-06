@@ -14,7 +14,7 @@ class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val todoListRepository: TodoListRepository
 ) : MainViewModel() {
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
+    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Success) //TODO: Revert to Loading
     val uiState: StateFlow<HomeUiState>
         get() = _uiState.asStateFlow()
 

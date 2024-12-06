@@ -23,8 +23,6 @@ import com.google.firebase.example.makeitso.ui.signup.SignUpScreen
 import com.google.firebase.example.makeitso.ui.theme.MakeItSoTheme
 import com.google.firebase.example.makeitso.ui.todoitem.TodoItemRoute
 import com.google.firebase.example.makeitso.ui.todoitem.TodoItemScreen
-import com.google.firebase.example.makeitso.ui.todolist.TodoListRoute
-import com.google.firebase.example.makeitso.ui.todolist.TodoListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,10 +51,13 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(SignInRoute) { launchSingleTop = true }
                                 }
                             ) }
-                            composable<SignInRoute> { SignInScreen() }
+                            composable<SignInRoute> { SignInScreen(
+                                openSignUpScreen = {
+                                    navController.navigate(SignUpRoute) { launchSingleTop = true }
+                                }
+                            ) }
                             composable<SignUpRoute> { SignUpScreen() }
                             composable<TodoItemRoute> { TodoItemScreen() }
-                            composable<TodoListRoute> { TodoListScreen() }
                         }
                     }
                 }

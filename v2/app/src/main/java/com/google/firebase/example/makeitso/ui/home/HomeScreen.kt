@@ -1,12 +1,17 @@
 package com.google.firebase.example.makeitso.ui.home
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,19 +30,38 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.example.makeitso.R
+import com.google.firebase.example.makeitso.data.model.TodoItem
 import com.google.firebase.example.makeitso.ui.shared.CenterTopAppBar
+import com.google.firebase.example.makeitso.ui.shared.LoadingIndicator
+import com.google.firebase.example.makeitso.ui.theme.MediumYellow
 import kotlinx.serialization.Serializable
 
 @Serializable
 object HomeRoute
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun HomeScreen(
     openSignInScreen: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    if (uiState.value is HomeUiState.Loading) {
+        LoadingIndicator()
+    } else {
+        HomeScreenContent(
+            openSignInScreen = openSignInScreen,
+            viewModel = viewModel
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun HomeScreenContent(
+    openSignInScreen: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -50,11 +75,12 @@ fun HomeScreen(
                 scrollBehavior = scrollBehavior
             )
         },
+        //TODO: Add FAB that launches a dialog with TextField
     ) { innerPadding ->
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = innerPadding.calculateTopPadding(), horizontal = 16.dp))
+                .padding(vertical = innerPadding.calculateTopPadding(), horizontal = 8.dp))
         {
             val (lists) = createRefs()
             val listState = rememberLazyListState()
@@ -71,8 +97,22 @@ fun HomeScreen(
                     },
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(listOf("Testing")) { item ->
-                    Text(item)
+                items(listOf(TodoItem(title = "1"), TodoItem(title = "2"))) { todoItem ->
+                    //TODO: Use uiState
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(48f))
+                            .background(MediumYellow)
+                            .clickable {  }
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(16.dp),
+                            text = todoItem.title
+                        )
+                    }
+
+                    Spacer(Modifier.padding(4.dp))
                 }
             }
         }

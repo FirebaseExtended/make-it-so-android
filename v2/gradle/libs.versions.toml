@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.0-rc01"
+constraintlayoutCompose = "1.1.0"
 coreSplashscreen = "1.0.1"
 firebaseBom = "33.4.0"
 hiltAndroidCompiler = "2.51.1"
@@ -19,6 +20,7 @@ googleKotlinKsp = "2.0.21-1.0.25"
 navigationCompose = "2.8.2"
 
 [libraries]
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }

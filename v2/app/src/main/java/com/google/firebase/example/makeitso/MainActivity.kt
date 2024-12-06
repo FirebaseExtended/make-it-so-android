@@ -48,7 +48,11 @@ class MainActivity : ComponentActivity() {
                             startDestination = HomeRoute,
                             modifier = Modifier.padding(innerPadding)
                         ) {
-                            composable<HomeRoute> { HomeScreen() }
+                            composable<HomeRoute> { HomeScreen(
+                                openSignInScreen = {
+                                    navController.navigate(SignInRoute) { launchSingleTop = true }
+                                }
+                            ) }
                             composable<SignInRoute> { SignInScreen() }
                             composable<SignUpRoute> { SignUpScreen() }
                             composable<TodoItemRoute> { TodoItemScreen() }

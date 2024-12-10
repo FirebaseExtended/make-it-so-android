@@ -12,7 +12,7 @@ import javax.inject.Inject
 class TodoListViewModel @Inject constructor(
     private val todoListRepository: TodoListRepository
 ) : MainViewModel() {
-    private val _uiState = MutableStateFlow<TodoListUiState>(TodoListUiState.Loading)
+    private val _uiState = MutableStateFlow<TodoListUiState>(TodoListUiState.Success)
     val uiState: StateFlow<TodoListUiState>
         get() = _uiState.asStateFlow()
 }

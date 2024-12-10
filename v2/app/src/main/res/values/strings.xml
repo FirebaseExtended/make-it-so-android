@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Make it So</string>
+
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_email">Sign in with email</string>
     <string name="sign_up_text">Don\’t have an account yet? \n Click here to sign up</string>
-    <string name="sign_in_with_google">Sign In with Google</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat password</string>
+
+    <string name="create_todo_list">Create a todo list</string>
+    <string name="create_todo_item">Create a todo item</string>
 </resources>

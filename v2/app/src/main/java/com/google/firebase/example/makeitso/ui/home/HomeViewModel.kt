@@ -17,17 +17,4 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Success) //TODO: Revert to Loading
     val uiState: StateFlow<HomeUiState>
         get() = _uiState.asStateFlow()
-
-    fun createGuestAccount() {
-        launchCatching {
-            authRepository.createGuestAccount()
-        }
-    }
-
-    fun signOut() {
-        launchCatching {
-            authRepository.signOut()
-            authRepository.createGuestAccount()
-        }
-    }
 }

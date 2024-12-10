@@ -23,6 +23,8 @@ import com.google.firebase.example.makeitso.ui.signup.SignUpScreen
 import com.google.firebase.example.makeitso.ui.theme.MakeItSoTheme
 import com.google.firebase.example.makeitso.ui.todoitem.TodoItemRoute
 import com.google.firebase.example.makeitso.ui.todoitem.TodoItemScreen
+import com.google.firebase.example.makeitso.ui.todolist.TodoListRoute
+import com.google.firebase.example.makeitso.ui.todolist.TodoListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,10 +45,15 @@ class MainActivity : ComponentActivity() {
                     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                         NavHost(
                             navController = navController,
-                            startDestination = HomeRoute,
+                            startDestination = SignInRoute,
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             composable<HomeRoute> { HomeScreen(
+                                openSignInScreen = {
+                                    navController.navigate(SignInRoute) { launchSingleTop = true }
+                                }
+                            ) }
+                            composable<TodoListRoute> { TodoListScreen(
                                 openSignInScreen = {
                                     navController.navigate(SignInRoute) { launchSingleTop = true }
                                 }

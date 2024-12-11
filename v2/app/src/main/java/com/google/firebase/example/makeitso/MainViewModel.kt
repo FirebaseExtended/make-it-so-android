@@ -1,22 +1,22 @@
 package com.google.firebase.example.makeitso
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-open class MainViewModel : ViewModel() {
+open class MainViewModel() : ViewModel() {
     fun launchCatching(
         showErrorSnackbar: (String) -> Unit = {},
         block: suspend CoroutineScope.() -> Unit
     ) =
         viewModelScope.launch(
             CoroutineExceptionHandler { _, throwable ->
-                val message = throwable.message ?: GENERIC_ERROR
-                Log.e(this.javaClass.name, message)
-                showErrorSnackbar(message)
+                Firebase.crashlytics.recordException(throwable)
+                showErrorSnackbar(throwable.message ?: GENERIC_ERROR)
             },
             block = block
         )

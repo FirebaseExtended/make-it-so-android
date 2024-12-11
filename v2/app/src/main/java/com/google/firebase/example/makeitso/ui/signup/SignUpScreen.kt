@@ -14,6 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -23,30 +27,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.example.makeitso.R
 import com.google.firebase.example.makeitso.ui.shared.AuthWithEmailButton
-import com.google.firebase.example.makeitso.ui.shared.AuthWithGoogleButton
-import com.google.firebase.example.makeitso.ui.shared.LoadingIndicator
 import kotlinx.serialization.Serializable
 
 @Serializable
 object SignUpRoute
 
 @Composable
-fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel()) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-
-    if (uiState.value is SignUpUiState.Loading) {
-        LoadingIndicator()
-    } else {
-        SignUpScreenContent()
-    }
-}
-
-@Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun SignUpScreenContent(viewModel: SignUpViewModel = hiltViewModel()) {
+fun SignUpScreen(openHomeScreen: () -> Unit, viewModel: SignUpViewModel = hiltViewModel()) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var repeatPassword by remember { mutableStateOf("") }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -86,13 +79,12 @@ fun SignUpScreenContent(viewModel: SignUpViewModel = hiltViewModel()) {
             ) {
                 Spacer(Modifier.size(24.dp))
 
-                //TODO: Use uiState
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    value = "example@gmail.com",
-                    onValueChange = { },
+                    value = email,
+                    onValueChange = { email = it },
                     label = { Text(stringResource(R.string.email)) }
                 )
 
@@ -102,8 +94,8 @@ fun SignUpScreenContent(viewModel: SignUpViewModel = hiltViewModel()) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    value = "123456",
-                    onValueChange = { },
+                    value = password,
+                    onValueChange = { password = it },
                     label = { Text(stringResource(R.string.password)) },
                     visualTransformation = PasswordVisualTransformation()
                 )
@@ -114,19 +106,22 @@ fun SignUpScreenContent(viewModel: SignUpViewModel = hiltViewModel()) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    value = "123456",
-                    onValueChange = { },
+                    value = repeatPassword,
+                    onValueChange = { repeatPassword = it },
                     label = { Text(stringResource(R.string.repeat_password)) },
                     visualTransformation = PasswordVisualTransformation()
                 )
 
                 Spacer(Modifier.size(32.dp))
 
-                AuthWithEmailButton(R.string.sign_up_with_email) { }
+                AuthWithEmailButton(R.string.sign_up_with_email) {
+                    viewModel.signUp(email, password, repeatPassword, openHomeScreen)
+                }
 
                 Spacer(Modifier.size(16.dp))
 
-                AuthWithGoogleButton(R.string.sign_up_with_google) { }
+                //TODO: Uncomment line below when Google Authentication is implemented
+                //AuthWithGoogleButton(R.string.sign_up_with_google) { }
             }
         }
     }

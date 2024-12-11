@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -48,21 +49,15 @@ fun HomeScreen(
     openSignInScreen: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    if (uiState.value is HomeUiState.Loading) {
-        LoadingIndicator()
-    } else {
-        HomeScreenContent(openSignInScreen = openSignInScreen)
-    }
+    if (isLoading) LoadingIndicator()
+    else HomeScreenContent(openSignInScreen, viewModel)
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeScreenContent(
-    openSignInScreen: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
-) {
+fun HomeScreenContent(openSignInScreen: () -> Unit, viewModel: HomeViewModel) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(

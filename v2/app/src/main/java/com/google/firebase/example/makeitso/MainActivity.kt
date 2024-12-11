@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                         NavHost(
                             navController = navController,
-                            startDestination = SignInRoute,
+                            startDestination = TodoListRoute,
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             composable<HomeRoute> { HomeScreen(
@@ -59,11 +59,18 @@ class MainActivity : ComponentActivity() {
                                 }
                             ) }
                             composable<SignInRoute> { SignInScreen(
+                                openHomeScreen = {
+                                    navController.navigate(TodoListRoute) { launchSingleTop = true }
+                                },
                                 openSignUpScreen = {
                                     navController.navigate(SignUpRoute) { launchSingleTop = true }
                                 }
                             ) }
-                            composable<SignUpRoute> { SignUpScreen() }
+                            composable<SignUpRoute> { SignUpScreen(
+                                openHomeScreen = {
+                                    navController.navigate(TodoListRoute) { launchSingleTop = true }
+                                }
+                            ) }
                             composable<TodoItemRoute> { TodoItemScreen() }
                         }
                     }

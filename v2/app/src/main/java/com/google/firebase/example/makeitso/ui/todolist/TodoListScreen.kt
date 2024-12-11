@@ -2,7 +2,6 @@ package com.google.firebase.example.makeitso.ui.todolist
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +40,8 @@ import com.google.firebase.example.makeitso.ui.theme.DarkBlue
 import kotlinx.serialization.Serializable
 
 //@Serializable
-//data class TodoListRoute(val listId: String) //TODO: use data class instead of object
+//data class TodoListRoute(val listId: String)
+//TODO: use listId when multiple lists feature is implemented
 
 @Serializable
 object TodoListRoute
@@ -49,27 +51,26 @@ fun TodoListScreen(
     openSignInScreen: () -> Unit,
     viewModel: TodoListViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    if(uiState.value is TodoListUiState.Loading) {
-        LoadingIndicator()
-    } else {
-        TodoListScreenContent(openSignInScreen = openSignInScreen)
+    if (isLoading) LoadingIndicator()
+    else TodoListScreenContent(openSignInScreen, viewModel)
+
+    LaunchedEffect(true) {
+        viewModel.loadCurrentUser()
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TodoListScreenContent(
-    openSignInScreen: () -> Unit,
-    viewModel: TodoListViewModel = hiltViewModel()
-) {
+    openSignInScreen: () -> Unit, viewModel: TodoListViewModel) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
         topBar = {
             CenterTopAppBar(
-                title = stringResource(R.string.app_name), //TODO: Change to todo item name
+                title = stringResource(R.string.app_name),
                 icon = Icons.Filled.AccountCircle,
                 iconDescription = "Sign In screen icon",
                 action = openSignInScreen,

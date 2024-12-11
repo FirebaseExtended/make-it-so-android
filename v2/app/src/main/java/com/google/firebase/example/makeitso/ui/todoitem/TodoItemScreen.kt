@@ -1,6 +1,7 @@
 package com.google.firebase.example.makeitso.ui.todoitem
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.example.makeitso.ui.shared.LoadingIndicator
@@ -11,16 +12,13 @@ data class TodoItemRoute(val itemId: String)
 
 @Composable
 fun TodoItemScreen(viewModel: TodoItemViewModel = hiltViewModel()) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    if (uiState.value is TodoItemUIState.Loading) {
-        LoadingIndicator()
-    } else {
-        TodoItemScreenContent()
-    }
+    if (isLoading) LoadingIndicator()
+    else TodoItemScreenContent(viewModel)
 }
 
 @Composable
-fun TodoItemScreenContent(viewModel: TodoItemViewModel = hiltViewModel()) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+fun TodoItemScreenContent(viewModel: TodoItemViewModel) {
+
 }

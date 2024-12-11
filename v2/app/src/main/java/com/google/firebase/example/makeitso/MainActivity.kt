@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,6 +30,7 @@ import com.google.firebase.example.makeitso.ui.todoitem.TodoItemScreen
 import com.google.firebase.example.makeitso.ui.todolist.TodoListRoute
 import com.google.firebase.example.makeitso.ui.todolist.TodoListScreen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -35,6 +40,8 @@ class MainActivity : ComponentActivity() {
         setSoftInputMode()
 
         setContent {
+            val scope = rememberCoroutineScope()
+            val snackbarHostState = remember { SnackbarHostState() }
             val navController = rememberNavController()
 
             MakeItSoTheme {
@@ -42,7 +49,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+                    ) { innerPadding ->
                         NavHost(
                             navController = navController,
                             startDestination = TodoListRoute,
@@ -64,11 +74,17 @@ class MainActivity : ComponentActivity() {
                                 },
                                 openSignUpScreen = {
                                     navController.navigate(SignUpRoute) { launchSingleTop = true }
+                                },
+                                showErrorSnackbar = { message ->
+                                    scope.launch { snackbarHostState.showSnackbar(message) }
                                 }
                             ) }
                             composable<SignUpRoute> { SignUpScreen(
                                 openHomeScreen = {
                                     navController.navigate(TodoListRoute) { launchSingleTop = true }
+                                },
+                                showErrorSnackbar = { message ->
+                                    scope.launch { snackbarHostState.showSnackbar(message) }
                                 }
                             ) }
                             composable<TodoItemRoute> { TodoItemScreen() }

@@ -9,8 +9,13 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : MainViewModel() {
-    fun signIn(email: String, password: String, openHomeScreen: () -> Unit) {
-        launchCatching {
+    fun signIn(
+        email: String,
+        password: String,
+        openHomeScreen: () -> Unit,
+        showErrorSnackbar: (String) -> Unit
+    ) {
+        launchCatching(showErrorSnackbar) {
             authRepository.signIn(email, password)
             openHomeScreen()
         }

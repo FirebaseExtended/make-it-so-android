@@ -36,7 +36,11 @@ object SignUpRoute
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun SignUpScreen(openHomeScreen: () -> Unit, viewModel: SignUpViewModel = hiltViewModel()) {
+fun SignUpScreen(
+    openHomeScreen: () -> Unit,
+    showErrorSnackbar: (String) -> Unit,
+    viewModel: SignUpViewModel = hiltViewModel()
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
@@ -115,7 +119,13 @@ fun SignUpScreen(openHomeScreen: () -> Unit, viewModel: SignUpViewModel = hiltVi
                 Spacer(Modifier.size(32.dp))
 
                 AuthWithEmailButton(R.string.sign_up_with_email) {
-                    viewModel.signUp(email, password, repeatPassword, openHomeScreen)
+                    viewModel.signUp(
+                        email,
+                        password,
+                        repeatPassword,
+                        openHomeScreen,
+                        showErrorSnackbar
+                    )
                 }
 
                 Spacer(Modifier.size(16.dp))

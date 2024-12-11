@@ -43,6 +43,7 @@ object SignInRoute
 fun SignInScreen(
     openHomeScreen: () -> Unit,
     openSignUpScreen: () -> Unit,
+    showErrorSnackbar: (String) -> Unit,
     viewModel: SignInViewModel = hiltViewModel()
 ) {
     var email by remember { mutableStateOf("") }
@@ -110,7 +111,7 @@ fun SignInScreen(
                 Spacer(Modifier.size(32.dp))
 
                 AuthWithEmailButton(R.string.sign_in_with_email) {
-                    viewModel.signIn(email, password, openHomeScreen)
+                    viewModel.signIn(email, password, openHomeScreen, showErrorSnackbar)
                 }
 
                 Spacer(Modifier.size(16.dp))

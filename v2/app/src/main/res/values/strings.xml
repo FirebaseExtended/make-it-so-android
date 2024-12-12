@@ -21,4 +21,10 @@
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
     <string name="delete_account">Delete Account</string>
+
+    <!-- Delete Account Dialog -->
+    <string name="delete_account_title">Delete account</string>
+    <string name="delete_account_description">Are you sure you want to delete your account? This action is irreversible.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

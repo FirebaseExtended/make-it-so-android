@@ -1,5 +1,6 @@
 package com.google.firebase.example.makeitso.ui.todolist
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,7 +42,7 @@ import kotlinx.serialization.Serializable
 
 //@Serializable
 //data class TodoListRoute(val listId: String)
-//TODO: use listId when multiple lists feature is implemented
+//TODO: Use listId when multiple lists feature is implemented
 
 @Serializable
 object TodoListRoute
@@ -49,12 +50,13 @@ object TodoListRoute
 @Composable
 fun TodoListScreen(
     openSettingsScreen: () -> Unit,
+    openTodoItemScreen: (String) -> Unit,
     viewModel: TodoListViewModel = hiltViewModel()
 ) {
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
-    if (isLoading) LoadingIndicator()
-    else TodoListScreenContent(openSettingsScreen, viewModel)
+    if (isLoadingUser) LoadingIndicator()
+    else TodoListScreenContent(openSettingsScreen, openTodoItemScreen, viewModel)
 
     LaunchedEffect(true) {
         viewModel.loadCurrentUser()
@@ -63,7 +65,12 @@ fun TodoListScreen(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TodoListScreenContent(openSettingsScreen: () -> Unit, viewModel: TodoListViewModel) {
+fun TodoListScreenContent(
+    openSettingsScreen: () -> Unit,
+    openTodoItemScreen: (String) -> Unit,
+    viewModel: TodoListViewModel
+) {
+    val todoItems = viewModel.todoItems.collectAsStateWithLifecycle(emptyList())
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -103,10 +110,8 @@ fun TodoListScreenContent(openSettingsScreen: () -> Unit, viewModel: TodoListVie
                     },
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(listOf(TodoItem(title = "1"), TodoItem(title = "2", completed = true))) { todoItem ->
-                    //TODO: Use uiState
-
-                    TodoItem(todoItem = todoItem)
+                items(todoItems.value) { todoItem ->
+                    TodoItem(todoItem) { openTodoItemScreen(todoItem.id) }
                 }
             }
 
@@ -121,14 +126,14 @@ fun TodoListScreenContent(openSettingsScreen: () -> Unit, viewModel: TodoListVie
                 contentColor = Color.White,
                 icon = { Icon(Icons.Filled.Add, "Create list button") },
                 text = { Text(text = stringResource(R.string.create_todo_item)) },
-                onClick = { }
+                onClick = { openTodoItemScreen("") }
             )
         }
     }
 }
 
 @Composable
-fun TodoItem(todoItem: TodoItem) {
+fun TodoItem(todoItem: TodoItem, openTodoItemScreen: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -139,6 +144,9 @@ fun TodoItem(todoItem: TodoItem) {
             colors = CheckboxDefaults.colors(checkedColor = DarkBlue)
         )
 
-        Text(text = todoItem.title)
+        Text(
+            text = todoItem.title,
+            modifier = Modifier.clickable { openTodoItemScreen() }
+        )
     }
 }

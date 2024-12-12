@@ -68,6 +68,9 @@ class MainActivity : ComponentActivity() {
                             composable<TodoListRoute> { TodoListScreen(
                                 openSettingsScreen = {
                                     navController.navigate(SettingsRoute) { launchSingleTop = true }
+                                },
+                                openTodoItemScreen = { itemId ->
+                                    navController.navigate(TodoItemRoute(itemId)) { launchSingleTop = true }
                                 }
                             ) }
                             composable<SettingsRoute> { SettingsScreen(
@@ -97,7 +100,14 @@ class MainActivity : ComponentActivity() {
                                     scope.launch { snackbarHostState.showSnackbar(message) }
                                 }
                             ) }
-                            composable<TodoItemRoute> { TodoItemScreen() }
+                            composable<TodoItemRoute> { TodoItemScreen(
+                                openHomeScreen = {
+                                    navController.navigate(TodoListRoute) { launchSingleTop = true }
+                                },
+                                showErrorSnackbar = { message ->
+                                    scope.launch { snackbarHostState.showSnackbar(message) }
+                                }
+                            ) }
                         }
                     }
                 }

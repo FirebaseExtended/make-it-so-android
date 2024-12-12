@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : MainViewModel() {
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean>
-        get() = _isLoading.asStateFlow()
+    private val _isLoadingUser = MutableStateFlow(true)
+    val isLoadingUser: StateFlow<Boolean>
+        get() = _isLoadingUser.asStateFlow()
 }

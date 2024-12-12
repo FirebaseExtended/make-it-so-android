@@ -12,9 +12,17 @@
     <string name="password">Password</string>
     <string name="repeat_password">Repeat password</string>
 
-    <!-- Todo Lists Screen -->
+    <!-- Home Screen -->
     <string name="create_todo_list">Create a todo list</string>
+
+    <!-- Todo Lists Screen -->
     <string name="create_todo_item">Create a todo item</string>
+
+    <!-- Todo Items Screen -->
+    <string name="title">Title</string>
+    <string name="flag">Flag</string>
+    <string name="priority">Priority</string>
+    <string name="edit_your_item">Edit your item</string>
 
     <!-- Settings Screen -->
     <string name="settings">Settings</string>

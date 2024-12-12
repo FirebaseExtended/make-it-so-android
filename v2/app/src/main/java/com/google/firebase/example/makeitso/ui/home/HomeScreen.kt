@@ -49,9 +49,9 @@ fun HomeScreen(
     openSettingsScreen: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
-    if (isLoading) LoadingIndicator()
+    if (isLoadingUser) LoadingIndicator()
     else HomeScreenContent(openSettingsScreen, viewModel)
 }
 

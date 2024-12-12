@@ -44,7 +44,7 @@ fun AuthWithGoogleButton(@StringRes label: Int, onButtonClick: () -> Unit) {
 }
 
 @Composable
-fun AuthWithEmailButton(@StringRes label: Int, onButtonClick: () -> Unit) {
+fun StandardButton(@StringRes label: Int, onButtonClick: () -> Unit) {
     OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()

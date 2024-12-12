@@ -44,4 +44,8 @@ class AuthRemoteDataSource @Inject constructor(private val auth: FirebaseAuth) {
         }
         auth.signOut()
     }
+
+    suspend fun deleteAccount() {
+        auth.currentUser!!.delete().await()
+    }
 }

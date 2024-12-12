@@ -27,4 +27,8 @@ class AuthRepository @Inject constructor(
     fun signOut() {
         authRemoteDataSource.signOut()
     }
+
+    suspend fun deleteAccount() {
+        authRemoteDataSource.deleteAccount()
+    }
 }

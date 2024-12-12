@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.example.makeitso.R
-import com.google.firebase.example.makeitso.ui.shared.AuthWithEmailButton
+import com.google.firebase.example.makeitso.ui.shared.StandardButton
 import com.google.firebase.example.makeitso.ui.theme.DarkBlue
 import kotlinx.serialization.Serializable
 
@@ -110,7 +110,7 @@ fun SignInScreen(
 
                 Spacer(Modifier.size(32.dp))
 
-                AuthWithEmailButton(R.string.sign_in_with_email) {
+                StandardButton(R.string.sign_in_with_email) {
                     viewModel.signIn(email, password, openHomeScreen, showErrorSnackbar)
                 }
 

@@ -20,6 +20,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.example.makeitso.ui.home.HomeRoute
 import com.google.firebase.example.makeitso.ui.home.HomeScreen
+import com.google.firebase.example.makeitso.ui.settings.SettingsRoute
+import com.google.firebase.example.makeitso.ui.settings.SettingsScreen
 import com.google.firebase.example.makeitso.ui.signin.SignInRoute
 import com.google.firebase.example.makeitso.ui.signin.SignInScreen
 import com.google.firebase.example.makeitso.ui.signup.SignUpRoute
@@ -59,11 +61,19 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             composable<HomeRoute> { HomeScreen(
-                                openSignInScreen = {
-                                    navController.navigate(SignInRoute) { launchSingleTop = true }
+                                openSettingsScreen = {
+                                    navController.navigate(SettingsRoute) { launchSingleTop = true }
                                 }
                             ) }
                             composable<TodoListRoute> { TodoListScreen(
+                                openSettingsScreen = {
+                                    navController.navigate(SettingsRoute) { launchSingleTop = true }
+                                }
+                            ) }
+                            composable<SettingsRoute> { SettingsScreen(
+                                openHomeScreen = {
+                                    navController.navigate(TodoListRoute) { launchSingleTop = true }
+                                },
                                 openSignInScreen = {
                                     navController.navigate(SignInRoute) { launchSingleTop = true }
                                 }

@@ -45,3 +45,24 @@ fun CenterTopAppBar(
         scrollBehavior = scrollBehavior
     )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CenterTopAppBar(
+    title: String,
+    scrollBehavior: TopAppBarScrollBehavior
+) {
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = if (isSystemInDarkTheme()) DarkGrey else LightYellow
+        ),
+        title = {
+            Text(
+                title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        scrollBehavior = scrollBehavior
+    )
+}

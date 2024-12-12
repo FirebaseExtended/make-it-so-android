@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.example.makeitso.R
-import com.google.firebase.example.makeitso.ui.shared.AuthWithEmailButton
+import com.google.firebase.example.makeitso.ui.shared.StandardButton
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -118,7 +118,7 @@ fun SignUpScreen(
 
                 Spacer(Modifier.size(32.dp))
 
-                AuthWithEmailButton(R.string.sign_up_with_email) {
+                StandardButton(R.string.sign_up_with_email) {
                     viewModel.signUp(
                         email,
                         password,

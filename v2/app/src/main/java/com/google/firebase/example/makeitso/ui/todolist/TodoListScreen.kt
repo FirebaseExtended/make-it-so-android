@@ -9,8 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,13 +48,13 @@ object TodoListRoute
 
 @Composable
 fun TodoListScreen(
-    openSignInScreen: () -> Unit,
+    openSettingsScreen: () -> Unit,
     viewModel: TodoListViewModel = hiltViewModel()
 ) {
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     if (isLoading) LoadingIndicator()
-    else TodoListScreenContent(openSignInScreen, viewModel)
+    else TodoListScreenContent(openSettingsScreen, viewModel)
 
     LaunchedEffect(true) {
         viewModel.loadCurrentUser()
@@ -63,17 +63,16 @@ fun TodoListScreen(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TodoListScreenContent(
-    openSignInScreen: () -> Unit, viewModel: TodoListViewModel) {
+fun TodoListScreenContent(openSettingsScreen: () -> Unit, viewModel: TodoListViewModel) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
         topBar = {
             CenterTopAppBar(
                 title = stringResource(R.string.app_name),
-                icon = Icons.Filled.AccountCircle,
-                iconDescription = "Sign In screen icon",
-                action = openSignInScreen,
+                icon = Icons.Filled.Settings,
+                iconDescription = "Settings screen icon",
+                action = openSettingsScreen,
                 scrollBehavior = scrollBehavior
             )
         },

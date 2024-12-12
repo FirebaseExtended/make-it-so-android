@@ -12,7 +12,13 @@
     <string name="password">Password</string>
     <string name="repeat_password">Repeat password</string>
 
-    <!-- Todo Lists -->
+    <!-- Todo Lists Screen -->
     <string name="create_todo_list">Create a todo list</string>
     <string name="create_todo_item">Create a todo item</string>
+
+    <!-- Settings Screen -->
+    <string name="settings">Settings</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="delete_account">Delete Account</string>
 </resources>

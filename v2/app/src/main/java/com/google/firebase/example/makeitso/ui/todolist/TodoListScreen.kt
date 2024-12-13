@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -108,10 +109,12 @@ fun TodoListScreenContent(
                         end.linkTo(parent.end)
                         height = Dimension.fillToConstraints
                     },
-                contentPadding = PaddingValues(16.dp)
+                contentPadding = PaddingValues(8.dp)
             ) {
                 items(todoItems.value) { todoItem ->
-                    TodoItem(todoItem) { openTodoItemScreen(todoItem.id) }
+                    TodoItem(todoItem, openTodoItemScreen) {
+                        viewModel.updateItem(todoItem.copy(completed = it))
+                    }
                 }
             }
 
@@ -133,20 +136,35 @@ fun TodoListScreenContent(
 }
 
 @Composable
-fun TodoItem(todoItem: TodoItem, openTodoItemScreen: () -> Unit) {
+fun TodoItem(
+    todoItem: TodoItem,
+    openTodoItemScreen: (String) -> Unit,
+    onCheckedChange: (Boolean) -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = todoItem.completed,
-            onCheckedChange = { },
+            onCheckedChange = onCheckedChange,
             colors = CheckboxDefaults.colors(checkedColor = DarkBlue)
         )
 
         Text(
             text = todoItem.title,
-            modifier = Modifier.clickable { openTodoItemScreen() }
+            modifier = Modifier.weight(1f).clickable(
+                interactionSource = null,
+                indication = null
+            ) { openTodoItemScreen(todoItem.id) }
         )
+
+        if (todoItem.flagged) {
+            Icon(
+                painter = painterResource(R.drawable.ic_flag),
+                contentDescription = "Flag icon",
+                modifier = Modifier.padding(8.dp)
+            )
+        }
     }
 }

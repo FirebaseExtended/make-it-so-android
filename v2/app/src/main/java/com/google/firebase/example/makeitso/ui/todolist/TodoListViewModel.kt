@@ -1,6 +1,7 @@
 package com.google.firebase.example.makeitso.ui.todolist
 
 import com.google.firebase.example.makeitso.MainViewModel
+import com.google.firebase.example.makeitso.data.model.TodoItem
 import com.google.firebase.example.makeitso.data.repository.AuthRepository
 import com.google.firebase.example.makeitso.data.repository.TodoItemRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoListViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    todoItemRepository: TodoItemRepository
+    private val todoItemRepository: TodoItemRepository
 ) : MainViewModel() {
     private val _isLoadingUser = MutableStateFlow(true)
     val isLoadingUser: StateFlow<Boolean>
@@ -27,6 +28,12 @@ class TodoListViewModel @Inject constructor(
             }
 
             _isLoadingUser.value = false
+        }
+    }
+
+    fun updateItem(item: TodoItem) {
+        launchCatching {
+            todoItemRepository.update(item)
         }
     }
 }

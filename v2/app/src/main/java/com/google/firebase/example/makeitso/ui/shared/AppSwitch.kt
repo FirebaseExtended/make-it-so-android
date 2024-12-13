@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import com.google.firebase.example.makeitso.ui.theme.DarkBlue
-import com.google.firebase.example.makeitso.ui.theme.DarkGrey
 import com.google.firebase.example.makeitso.ui.theme.LightBlue
 import com.google.firebase.example.makeitso.ui.theme.LightYellow
+import com.google.firebase.example.makeitso.ui.theme.MediumGrey
 
 @Composable
 fun AppSwitch(
@@ -24,7 +24,7 @@ fun AppSwitch(
         colors = SwitchDefaults.colors(
             checkedThumbColor = DarkBlue,
             checkedTrackColor = LightBlue,
-            uncheckedThumbColor = DarkGrey,
+            uncheckedThumbColor = MediumGrey,
             uncheckedTrackColor = LightYellow,
         )
     )

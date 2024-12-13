@@ -1,6 +1,7 @@
 package com.google.firebase.example.makeitso.ui.todoitem
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +51,7 @@ import com.google.firebase.example.makeitso.ui.shared.CenterTopAppBar
 import com.google.firebase.example.makeitso.ui.shared.LoadingIndicator
 import com.google.firebase.example.makeitso.ui.shared.StandardButton
 import com.google.firebase.example.makeitso.ui.theme.DarkGrey
+import com.google.firebase.example.makeitso.ui.theme.MediumGrey
 import com.google.firebase.example.makeitso.ui.theme.MediumYellow
 import kotlinx.serialization.Serializable
 
@@ -81,6 +83,7 @@ fun TodoItemScreenContent(
     viewModel: TodoItemViewModel
 ) {
     val editableItem = remember { mutableStateOf(todoItem) }
+    val backgroundColor = if (isSystemInDarkTheme()) MediumGrey else MediumYellow
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -124,7 +127,7 @@ fun TodoItemScreenContent(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
                     .clip(RoundedCornerShape(48f))
-                    .background(MediumYellow),
+                    .background(backgroundColor),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -144,7 +147,7 @@ fun TodoItemScreenContent(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
                     .clip(RoundedCornerShape(48f))
-                    .background(MediumYellow)
+                    .background(backgroundColor)
             ) {
                 Text(
                     modifier = Modifier
@@ -214,18 +217,22 @@ fun PriorityChip(
     )
 }
 
+@Composable
 private fun getPriorityChipColors(selectedColor: Color): SelectableChipColors {
+    val containerColor = if (isSystemInDarkTheme()) MediumGrey else MediumYellow
+    val contentColor = if (isSystemInDarkTheme()) Color.White else DarkGrey
+
     return SelectableChipColors(
-        containerColor = MediumYellow,
-        labelColor = DarkGrey,
-        leadingIconColor = DarkGrey,
-        trailingIconColor = DarkGrey,
-        disabledContainerColor = MediumYellow,
-        disabledLabelColor = DarkGrey,
-        disabledLeadingIconColor = DarkGrey,
-        disabledTrailingIconColor = DarkGrey,
+        containerColor = containerColor,
+        labelColor = contentColor,
+        leadingIconColor = contentColor,
+        trailingIconColor = contentColor,
+        disabledContainerColor = containerColor,
+        disabledLabelColor = contentColor,
+        disabledLeadingIconColor = contentColor,
+        disabledTrailingIconColor = contentColor,
         selectedContainerColor = selectedColor,
-        disabledSelectedContainerColor = MediumYellow,
+        disabledSelectedContainerColor = DarkGrey,
         selectedLabelColor = DarkGrey,
         selectedLeadingIconColor = DarkGrey,
         selectedTrailingIconColor = DarkGrey

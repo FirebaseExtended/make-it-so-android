@@ -27,7 +27,11 @@ class TodoItemViewModel @Inject constructor(
 
     fun loadItem() {
         launchCatching {
-            _todoItem.value = todoItemRepository.getTodoItem(itemId) ?: TodoItem()
+            if (itemId.isBlank()) {
+                _todoItem.value = TodoItem()
+            } else {
+                _todoItem.value = todoItemRepository.getTodoItem(itemId)
+            }
         }
     }
 
@@ -55,6 +59,13 @@ class TodoItemViewModel @Inject constructor(
                 todoItemRepository.update(item)
             }
 
+            openHomeScreen()
+        }
+    }
+
+    fun deleteItem(item: TodoItem, openHomeScreen: () -> Unit) {
+        launchCatching {
+            if (itemId.isNotBlank()) todoItemRepository.delete(item.id)
             openHomeScreen()
         }
     }

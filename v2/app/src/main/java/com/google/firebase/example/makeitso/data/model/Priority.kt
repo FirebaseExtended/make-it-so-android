@@ -1,11 +1,12 @@
 package com.google.firebase.example.makeitso.data.model
 
-enum class Priority(val title: String, val value: Int) {
-    LOW("Low", 2),
-    MEDIUM("Medium", 1),
-    HIGH("High", 0)
-}
+import androidx.compose.ui.graphics.Color
+import com.google.firebase.example.makeitso.ui.theme.LightGreen
+import com.google.firebase.example.makeitso.ui.theme.LightOrange
+import com.google.firebase.example.makeitso.ui.theme.LightRed
 
-fun Int.getPriority(): Priority {
-    return Priority.entries.first { this == it.value }
+enum class Priority(val title: String, val selectedColor: Color, val value: Int) {
+    LOW("Low", LightGreen, 2),
+    MEDIUM("Medium", LightOrange, 1),
+    HIGH("High", LightRed, 0)
 }

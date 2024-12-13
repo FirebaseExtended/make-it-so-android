@@ -22,7 +22,8 @@
     <string name="title">Title</string>
     <string name="flag">Flag</string>
     <string name="priority">Priority</string>
-    <string name="edit_your_item">Edit your item</string>
+    <string name="edit_todo_item">Edit todo item</string>
+    <string name="delete_todo_item">Delete this todo item</string>
 
     <!-- Settings Screen -->
     <string name="settings">Settings</string>

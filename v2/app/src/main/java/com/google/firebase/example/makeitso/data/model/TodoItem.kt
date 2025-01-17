@@ -5,7 +5,7 @@ import com.google.firebase.firestore.DocumentId
 data class TodoItem(
     @DocumentId val id: String = "",
     val title: String = "",
-    val priority: Int = Priority.LOW.value,
+    val priority: Int = Priority.NONE.value,
     val completed: Boolean = false,
     val flagged: Boolean = false,
     val ownerId: String = ""
@@ -21,5 +21,9 @@ fun TodoItem.isMediumPriority(): Boolean {
 
 fun TodoItem.isLowPriority(): Boolean {
     return this.priority == Priority.LOW.value
+}
+
+fun TodoItem.isNonePriority(): Boolean {
+    return this.priority == Priority.NONE.value
 }
 

@@ -42,10 +42,12 @@ import com.google.firebase.example.makeitso.data.model.Priority
 import com.google.firebase.example.makeitso.data.model.Priority.HIGH
 import com.google.firebase.example.makeitso.data.model.Priority.LOW
 import com.google.firebase.example.makeitso.data.model.Priority.MEDIUM
+import com.google.firebase.example.makeitso.data.model.Priority.NONE
 import com.google.firebase.example.makeitso.data.model.TodoItem
 import com.google.firebase.example.makeitso.data.model.isHighPriority
 import com.google.firebase.example.makeitso.data.model.isLowPriority
 import com.google.firebase.example.makeitso.data.model.isMediumPriority
+import com.google.firebase.example.makeitso.data.model.isNonePriority
 import com.google.firebase.example.makeitso.ui.shared.AppSwitch
 import com.google.firebase.example.makeitso.ui.shared.CenterTopAppBar
 import com.google.firebase.example.makeitso.ui.shared.LoadingIndicator
@@ -177,6 +179,12 @@ fun TodoItemScreenContent(
                     PriorityChip(LOW, editableItem.value.isLowPriority()) {
                         editableItem.value = editableItem.value.copy(
                             priority = LOW.value
+                        )
+                    }
+
+                    PriorityChip(NONE, editableItem.value.isNonePriority()) {
+                        editableItem.value = editableItem.value.copy(
+                            priority = NONE.value
                         )
                     }
                 }

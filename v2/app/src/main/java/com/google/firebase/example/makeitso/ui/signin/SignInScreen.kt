@@ -111,9 +111,12 @@ fun SignInScreen(
 
                 Spacer(Modifier.size(32.dp))
 
-                StandardButton(R.string.sign_in_with_email) {
-                    viewModel.signIn(email, password, openHomeScreen, showErrorSnackbar)
-                }
+                StandardButton(
+                    label = R.string.sign_in_with_email,
+                    onButtonClick = {
+                        viewModel.signIn(email, password, openHomeScreen, showErrorSnackbar)
+                    }
+                )
 
                 Spacer(Modifier.size(16.dp))
 

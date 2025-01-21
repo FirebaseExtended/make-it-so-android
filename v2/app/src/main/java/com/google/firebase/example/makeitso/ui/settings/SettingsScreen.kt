@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -70,13 +71,19 @@ fun SettingsScreen(
             Spacer(Modifier.size(24.dp))
 
             if (isAnonymous) {
-                StandardButton(R.string.sign_in) {
-                    openSignInScreen()
-                }
+                StandardButton(
+                    label = R.string.sign_in,
+                    onButtonClick = {
+                        openSignInScreen()
+                    }
+                )
             } else {
-                StandardButton(R.string.sign_out) {
-                    viewModel.signOut(openHomeScreen)
-                }
+                StandardButton(
+                    label = R.string.sign_out,
+                    onButtonClick = {
+                        viewModel.signOut(openHomeScreen)
+                    }
+                )
 
                 Spacer(Modifier.size(16.dp))
 
@@ -91,13 +98,16 @@ fun DeleteAccountButton(
     openHomeScreen: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val showDeleteAccountDialog = remember { mutableStateOf(false) }
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
 
-    StandardButton(R.string.delete_account) {
-        showDeleteAccountDialog.value = true
-    }
+    StandardButton(
+        label = R.string.delete_account,
+        onButtonClick = {
+            showDeleteAccountDialog = true
+        }
+    )
 
-    if (showDeleteAccountDialog.value) {
+    if (showDeleteAccountDialog) {
         AlertDialog(
             containerColor = LightRed,
             textContentColor = DarkBlue,
@@ -106,7 +116,7 @@ fun DeleteAccountButton(
             text = { Text(stringResource(R.string.delete_account_description)) },
             dismissButton = {
                 TextButton(
-                    onClick = { showDeleteAccountDialog.value = false },
+                    onClick = { showDeleteAccountDialog = false },
                     colors = getDialogButtonColors()
                 ) {
                     Text(text = stringResource(R.string.cancel), fontSize = 16.sp)
@@ -115,7 +125,7 @@ fun DeleteAccountButton(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        showDeleteAccountDialog.value = false
+                        showDeleteAccountDialog = false
                         viewModel.deleteAccount(openHomeScreen)
                     },
                     colors = getDialogButtonColors()
@@ -123,7 +133,7 @@ fun DeleteAccountButton(
                     Text(text = stringResource(R.string.delete), fontSize = 16.sp)
                 }
             },
-            onDismissRequest = { showDeleteAccountDialog.value = false }
+            onDismissRequest = { showDeleteAccountDialog = false }
         )
     }
 }

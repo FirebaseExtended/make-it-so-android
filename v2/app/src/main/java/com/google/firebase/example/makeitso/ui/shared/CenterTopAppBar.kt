@@ -1,5 +1,6 @@
 package com.google.firebase.example.makeitso.ui.shared
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,10 +24,16 @@ fun CenterTopAppBar(
     action: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+    val appBarColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        TopAppBarDefaults.centerAlignedTopAppBarColors()
+    } else {
+        TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = if (isSystemInDarkTheme()) DarkGrey else LightYellow
-        ),
+        )
+    }
+
+    CenterAlignedTopAppBar(
+        colors = appBarColor,
         title = {
             Text(
                 title,

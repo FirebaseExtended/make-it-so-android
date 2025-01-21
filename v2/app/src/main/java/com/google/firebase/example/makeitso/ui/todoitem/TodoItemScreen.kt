@@ -193,9 +193,12 @@ fun TodoItemScreenContent(
 
             Spacer(Modifier.size(24.dp))
 
-            StandardButton(R.string.delete_todo_item) {
-                viewModel.deleteItem(todoItem, openHomeScreen)
-            }
+            StandardButton(
+                label = R.string.delete_todo_item,
+                onButtonClick = {
+                    viewModel.deleteItem(todoItem, openHomeScreen)
+                }
+            )
         }
     }
 }

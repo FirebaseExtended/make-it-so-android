@@ -119,15 +119,18 @@ fun SignUpScreen(
 
                 Spacer(Modifier.size(32.dp))
 
-                StandardButton(R.string.sign_up_with_email) {
-                    viewModel.signUp(
-                        email,
-                        password,
-                        repeatPassword,
-                        openHomeScreen,
-                        showErrorSnackbar
-                    )
-                }
+                StandardButton(
+                    label = R.string.sign_up_with_email,
+                    onButtonClick = {
+                        viewModel.signUp(
+                            email,
+                            password,
+                            repeatPassword,
+                            openHomeScreen,
+                            showErrorSnackbar
+                        )
+                    }
+                )
 
                 Spacer(Modifier.size(16.dp))
 

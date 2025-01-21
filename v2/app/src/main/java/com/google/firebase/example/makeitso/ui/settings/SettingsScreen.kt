@@ -37,11 +37,25 @@ import kotlinx.serialization.Serializable
 object SettingsRoute
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun SettingsScreen(
     openHomeScreen: () -> Unit,
     openSignInScreen: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
+) {
+    val shouldRestartApp by viewModel.shouldRestartApp.collectAsStateWithLifecycle()
+
+    if (shouldRestartApp) {
+        openHomeScreen()
+    } else {
+        SettingsScreenContent(openSignInScreen, viewModel)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun SettingsScreenContent(
+    openSignInScreen: () -> Unit,
+    viewModel: SettingsViewModel
 ) {
     val isAnonymous by viewModel.isAnonymous.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -81,23 +95,20 @@ fun SettingsScreen(
                 StandardButton(
                     label = R.string.sign_out,
                     onButtonClick = {
-                        viewModel.signOut(openHomeScreen)
+                        viewModel.signOut()
                     }
                 )
 
                 Spacer(Modifier.size(16.dp))
 
-                DeleteAccountButton(openHomeScreen, viewModel)
+                DeleteAccountButton(viewModel)
             }
         }
     }
 }
 
 @Composable
-fun DeleteAccountButton(
-    openHomeScreen: () -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel()
-) {
+fun DeleteAccountButton(viewModel: SettingsViewModel = hiltViewModel()) {
     var showDeleteAccountDialog by remember { mutableStateOf(false) }
 
     StandardButton(
@@ -126,7 +137,7 @@ fun DeleteAccountButton(
                 TextButton(
                     onClick = {
                         showDeleteAccountDialog = false
-                        viewModel.deleteAccount(openHomeScreen)
+                        viewModel.deleteAccount()
                     },
                     colors = getDialogButtonColors()
                 ) {

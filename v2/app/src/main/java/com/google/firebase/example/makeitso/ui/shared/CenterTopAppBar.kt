@@ -7,6 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -24,16 +25,8 @@ fun CenterTopAppBar(
     action: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
-    val appBarColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        TopAppBarDefaults.centerAlignedTopAppBarColors()
-    } else {
-        TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = if (isSystemInDarkTheme()) DarkGrey else LightYellow
-        )
-    }
-
     CenterAlignedTopAppBar(
-        colors = appBarColor,
+        colors = appBarColors(),
         title = {
             Text(
                 title,
@@ -60,9 +53,7 @@ fun CenterTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior
 ) {
     CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = if (isSystemInDarkTheme()) DarkGrey else LightYellow
-        ),
+        colors = appBarColors(),
         title = {
             Text(
                 title,
@@ -72,4 +63,16 @@ fun CenterTopAppBar(
         },
         scrollBehavior = scrollBehavior
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun appBarColors(): TopAppBarColors {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        TopAppBarDefaults.centerAlignedTopAppBarColors()
+    } else {
+        TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = if (isSystemInDarkTheme()) DarkGrey else LightYellow
+        )
+    }
 }

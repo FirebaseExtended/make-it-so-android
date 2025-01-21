@@ -20,6 +20,10 @@ class TodoItemViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val todoItemRepository: TodoItemRepository
 ) : MainViewModel() {
+    private val _navigateToTodoList = MutableStateFlow(false)
+    val navigateToTodoList: StateFlow<Boolean>
+        get() = _navigateToTodoList.asStateFlow()
+
     private val todoItemRoute = savedStateHandle.toRoute<TodoItemRoute>()
     private val itemId: String = todoItemRoute.itemId
 
@@ -39,7 +43,6 @@ class TodoItemViewModel @Inject constructor(
 
     fun saveItem(
         item: TodoItem,
-        openHomeScreen: () -> Unit,
         showErrorSnackbar: (ErrorMessage) -> Unit
     ) {
         val ownerId = authRepository.currentUser?.uid
@@ -61,14 +64,14 @@ class TodoItemViewModel @Inject constructor(
                 todoItemRepository.update(item)
             }
 
-            openHomeScreen()
+            _navigateToTodoList.value = true
         }
     }
 
-    fun deleteItem(item: TodoItem, openHomeScreen: () -> Unit) {
+    fun deleteItem(item: TodoItem) {
         launchCatching {
             if (itemId.isNotBlank()) todoItemRepository.delete(item.id)
-            openHomeScreen()
+            _navigateToTodoList.value = true
         }
     }
 }

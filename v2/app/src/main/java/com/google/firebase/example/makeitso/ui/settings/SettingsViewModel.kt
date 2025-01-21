@@ -12,6 +12,10 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : MainViewModel() {
+    private val _shouldRestartApp = MutableStateFlow(false)
+    val shouldRestartApp: StateFlow<Boolean>
+        get() = _shouldRestartApp.asStateFlow()
+
     private val _isAnonymous = MutableStateFlow(true)
     val isAnonymous: StateFlow<Boolean>
         get() = _isAnonymous.asStateFlow()
@@ -23,17 +27,17 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun signOut(openHomeScreen: () -> Unit) {
+    fun signOut() {
         launchCatching {
             authRepository.signOut()
-            openHomeScreen()
+            _shouldRestartApp.value = true
         }
     }
 
-    fun deleteAccount(openHomeScreen: () -> Unit) {
+    fun deleteAccount() {
         launchCatching {
             authRepository.deleteAccount()
-            openHomeScreen()
+            _shouldRestartApp.value = true
         }
     }
 }

@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.example.makeitso.R
 import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.ui.shared.StandardButton
@@ -36,11 +37,25 @@ import kotlinx.serialization.Serializable
 object SignUpRoute
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun SignUpScreen(
     openHomeScreen: () -> Unit,
     showErrorSnackbar: (ErrorMessage) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
+) {
+    val shouldRestartApp by viewModel.shouldRestartApp.collectAsStateWithLifecycle()
+
+    if (shouldRestartApp) {
+        openHomeScreen()
+    } else {
+        SignUpScreenContent(showErrorSnackbar, viewModel)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun SignUpScreenContent(
+    showErrorSnackbar: (ErrorMessage) -> Unit,
+    viewModel: SignUpViewModel
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -126,7 +141,6 @@ fun SignUpScreen(
                             email,
                             password,
                             repeatPassword,
-                            openHomeScreen,
                             showErrorSnackbar
                         )
                     }

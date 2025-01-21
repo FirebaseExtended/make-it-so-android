@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             ) }
                             composable<TodoItemRoute> { TodoItemScreen(
-                                openHomeScreen = {
+                                openTodoListScreen = {
                                     navController.navigate(TodoListRoute) { launchSingleTop = true }
                                 },
                                 showErrorSnackbar = { errorMessage ->

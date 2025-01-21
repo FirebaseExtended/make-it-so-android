@@ -5,17 +5,23 @@ import com.google.firebase.example.makeitso.R
 import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : MainViewModel() {
+    private val _shouldRestartApp = MutableStateFlow(false)
+    val shouldRestartApp: StateFlow<Boolean>
+        get() = _shouldRestartApp.asStateFlow()
+
     fun signUp(
         email: String,
         password: String,
         repeatPassword: String,
-        openHomeScreen: () -> Unit,
         showErrorSnackbar: (ErrorMessage) -> Unit
     ) {
         if (!email.isValidEmail()) {
@@ -35,7 +41,7 @@ class SignUpViewModel @Inject constructor(
 
         launchCatching(showErrorSnackbar) {
             authRepository.signUp(email, password)
-            openHomeScreen()
+            _shouldRestartApp.value = true
         }
     }
 }

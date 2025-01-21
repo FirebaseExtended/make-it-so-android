@@ -63,14 +63,31 @@ data class TodoItemRoute(val itemId: String)
 
 @Composable
 fun TodoItemScreen(
-    openHomeScreen: () -> Unit,
+    openTodoListScreen: () -> Unit,
     showErrorSnackbar: (ErrorMessage) -> Unit,
     viewModel: TodoItemViewModel = hiltViewModel()
 ) {
+    val navigateToTodoList by viewModel.navigateToTodoList.collectAsStateWithLifecycle()
+
+    if (navigateToTodoList) {
+        openTodoListScreen()
+    } else {
+        TodoItemScreen(showErrorSnackbar, viewModel)
+    }
+}
+
+@Composable
+fun TodoItemScreen(
+    showErrorSnackbar: (ErrorMessage) -> Unit,
+    viewModel: TodoItemViewModel
+) {
     val todoItem by viewModel.todoItem.collectAsStateWithLifecycle()
 
-    if (todoItem == null) LoadingIndicator()
-    else TodoItemScreenContent(todoItem!!, openHomeScreen, showErrorSnackbar, viewModel)
+    if (todoItem == null) {
+        LoadingIndicator()
+    } else {
+        TodoItemScreenContent(todoItem!!, showErrorSnackbar, viewModel)
+    }
 
     LaunchedEffect(true) {
         viewModel.loadItem()
@@ -81,7 +98,6 @@ fun TodoItemScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 fun TodoItemScreenContent(
     todoItem: TodoItem,
-    openHomeScreen: () -> Unit,
     showErrorSnackbar: (ErrorMessage) -> Unit,
     viewModel: TodoItemViewModel
 ) {
@@ -96,7 +112,7 @@ fun TodoItemScreenContent(
                 icon = Icons.Filled.Check,
                 iconDescription = "Save Todo Item icon",
                 action = {
-                    viewModel.saveItem(editableItem.value, openHomeScreen, showErrorSnackbar)
+                    viewModel.saveItem(editableItem.value, showErrorSnackbar)
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -196,7 +212,7 @@ fun TodoItemScreenContent(
             StandardButton(
                 label = R.string.delete_todo_item,
                 onButtonClick = {
-                    viewModel.deleteItem(todoItem, openHomeScreen)
+                    viewModel.deleteItem(todoItem)
                 }
             )
         }

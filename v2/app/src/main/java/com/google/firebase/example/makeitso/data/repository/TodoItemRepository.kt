@@ -8,7 +8,9 @@ import javax.inject.Inject
 class TodoItemRepository @Inject constructor(
     private val todoItemRemoteDataSource: TodoItemRemoteDataSource
 ) {
-    val todoItems: Flow<List<TodoItem>> = todoItemRemoteDataSource.todoItems
+    fun getTodoItems(currentUserIdFlow: Flow<String?>): Flow<List<TodoItem>> {
+        return todoItemRemoteDataSource.getTodoItems(currentUserIdFlow)
+    }
 
     suspend fun getTodoItem(itemId: String): TodoItem? {
         return todoItemRemoteDataSource.getTodoItem(itemId)

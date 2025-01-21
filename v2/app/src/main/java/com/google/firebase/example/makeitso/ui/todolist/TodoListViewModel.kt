@@ -19,7 +19,7 @@ class TodoListViewModel @Inject constructor(
     val isLoadingUser: StateFlow<Boolean>
         get() = _isLoadingUser.asStateFlow()
 
-    val todoItems = todoItemRepository.todoItems
+    val todoItems = todoItemRepository.getTodoItems(authRepository.currentUserIdFlow)
 
     fun loadCurrentUser() {
         launchCatching {

@@ -11,18 +11,17 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class TodoItemRemoteDataSource @Inject constructor(
-    private val authDataSource: AuthRemoteDataSource,
     private val firestore: FirebaseFirestore
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    val todoItems: Flow<List<TodoItem>>
-        get() =
-            authDataSource.currentUserIdFlow.flatMapLatest { ownerId ->
-                firestore
-                    .collection(TODO_ITEMS_COLLECTION)
-                    .whereEqualTo(OWNER_ID_FIELD, ownerId)
-                    .dataObjects()
-            }
+    fun getTodoItems(currentUserIdFlow: Flow<String?>): Flow<List<TodoItem>> {
+        return currentUserIdFlow.flatMapLatest { ownerId ->
+            firestore
+                .collection(TODO_ITEMS_COLLECTION)
+                .whereEqualTo(OWNER_ID_FIELD, ownerId)
+                .dataObjects()
+        }
+    }
 
     suspend fun getTodoItem(itemId: String): TodoItem? {
         return firestore.collection(TODO_ITEMS_COLLECTION).document(itemId).get().await().toObject()

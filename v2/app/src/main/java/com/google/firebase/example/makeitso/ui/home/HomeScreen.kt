@@ -51,8 +51,11 @@ fun HomeScreen(
 ) {
     val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
-    if (isLoadingUser) LoadingIndicator()
-    else HomeScreenContent(openSettingsScreen, viewModel)
+    if (isLoadingUser) {
+        LoadingIndicator()
+    } else {
+        HomeScreenContent(openSettingsScreen, viewModel)
+    }
 }
 
 @Composable

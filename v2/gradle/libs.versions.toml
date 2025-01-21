@@ -55,8 +55,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 google-hilt = { id = "com.google.dagger.hilt.android", version.ref = "googleHilt" }
-google-kotlin-ksp = { id = "com.google.devtools.ksp", version.ref ="googleKotlinKsp" }
-google-ksp = { id = "com.google.devtools.ksp"}
-firebase-crashlytics-versioned = { id = "com.google.firebase.crashlytics", version.ref="firebaseCrashlytics"}
-firebase-crashlytics = { id = "com.google.firebase.crashlytics"}
+google-ksp = { id = "com.google.devtools.ksp", version.ref ="googleKotlinKsp" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref="firebaseCrashlytics"}
 

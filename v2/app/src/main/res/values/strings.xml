@@ -2,6 +2,14 @@
     <!-- Common -->
     <string name="app_name">Make it So</string>
 
+    <!-- Error -->
+    <string name="generic_error">Something went wrong</string>
+    <string name="invalid_email">Invalid email format</string>
+    <string name="invalid_password">Passwords should have at least eight digits and include one digit, one lower case letter and one upper case letter</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="could_not_find_account">We couldn\'t find your account id at the moment, please try again later</string>
+    <string name="item_without_title">Title cannot be empty</string>
+
     <!-- Authentication -->
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_email">Sign in with email</string>

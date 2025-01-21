@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.ui.home.HomeRoute
 import com.google.firebase.example.makeitso.ui.home.HomeScreen
 import com.google.firebase.example.makeitso.ui.settings.SettingsRoute
@@ -88,7 +89,8 @@ class MainActivity : ComponentActivity() {
                                 openSignUpScreen = {
                                     navController.navigate(SignUpRoute) { launchSingleTop = true }
                                 },
-                                showErrorSnackbar = { message ->
+                                showErrorSnackbar = { errorMessage ->
+                                    val message = getErrorMessage(errorMessage)
                                     scope.launch { snackbarHostState.showSnackbar(message) }
                                 }
                             ) }
@@ -96,7 +98,8 @@ class MainActivity : ComponentActivity() {
                                 openHomeScreen = {
                                     navController.navigate(TodoListRoute) { launchSingleTop = true }
                                 },
-                                showErrorSnackbar = { message ->
+                                showErrorSnackbar = { errorMessage ->
+                                    val message = getErrorMessage(errorMessage)
                                     scope.launch { snackbarHostState.showSnackbar(message) }
                                 }
                             ) }
@@ -104,7 +107,8 @@ class MainActivity : ComponentActivity() {
                                 openHomeScreen = {
                                     navController.navigate(TodoListRoute) { launchSingleTop = true }
                                 },
-                                showErrorSnackbar = { message ->
+                                showErrorSnackbar = { errorMessage ->
+                                    val message = getErrorMessage(errorMessage)
                                     scope.launch { snackbarHostState.showSnackbar(message) }
                                 }
                             ) }
@@ -117,5 +121,12 @@ class MainActivity : ComponentActivity() {
 
     private fun setSoftInputMode() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+    }
+
+    private fun getErrorMessage(error: ErrorMessage): String {
+        return when (error) {
+            is ErrorMessage.StringError -> error.message
+            is ErrorMessage.IdError -> applicationContext.resources.getString(error.message)
+        }
     }
 }

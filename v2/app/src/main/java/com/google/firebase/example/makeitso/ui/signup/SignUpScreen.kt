@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.example.makeitso.R
+import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.ui.shared.StandardButton
 import kotlinx.serialization.Serializable
 
@@ -38,7 +39,7 @@ object SignUpRoute
 @OptIn(ExperimentalMaterial3Api::class)
 fun SignUpScreen(
     openHomeScreen: () -> Unit,
-    showErrorSnackbar: (String) -> Unit,
+    showErrorSnackbar: (ErrorMessage) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     var email by remember { mutableStateOf("") }

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.example.makeitso.R
+import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.data.model.Priority
 import com.google.firebase.example.makeitso.data.model.Priority.HIGH
 import com.google.firebase.example.makeitso.data.model.Priority.LOW
@@ -63,7 +64,7 @@ data class TodoItemRoute(val itemId: String)
 @Composable
 fun TodoItemScreen(
     openHomeScreen: () -> Unit,
-    showErrorSnackbar: (String) -> Unit,
+    showErrorSnackbar: (ErrorMessage) -> Unit,
     viewModel: TodoItemViewModel = hiltViewModel()
 ) {
     val todoItem by viewModel.todoItem.collectAsStateWithLifecycle()
@@ -81,7 +82,7 @@ fun TodoItemScreen(
 fun TodoItemScreenContent(
     todoItem: TodoItem,
     openHomeScreen: () -> Unit,
-    showErrorSnackbar: (String) -> Unit,
+    showErrorSnackbar: (ErrorMessage) -> Unit,
     viewModel: TodoItemViewModel
 ) {
     val editableItem = remember { mutableStateOf(todoItem) }
@@ -164,25 +165,25 @@ fun TodoItemScreenContent(
                         .padding(start = 16.dp, bottom = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    PriorityChip(HIGH, editableItem.value.isHighPriority()) {
+                    PriorityChip(HIGH, editableItem.value.isHighPriority) {
                         editableItem.value = editableItem.value.copy(
                             priority = HIGH.value
                         )
                     }
 
-                    PriorityChip(MEDIUM, editableItem.value.isMediumPriority()) {
+                    PriorityChip(MEDIUM, editableItem.value.isMediumPriority) {
                         editableItem.value = editableItem.value.copy(
                             priority = MEDIUM.value
                         )
                     }
 
-                    PriorityChip(LOW, editableItem.value.isLowPriority()) {
+                    PriorityChip(LOW, editableItem.value.isLowPriority) {
                         editableItem.value = editableItem.value.copy(
                             priority = LOW.value
                         )
                     }
 
-                    PriorityChip(NONE, editableItem.value.isNonePriority()) {
+                    PriorityChip(NONE, editableItem.value.isNonePriority) {
                         editableItem.value = editableItem.value.copy(
                             priority = NONE.value
                         )

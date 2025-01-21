@@ -1,6 +1,8 @@
 package com.google.firebase.example.makeitso.ui.signup
 
 import com.google.firebase.example.makeitso.MainViewModel
+import com.google.firebase.example.makeitso.R
+import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -14,20 +16,20 @@ class SignUpViewModel @Inject constructor(
         password: String,
         repeatPassword: String,
         openHomeScreen: () -> Unit,
-        showErrorSnackbar: (String) -> Unit
+        showErrorSnackbar: (ErrorMessage) -> Unit
     ) {
         if (!email.isValidEmail()) {
-            showErrorSnackbar(INVALID_EMAIL_ERROR)
+            showErrorSnackbar(ErrorMessage.IdError(R.string.invalid_email))
             return
         }
 
         if (!password.isValidPassword()) {
-            showErrorSnackbar(INVALID_PASSWORD_ERROR)
+            showErrorSnackbar(ErrorMessage.IdError(R.string.invalid_password))
             return
         }
 
         if (password != repeatPassword) {
-            showErrorSnackbar(PASSWORDS_DO_NOT_MATCH_ERROR)
+            showErrorSnackbar(ErrorMessage.IdError(R.string.passwords_do_not_match))
             return
         }
 
@@ -35,11 +37,5 @@ class SignUpViewModel @Inject constructor(
             authRepository.signUp(email, password)
             openHomeScreen()
         }
-    }
-
-    companion object {
-        private const val INVALID_EMAIL_ERROR = "Invalid email format"
-        private const val INVALID_PASSWORD_ERROR = "Passwords should have at least eight digits and include one digit, one lower case letter and one upper case letter"
-        private const val PASSWORDS_DO_NOT_MATCH_ERROR = "Passwords do not match"
     }
 }

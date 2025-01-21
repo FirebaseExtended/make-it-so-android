@@ -11,19 +11,15 @@ data class TodoItem(
     val ownerId: String = ""
 )
 
-fun TodoItem.isHighPriority(): Boolean {
-    return this.priority == Priority.HIGH.value
-}
+val TodoItem.isHighPriority: Boolean
+    get() = this.priority == Priority.HIGH.value
 
-fun TodoItem.isMediumPriority(): Boolean {
-    return this.priority == Priority.MEDIUM.value
-}
+val TodoItem.isMediumPriority: Boolean
+    get() = this.priority == Priority.MEDIUM.value
 
-fun TodoItem.isLowPriority(): Boolean {
-    return this.priority == Priority.LOW.value
-}
+val TodoItem.isLowPriority: Boolean
+    get() = this.priority == Priority.LOW.value
 
-fun TodoItem.isNonePriority(): Boolean {
-    return this.priority == Priority.NONE.value
-}
+val TodoItem.isNonePriority: Boolean
+    get() = this.priority == Priority.NONE.value
 

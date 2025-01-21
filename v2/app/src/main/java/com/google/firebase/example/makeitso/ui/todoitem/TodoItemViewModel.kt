@@ -3,6 +3,8 @@ package com.google.firebase.example.makeitso.ui.todoitem
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.google.firebase.example.makeitso.MainViewModel
+import com.google.firebase.example.makeitso.R
+import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.data.model.TodoItem
 import com.google.firebase.example.makeitso.data.repository.AuthRepository
 import com.google.firebase.example.makeitso.data.repository.TodoItemRepository
@@ -38,17 +40,17 @@ class TodoItemViewModel @Inject constructor(
     fun saveItem(
         item: TodoItem,
         openHomeScreen: () -> Unit,
-        showErrorSnackbar: (String) -> Unit
+        showErrorSnackbar: (ErrorMessage) -> Unit
     ) {
         val ownerId = authRepository.currentUser?.uid
 
         if (ownerId.isNullOrBlank()) {
-            showErrorSnackbar(NO_ACCOUNT_ERROR)
+            showErrorSnackbar(ErrorMessage.IdError(R.string.could_not_find_account))
             return
         }
 
         if (item.title.isBlank()) {
-            showErrorSnackbar(NO_TITLE_ERROR)
+            showErrorSnackbar(ErrorMessage.IdError(R.string.item_without_title))
             return
         }
 
@@ -68,10 +70,5 @@ class TodoItemViewModel @Inject constructor(
             if (itemId.isNotBlank()) todoItemRepository.delete(item.id)
             openHomeScreen()
         }
-    }
-
-    companion object {
-        private const val NO_ACCOUNT_ERROR = "We couldn't find your account id at the moment, please try again later"
-        private const val NO_TITLE_ERROR = "Title cannot be empty"
     }
 }

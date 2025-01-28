@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -39,6 +40,7 @@ import com.google.firebase.example.makeitso.data.model.TodoItem
 import com.google.firebase.example.makeitso.ui.shared.CenterTopAppBar
 import com.google.firebase.example.makeitso.ui.shared.LoadingIndicator
 import com.google.firebase.example.makeitso.ui.theme.DarkBlue
+import com.google.firebase.example.makeitso.ui.theme.MakeItSoTheme
 import kotlinx.serialization.Serializable
 
 //@Serializable
@@ -56,8 +58,18 @@ fun TodoListScreen(
 ) {
     val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
-    if (isLoadingUser) LoadingIndicator()
-    else TodoListScreenContent(openSettingsScreen, openTodoItemScreen, viewModel)
+    if (isLoadingUser) {
+        LoadingIndicator()
+    } else {
+        val todoItems = viewModel.todoItems.collectAsStateWithLifecycle(emptyList())
+
+        TodoListScreenContent(
+            todoItems = todoItems.value,
+            openSettingsScreen = openSettingsScreen,
+            openTodoItemScreen = openTodoItemScreen,
+            updateItem = viewModel::updateItem
+        )
+    }
 
     LaunchedEffect(true) {
         viewModel.loadCurrentUser()
@@ -67,11 +79,11 @@ fun TodoListScreen(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TodoListScreenContent(
+    todoItems: List<TodoItem>,
     openSettingsScreen: () -> Unit,
     openTodoItemScreen: (String) -> Unit,
-    viewModel: TodoListViewModel
+    updateItem: (todoItem: TodoItem) -> Unit
 ) {
-    val todoItems = viewModel.todoItems.collectAsStateWithLifecycle(emptyList())
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -111,9 +123,9 @@ fun TodoListScreenContent(
                     },
                 contentPadding = PaddingValues(8.dp)
             ) {
-                items(todoItems.value) { todoItem ->
+                items(todoItems) { todoItem ->
                     TodoItem(todoItem, openTodoItemScreen) {
-                        viewModel.updateItem(todoItem.copy(completed = it))
+                        updateItem(todoItem.copy(completed = it))
                     }
                 }
             }
@@ -166,5 +178,18 @@ fun TodoItem(
                 modifier = Modifier.padding(8.dp)
             )
         }
+    }
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun TodoListScreenPreview() {
+    MakeItSoTheme(darkTheme = true) {
+        TodoListScreenContent(
+            todoItems = listOf(TodoItem()),
+            openSettingsScreen = {},
+            openTodoItemScreen = {},
+            updateItem = {}
+        )
     }
 }

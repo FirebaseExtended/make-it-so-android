@@ -126,7 +126,7 @@ class MainActivity : ComponentActivity() {
     private fun getErrorMessage(error: ErrorMessage): String {
         return when (error) {
             is ErrorMessage.StringError -> error.message
-            is ErrorMessage.IdError -> applicationContext.resources.getString(error.message)
+            is ErrorMessage.IdError -> this@MainActivity.getString(error.message)
         }
     }
 }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +32,7 @@ import com.google.firebase.example.makeitso.ui.shared.StandardButton
 import com.google.firebase.example.makeitso.ui.theme.DarkBlue
 import com.google.firebase.example.makeitso.ui.theme.DarkGrey
 import com.google.firebase.example.makeitso.ui.theme.LightRed
+import com.google.firebase.example.makeitso.ui.theme.MakeItSoTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -47,21 +49,31 @@ fun SettingsScreen(
     if (shouldRestartApp) {
         openHomeScreen()
     } else {
-        SettingsScreenContent(openSignInScreen, viewModel)
+        val isAnonymous by viewModel.isAnonymous.collectAsStateWithLifecycle()
+
+        SettingsScreenContent(
+            loadCurrentUser = viewModel::loadCurrentUser,
+            openSignInScreen = openSignInScreen,
+            signOut = viewModel::signOut,
+            deleteAccount = viewModel::deleteAccount,
+            isAnonymous = isAnonymous
+        )
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun SettingsScreenContent(
+    loadCurrentUser: () -> Unit,
     openSignInScreen: () -> Unit,
-    viewModel: SettingsViewModel
+    signOut: () -> Unit,
+    deleteAccount: () -> Unit,
+    isAnonymous: Boolean
 ) {
-    val isAnonymous by viewModel.isAnonymous.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     LaunchedEffect(true) {
-        viewModel.loadCurrentUser()
+        loadCurrentUser()
     }
 
     Scaffold(
@@ -95,20 +107,20 @@ fun SettingsScreenContent(
                 StandardButton(
                     label = R.string.sign_out,
                     onButtonClick = {
-                        viewModel.signOut()
+                        signOut()
                     }
                 )
 
                 Spacer(Modifier.size(16.dp))
 
-                DeleteAccountButton(viewModel)
+                DeleteAccountButton(deleteAccount)
             }
         }
     }
 }
 
 @Composable
-fun DeleteAccountButton(viewModel: SettingsViewModel = hiltViewModel()) {
+fun DeleteAccountButton(deleteAccount: () -> Unit) {
     var showDeleteAccountDialog by remember { mutableStateOf(false) }
 
     StandardButton(
@@ -137,7 +149,7 @@ fun DeleteAccountButton(viewModel: SettingsViewModel = hiltViewModel()) {
                 TextButton(
                     onClick = {
                         showDeleteAccountDialog = false
-                        viewModel.deleteAccount()
+                        deleteAccount()
                     },
                     colors = getDialogButtonColors()
                 ) {
@@ -156,4 +168,18 @@ private fun getDialogButtonColors(): ButtonColors {
         disabledContainerColor = LightRed,
         disabledContentColor = DarkGrey
     )
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun SettingsScreenPreview() {
+    MakeItSoTheme(darkTheme = true) {
+        SettingsScreenContent(
+            loadCurrentUser = {},
+            openSignInScreen = {},
+            signOut = {},
+            deleteAccount = {},
+            isAnonymous = false
+        )
+    }
 }

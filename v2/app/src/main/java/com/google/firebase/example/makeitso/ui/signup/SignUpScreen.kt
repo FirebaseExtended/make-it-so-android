@@ -24,6 +24,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.example.makeitso.R
 import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.ui.shared.StandardButton
+import com.google.firebase.example.makeitso.ui.theme.MakeItSoTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -47,15 +49,18 @@ fun SignUpScreen(
     if (shouldRestartApp) {
         openHomeScreen()
     } else {
-        SignUpScreenContent(showErrorSnackbar, viewModel)
+        SignUpScreenContent(
+            signUp = viewModel::signUp,
+            showErrorSnackbar = showErrorSnackbar
+        )
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun SignUpScreenContent(
-    showErrorSnackbar: (ErrorMessage) -> Unit,
-    viewModel: SignUpViewModel
+    signUp: (String, String, String, (ErrorMessage) -> Unit) -> Unit,
+    showErrorSnackbar: (ErrorMessage) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -137,7 +142,7 @@ fun SignUpScreenContent(
                 StandardButton(
                     label = R.string.sign_up_with_email,
                     onButtonClick = {
-                        viewModel.signUp(
+                        signUp(
                             email,
                             password,
                             repeatPassword,
@@ -152,5 +157,16 @@ fun SignUpScreenContent(
                 //AuthWithGoogleButton(R.string.sign_up_with_google) { }
             }
         }
+    }
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun SignUpScreenPreview() {
+    MakeItSoTheme(darkTheme = true) {
+        SignUpScreenContent(
+            signUp = { _, _, _, _ -> },
+            showErrorSnackbar = {}
+        )
     }
 }

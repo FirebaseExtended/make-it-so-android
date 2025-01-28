@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,6 +55,7 @@ import com.google.firebase.example.makeitso.ui.shared.CenterTopAppBar
 import com.google.firebase.example.makeitso.ui.shared.LoadingIndicator
 import com.google.firebase.example.makeitso.ui.shared.StandardButton
 import com.google.firebase.example.makeitso.ui.theme.DarkGrey
+import com.google.firebase.example.makeitso.ui.theme.MakeItSoTheme
 import com.google.firebase.example.makeitso.ui.theme.MediumGrey
 import com.google.firebase.example.makeitso.ui.theme.MediumYellow
 import kotlinx.serialization.Serializable
@@ -72,25 +74,39 @@ fun TodoItemScreen(
     if (navigateToTodoList) {
         openTodoListScreen()
     } else {
-        TodoItemScreen(showErrorSnackbar, viewModel)
+        val todoItem by viewModel.todoItem.collectAsStateWithLifecycle()
+
+        TodoItemScreen(
+            todoItem = todoItem,
+            showErrorSnackbar = showErrorSnackbar,
+            saveItem = viewModel::saveItem,
+            deleteItem = viewModel::deleteItem,
+            loadItem = viewModel::loadItem
+        )
     }
 }
 
 @Composable
 fun TodoItemScreen(
+    todoItem: TodoItem?,
     showErrorSnackbar: (ErrorMessage) -> Unit,
-    viewModel: TodoItemViewModel
+    saveItem: (TodoItem, (ErrorMessage) -> Unit) -> Unit,
+    deleteItem: (TodoItem) -> Unit,
+    loadItem: () -> Unit
 ) {
-    val todoItem by viewModel.todoItem.collectAsStateWithLifecycle()
-
     if (todoItem == null) {
         LoadingIndicator()
     } else {
-        TodoItemScreenContent(todoItem!!, showErrorSnackbar, viewModel)
+        TodoItemScreenContent(
+            todoItem = todoItem,
+            showErrorSnackbar = showErrorSnackbar,
+            saveItem = saveItem,
+            deleteItem = deleteItem
+        )
     }
 
     LaunchedEffect(true) {
-        viewModel.loadItem()
+        loadItem()
     }
 }
 
@@ -99,7 +115,8 @@ fun TodoItemScreen(
 fun TodoItemScreenContent(
     todoItem: TodoItem,
     showErrorSnackbar: (ErrorMessage) -> Unit,
-    viewModel: TodoItemViewModel
+    saveItem: (TodoItem, (ErrorMessage) -> Unit) -> Unit,
+    deleteItem: (TodoItem) -> Unit
 ) {
     val editableItem = remember { mutableStateOf(todoItem) }
     val backgroundColor = if (isSystemInDarkTheme()) MediumGrey else MediumYellow
@@ -112,7 +129,7 @@ fun TodoItemScreenContent(
                 icon = Icons.Filled.Check,
                 iconDescription = "Save Todo Item icon",
                 action = {
-                    viewModel.saveItem(editableItem.value, showErrorSnackbar)
+                    saveItem(editableItem.value, showErrorSnackbar)
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -212,7 +229,7 @@ fun TodoItemScreenContent(
             StandardButton(
                 label = R.string.delete_todo_item,
                 onButtonClick = {
-                    viewModel.deleteItem(todoItem)
+                    deleteItem(todoItem)
                 }
             )
         }
@@ -265,4 +282,17 @@ private fun getPriorityChipColors(selectedColor: Color): SelectableChipColors {
         selectedLeadingIconColor = DarkGrey,
         selectedTrailingIconColor = DarkGrey
     )
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun TodoItemScreenPreview() {
+    MakeItSoTheme(darkTheme = true) {
+        TodoItemScreenContent(
+            todoItem = TodoItem(),
+            showErrorSnackbar = {},
+            saveItem = { _, _ -> },
+            deleteItem = {}
+        )
+    }
 }

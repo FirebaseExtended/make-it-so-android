@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -35,6 +36,7 @@ import com.google.firebase.example.makeitso.R
 import com.google.firebase.example.makeitso.data.model.ErrorMessage
 import com.google.firebase.example.makeitso.ui.shared.StandardButton
 import com.google.firebase.example.makeitso.ui.theme.DarkBlue
+import com.google.firebase.example.makeitso.ui.theme.MakeItSoTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -52,7 +54,11 @@ fun SignInScreen(
     if (shouldRestartApp) {
         openHomeScreen()
     } else {
-        SignInScreenContent(openSignUpScreen, showErrorSnackbar, viewModel)
+        SignInScreenContent(
+            openSignUpScreen = openSignUpScreen,
+            signIn = viewModel::signIn,
+            showErrorSnackbar = showErrorSnackbar
+        )
     }
 }
 
@@ -60,8 +66,8 @@ fun SignInScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 fun SignInScreenContent(
     openSignUpScreen: () -> Unit,
-    showErrorSnackbar: (ErrorMessage) -> Unit,
-    viewModel: SignInViewModel
+    signIn: (String, String, (ErrorMessage) -> Unit) -> Unit,
+    showErrorSnackbar: (ErrorMessage) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -130,7 +136,7 @@ fun SignInScreenContent(
                 StandardButton(
                     label = R.string.sign_in_with_email,
                     onButtonClick = {
-                        viewModel.signIn(email, password, showErrorSnackbar)
+                        signIn(email, password, showErrorSnackbar)
                     }
                 )
 
@@ -161,5 +167,17 @@ fun SignInScreenContent(
                 Spacer(Modifier.size(24.dp))
             }
         }
+    }
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun SignInScreenPreview() {
+    MakeItSoTheme(darkTheme = true) {
+        SignInScreenContent(
+            openSignUpScreen = {},
+            signIn = { _, _, _ -> },
+            showErrorSnackbar = {}
+        )
     }
 }

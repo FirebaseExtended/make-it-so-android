@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -38,6 +39,7 @@ import com.google.firebase.example.makeitso.data.model.TodoList
 import com.google.firebase.example.makeitso.ui.shared.CenterTopAppBar
 import com.google.firebase.example.makeitso.ui.shared.LoadingIndicator
 import com.google.firebase.example.makeitso.ui.theme.DarkBlue
+import com.google.firebase.example.makeitso.ui.theme.MakeItSoTheme
 import com.google.firebase.example.makeitso.ui.theme.MediumYellow
 import kotlinx.serialization.Serializable
 
@@ -54,13 +56,13 @@ fun HomeScreen(
     if (isLoadingUser) {
         LoadingIndicator()
     } else {
-        HomeScreenContent(openSettingsScreen, viewModel)
+        HomeScreenContent(openSettingsScreen)
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeScreenContent(openSettingsScreen: () -> Unit, viewModel: HomeViewModel) {
+fun HomeScreenContent(openSettingsScreen: () -> Unit) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -133,5 +135,15 @@ fun HomeScreenContent(openSettingsScreen: () -> Unit, viewModel: HomeViewModel) 
                 onClick = { }
             )
         }
+    }
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun HomeScreenPreview() {
+    MakeItSoTheme(darkTheme = true) {
+        HomeScreenContent(
+            openSettingsScreen = {}
+        )
     }
 }

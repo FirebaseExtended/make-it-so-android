@@ -1,6 +1,8 @@
 [versions]
 agp = "8.7.0-rc01"
-firebaseBom = "33.4.0"
+constraintlayoutCompose = "1.1.0"
+coreSplashscreen = "1.0.1"
+firebaseBom = "33.7.0"
 hiltAndroidCompiler = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.0.21"
@@ -16,13 +18,18 @@ googleServices = "4.4.2"
 googleHilt = "2.51.1"
 googleKotlinKsp = "2.0.21-1.0.25"
 navigationCompose = "2.8.2"
+firebaseCrashlytics = "3.0.2"
 
 [libraries]
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidCompiler" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
@@ -48,6 +55,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 google-hilt = { id = "com.google.dagger.hilt.android", version.ref = "googleHilt" }
-google-kotlin-ksp = { id = "com.google.devtools.ksp", version.ref ="googleKotlinKsp" }
-google-ksp = { id = "com.google.devtools.ksp"}
+google-ksp = { id = "com.google.devtools.ksp", version.ref ="googleKotlinKsp" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref="firebaseCrashlytics"}
 

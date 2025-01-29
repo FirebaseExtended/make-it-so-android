@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MakeItSo"
-        android:name = ".data.injection.MakeItSoHiltApp">
+        android:name = ".data.injection.MakeItSoHiltApp"
+        android:windowSoftInputMode="adjustResize">
         <activity
             android:name=".MainActivity"
             android:exported="true"

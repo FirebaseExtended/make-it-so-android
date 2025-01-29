@@ -1,14 +1,15 @@
 package com.google.firebase.example.makeitso.data.repository
 
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.example.makeitso.data.datasource.AuthRemoteDataSource
-import com.google.firebase.example.makeitso.data.model.User
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource
 ) {
-    val currentUser: Flow<User?> = authRemoteDataSource.currentUser
+    val currentUser: FirebaseUser? = authRemoteDataSource.currentUser
+    val currentUserIdFlow: Flow<String?> = authRemoteDataSource.currentUserIdFlow
 
     suspend fun createGuestAccount() {
         authRemoteDataSource.createGuestAccount()
@@ -22,7 +23,11 @@ class AuthRepository @Inject constructor(
        authRemoteDataSource.linkAccount(email, password)
     }
 
-    suspend fun signOut() {
+    fun signOut() {
         authRemoteDataSource.signOut()
+    }
+
+    suspend fun deleteAccount() {
+        authRemoteDataSource.deleteAccount()
     }
 }

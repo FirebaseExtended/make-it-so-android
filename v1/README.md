@@ -12,17 +12,17 @@ To explain how each product above was used in the code, we've written a series o
 
 In order for this app to work, you will need to create a [Firebase project](https://firebase.google.com/):
 
-* Clone this repository
-* Create a Firebase project in the [Firebase Console](https://console.firebase.google.com/)
-* Follow [these steps](https://firebase.google.com/docs/android/setup#register-app) to register Make it So app in your Firebase project
-* Follow [these steps](https://firebase.google.com/docs/android/setup#add-config-file) to add the Firebase Android configuration file to Make it So
-* [Create a Cloud Firestore database](https://firebase.google.com/docs/firestore/quickstart#create) in your Firebase project
-* [Enable Anonymous Authentication](https://firebase.google.com/docs/auth/android/anonymous-auth#before-you-begin) in your Firebase project
-* [Enable Email/Password Authentication](https://firebase.google.com/docs/auth/android/password-auth#before_you_begin) in your Firebase project
-* Run the app using Android Studio Flamingo+ on a device/emulator with API level 21 or above
-* Create your first to-do item in the app
-* In the Firebase console, navigate to the [Firestore Indexes tab](https://console.firebase.google.com/project/_/firestore/indexes)
-* Create a new composite index for the collection `tasks` with 2 fields: `userId` and `createdAt` (both Ascending)
-* Choose the "Collection" option in Query scopes (you won't be using `collectionGroup` in this app)
+1. Clone this repository
+1. Create a Firebase project in the [Firebase Console](https://console.firebase.google.com/)
+1. Follow [these steps](https://firebase.google.com/docs/android/setup#register-app) to register Make it So app in your Firebase project
+1. Follow [these steps](https://firebase.google.com/docs/android/setup#add-config-file) to add the Firebase Android configuration file to Make it So
+1. [Create a Cloud Firestore database](https://firebase.google.com/docs/firestore/quickstart#create) in your Firebase project
+1. [Enable Anonymous Authentication](https://firebase.google.com/docs/auth/android/anonymous-auth#before-you-begin) in your Firebase project
+1. [Enable Email/Password Authentication](https://firebase.google.com/docs/auth/android/password-auth#before_you_begin) in your Firebase project
+1. Run the app using Android Studio Flamingo+ on a device/emulator with API level 21 or above
+1. Create your first to-do item in the app
+1. In the Firebase console, navigate to the [Firestore Indexes tab](https://console.firebase.google.com/project/_/firestore/indexes)
+1. Create a new composite index for the collection `tasks` with 2 fields: `userId` and `createdAt` (both Ascending)
+1. Choose the "Collection" option in Query scopes (you won't be using `collectionGroup` in this app)
 
 This index is necessary when fetching documents because this app uses `where` and `orderBy` operators in different fields: `where` uses the `userId` field and `orderBy` uses the `createdAt` field (see `StorageServiceImpl`). Learn more on the Firebase documentation about [Index types](https://firebase.google.com/docs/firestore/query-data/index-overview#composite_indexes).

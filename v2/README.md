@@ -1,3 +1,6 @@
+
+[MakeItSoV2.webm](https://github.com/user-attachments/assets/14ae8e83-f9e3-470e-8bcf-f2ac2cfcf9e9)
+
 ## Make it So Version 2
 
 This is a sample Android app that demonstrates how to use Firebase Authentication, Crashlytics and Cloud Firestore. Make it So is a simple to-do list application that allows the user to add and edit to-do items, add flags and priorities, and mark the tasks as completed.

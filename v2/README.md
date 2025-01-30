@@ -1,5 +1,4 @@
-
-[MakeItSoV2.webm](https://github.com/user-attachments/assets/14ae8e83-f9e3-470e-8bcf-f2ac2cfcf9e9)
+<img width="1062" alt="Make it So Version 2" src="https://github.com/user-attachments/assets/57b9cdef-3fa7-4620-a33e-32db9c704ff4" />
 
 ## Make it So Version 2
 
